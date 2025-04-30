@@ -1,8 +1,8 @@
 package datastruct
 
 type Candle struct {
-	figi                   string
-	open, high, low, close Quotation
+	Figi, Uid              string
+	Open, High, Low, Close Quotation
 }
 
 type Quotation struct {
