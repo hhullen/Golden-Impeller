@@ -16,7 +16,7 @@ const (
 
 type IStrategy interface {
 	// Должен получить действие для исполнения. Историческте данные по инструменту внутри стратегии.
-	GetActionDecision(context.Context, *datastruct.Candle) (StrategyAction, error)
+	GetActionDecision(ctx context.Context, lp *datastruct.LastPrice) (StrategyAction, error)
 	// Должен получить имя стратегии
 	GetName() string
 }
@@ -28,8 +28,8 @@ type ILogger interface {
 }
 
 type IBroker interface {
-	// Должен получить последнюю свечу для инструмента по uid из стрима. Блокирующая.
-	GetLastCandle(context.Context, string) (*datastruct.Candle, error)
+	// Должен получить последнюю цену для инструмента по uid из стрима. Блокирующая.
+	GetLastPrice(ctx context.Context, uid string) (*datastruct.LastPrice, error)
 }
 
 type Service struct {
@@ -59,13 +59,13 @@ func (s *Service) RunTrading(uid string, strategy IStrategy) {
 				err = nil
 			}
 
-			candle, err := s.broker.GetLastCandle(s.ctx, uid)
+			lastPrice, err := s.broker.GetLastPrice(s.ctx, uid)
 			if err != nil {
-				s.logger.Errorf("error getting candle for '%s': %s", uid, err.Error())
+				s.logger.Errorf("error getting last price for '%s': %s", uid, err.Error())
 				continue
 			}
 
-			action, err := strategy.GetActionDecision(s.ctx, candle)
+			action, err := strategy.GetActionDecision(s.ctx, lastPrice)
 			if err != nil {
 				s.logger.Errorf("error getting action decision '%s': %s", uid, err.Error())
 				continue
