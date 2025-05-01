@@ -10,14 +10,17 @@ type Candle struct {
 
 type LastPrice struct {
 	Figi, Uid string
-	Units     int64
-	Nano      int32
+	Price     Quotation
 	Time      time.Time
 }
 
 type Quotation struct {
 	Units int64
 	Nano  int32
+}
+
+func (q *Quotation) ToFloat64() float64 {
+	return float64(q.Units) + float64(q.Nano/1000000000)
 }
 
 type OrderState struct {

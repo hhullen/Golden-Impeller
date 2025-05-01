@@ -46,11 +46,13 @@ func (c *Client) GetLastPrice(ctx context.Context, uid string) (*datastruct.Last
 	}
 
 	return &datastruct.LastPrice{
-		Units: lastPrice.Price.Units,
-		Nano:  lastPrice.Price.Nano,
-		Time:  lastPrice.Time.AsTime(),
-		Uid:   lastPrice.InstrumentUid,
-		Figi:  lastPrice.Figi,
+		Price: datastruct.Quotation{
+			Units: lastPrice.Price.Units,
+			Nano:  lastPrice.Price.Nano,
+		},
+		Time: lastPrice.Time.AsTime(),
+		Uid:  lastPrice.InstrumentUid,
+		Figi: lastPrice.Figi,
 	}, nil
 
 }

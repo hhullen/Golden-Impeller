@@ -2,16 +2,19 @@ package strategy
 
 import (
 	"context"
+	"slices"
 	"time"
 	"trading_bot/internal/service"
 	"trading_bot/internal/service/datastruct"
 
 	"golang.org/x/sync/errgroup"
+	"gonum.org/v1/gonum/stat"
 )
 
 const (
 	daysToLoadCandlesHiustory = 10 * time.Hour * 24
 	ordersLimitPerInstrument  = 1
+	intervalSize              = 0.8
 )
 
 type IBrocker interface {
@@ -64,8 +67,24 @@ func (i *Interval) GetActionDecision(ctx context.Context, lastPrice *datastruct.
 	}
 	i.candlesStore = append(i.candlesStore, candles...)
 
-	// найти коридор
-	// а потом определить где цена
+	values := make([]float64, len(i.candlesStore))
+	for n := range i.candlesStore {
+		values[n] = i.candlesStore[n].Close.ToFloat64()
+	}
+
+	slices.Sort(values)
+	lowFraction := (1 - intervalSize) / 2
+	highFraction := 1 - lowFraction
+
+	lowerCoridorBound := stat.Quantile(lowFraction, stat.Empirical, values, nil)
+	higherCoridorBound := stat.Quantile(highFraction, stat.Empirical, values, nil)
+
+	lastPriceValue := lastPrice.Price.ToFloat64()
+	if lastPriceValue >= higherCoridorBound {
+		// обработать превышение порога
+	} else if lastPriceValue <= lowerCoridorBound {
+		// обработать понижение порога
+	}
 
 	return service.Hold, nil
 }
