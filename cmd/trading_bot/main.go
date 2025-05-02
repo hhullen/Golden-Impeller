@@ -2,20 +2,24 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 	"trading_bot/internal/clients/t_api"
 	"trading_bot/internal/logger"
-	"trading_bot/internal/service"
-	"trading_bot/internal/strategy"
 
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
+	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
 	"gopkg.in/yaml.v3"
 )
 
 const (
-	envFile = ".env.yaml"
+	envFile    = ".env.yaml"
+	TGLD       = "4c466956-d2ce-4a95-abb4-17947a65f18a"
+	TMOS       = "9654c2dd-6993-427e-80fa-04e80a1cf4da"
+	GLDRUB_TOM = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
 )
 
 func main() {
@@ -40,11 +44,9 @@ func main() {
 		panic(err)
 	}
 
-	s := service.NewService(ctx, investClient, logger)
+	// s := service.NewService(ctx, investClient, logger)
 
-	const TMOS = "9654c2dd-6993-427e-80fa-04e80a1cf4da"
-
-	s.RunTrading(TMOS, strategy.NewIntervalStrategy())
+	// s.RunTrading(TMOS, strategy.NewIntervalStrategy())
 
 	// investClient, err := investgo.NewClient(ctx, investCfg, &logger.Logger{})
 	// if err != nil {
@@ -53,94 +55,11 @@ func main() {
 
 	defer investClient.Conn.Close()
 
-	// schedule, _ := investClient.NewInstrumentsServiceClient().TradingSchedules("MOEX", time.Now(), time.Now().Add(1*time.Hour))
-
-	// for _, exs := range schedule.GetExchanges() {
-	// 	for _, day := range exs.Days {
-	// 		fmt.Printf("Дата: %s, работает: %v, с %s по %s\n",
-	// 			day.Date.AsTime().Format("2006-01-02"),
-	// 			day.IsTradingDay,
-	// 			day.StartTime.AsTime().Local().Format(time.TimeOnly),
-	// 			day.EndTime.AsTime().Local().Format(time.TimeOnly),
-	// 		)
-	// 	}
-	// }
-
-	// instrumentsServiceClient := investClient.NewInstrumentsServiceClient()
-
-	// investClient.NewOrdersServiceClient().PostOrder(&investgo.PostOrderRequest{})
-
-	// ins, err := instrumentsServiceClient.FindInstrument("TMOS")
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// for i := range ins.Instruments {
-	// 	fmt.Println(ins.Instruments[i].ClassCode, ins.Instruments[i].Ticker, ins.Instruments[i].Name, ins.Instruments[i].Uid, ins.Instruments[i].Figi)
-	// }
-
-	// gg, err := instrumentsServiceClient.EtfByTicker("TMOS", "TQTF")
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// fmt.Println(gg.Instrument.ClassCode, gg.Instrument.Ticker, gg.Instrument.Name, gg.Instrument.Uid, gg.Instrument.Figi)
-
-	// resp, err := instrumentsServiceClient.Shares(pb.InstrumentStatus_INSTRUMENT_STATUS_BASE)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// shares := resp.GetInstruments()
-	// fmt.Println("LEN:", len(shares))
-
-	// var moexShare *pb.Share
-	// for i := range shares {
-	// if shares[i].Ticker == "MOEX" {
-	// 	moexShare = shares[i]
-	// 	break
-	// }
-	// println(shares[i].Ticker, shares[i].Isin, shares[i].Uid)
-	// }
-
-	// r, _ := investClient.NewUsersServiceClient().GetAccounts(pb.AccountStatus_ACCOUNT_STATUS_ALL.Enum())
-	// for i := range r.Accounts {
-	// 	fmt.Println(r.Accounts[i].String())
-	// }
-
-	// s, _ := investClient.NewMarketDataStreamClient().MarketDataStream()
-
-	// // ch, err := s.SubscribeInfo([]string{etfs[0].Uid, etfs[1].Uid})
-	// ch, err := s.SubscribeCandle([]string{gg.Instrument.Figi}, pb.SubscriptionInterval_SUBSCRIPTION_INTERVAL_ONE_MINUTE, true, pb.GetCandlesRequest_CANDLE_SOURCE_EXCHANGE.Enum())
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// var r pb.Candle
-	// // p, _ := s.SubscribeLastPrice([]string{shares[0].Uid, shares[99].Uid})
-
-	// go func() {
-	// 	if err := s.Listen(); err != nil {
-	// 		panic(err)
-	// 	}
-	// }()
-
-	// // go func() {
-	// fmt.Println("START")
-	// for c := range ch {
-	// 	fmt.Println("LISTENING")
-	// 	fmt.Println(c.GetVolume())
-	// 	fmt.Println(c.GetHigh())
-	// 	fmt.Println(c.GetLow())
-	// 	fmt.Println(c.GetInterval())
-	// 	fmt.Println("WAIT NEW")
-	// }
-	// fmt.Println("FINISH")
-	// }()
-
-	// for lp := range p {
-	// 	fmt.Println(lp.Figi, lp.Price, lp.LastPriceType)
-	// }
-
+	// рабочие костыли
+	printSchedule(investClient, "MOEX")
+	printAccounts(investClient)
+	fundAndPrintInstrument(investClient, "TGLD")
+	listenAndPrintLastPrice(investClient, TGLD)
 }
 
 func getEnvCfg() (map[string]string, error) {
@@ -155,4 +74,61 @@ func getEnvCfg() (map[string]string, error) {
 	}
 
 	return envCfg, nil
+}
+
+func fundAndPrintInstrument(c *t_api.Client, name string) {
+	instrumentsServiceClient := c.NewInstrumentsServiceClient()
+
+	ins, err := instrumentsServiceClient.FindInstrument(name)
+	if err != nil {
+		panic(err)
+	}
+
+	for i := range ins.Instruments {
+		fmt.Println(ins.Instruments[i].ClassCode, ins.Instruments[i].Ticker, ins.Instruments[i].Name, ins.Instruments[i].Uid, ins.Instruments[i].Figi)
+	}
+}
+
+func printSchedule(c *t_api.Client, excange string) {
+	schedule, _ := c.NewInstrumentsServiceClient().TradingSchedules(excange, time.Now(), time.Now().Add(1*time.Hour))
+
+	for _, exs := range schedule.GetExchanges() {
+		for _, day := range exs.Days {
+			fmt.Printf("Дата: %s, работает: %v, с %s по %s\n",
+				day.Date.AsTime().Format("2006-01-02"),
+				day.IsTradingDay,
+				day.StartTime.AsTime().Local().Format(time.TimeOnly),
+				day.EndTime.AsTime().Local().Format(time.TimeOnly),
+			)
+		}
+	}
+}
+
+func printAccounts(c *t_api.Client) {
+	r, _ := c.NewUsersServiceClient().GetAccounts(pb.AccountStatus_ACCOUNT_STATUS_ALL.Enum())
+	for i := range r.Accounts {
+		fmt.Println(r.Accounts[i].String())
+	}
+}
+
+func listenAndPrintLastPrice(c *t_api.Client, uid string) {
+	stream, err := c.NewMarketDataStreamClient().MarketDataStream()
+	if err != nil {
+		panic(err)
+	}
+
+	prices, err := stream.SubscribeLastPrice([]string{uid})
+	if err != nil {
+		panic(err)
+	}
+
+	go func() {
+		if err := stream.Listen(); err != nil {
+			panic(err)
+		}
+	}()
+
+	for lp := range prices {
+		fmt.Println(lp.Time.AsTime().Local().Format(time.TimeOnly), lp.Figi, lp.Price, lp.LastPriceType)
+	}
 }

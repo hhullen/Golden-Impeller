@@ -3,6 +3,7 @@ package t_api
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 	"trading_bot/internal/service/datastruct"
 	"trading_bot/internal/strategy"
@@ -31,10 +32,14 @@ func NewClient(ctx context.Context, conf investgo.Config, l investgo.Logger) (*C
 	return &Client{Client: *investClient}, nil
 }
 
-func (c *Client) GetLastPrice(ctx context.Context, uid string) (*datastruct.LastPrice, error) {
+func (c *Client) GetAccoountId() string {
+	return c.Config.AccountId
+}
+
+func (c *Client) GetLastPrice(ctx context.Context, instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error) {
 	if c.marketDataStream == nil {
 
-		if err := c.prepareStreamForInstrument(ctx, uid); err != nil {
+		if err := c.prepareStreamForInstrument(ctx, instrInfo.Uid); err != nil {
 			return nil, err
 		}
 
@@ -175,14 +180,69 @@ func (c *Client) GetOrders(ctx context.Context, uid string) ([]*datastruct.Order
 	}
 
 	orders := []*datastruct.OrderState{}
-	for i := range ordersResp.Orders {
-		if ordersResp.Orders[i].InstrumentUid == uid {
+	for _, order := range ordersResp.Orders {
+		if order.InstrumentUid == uid {
 			orders = append(orders, &datastruct.OrderState{
-				InstrumentUid: ordersResp.Orders[i].InstrumentUid,
-				OrderId:       ordersResp.Orders[i].OrderId,
+				InstrumentUid: order.InstrumentUid,
+				OrderId:       order.OrderId,
 			})
 		}
 	}
 
 	return orders, nil
+}
+
+func (c *Client) GetPositions(uid string) (*datastruct.Position, error) {
+	portfResp, err := c.Client.NewOperationsServiceClient().GetPortfolio(c.GetAccoountId(), pb.PortfolioRequest_RUB)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, pos := range portfResp.PortfolioResponse.Positions {
+		if pos.InstrumentUid == uid {
+
+			return &datastruct.Position{
+				AveragePositionPrice: datastruct.Quotation{
+					Units: pos.AveragePositionPrice.Units,
+					Nano:  pos.AveragePositionPrice.Nano,
+				},
+				Quantity: datastruct.Quotation{
+					Units: pos.Quantity.Units,
+					Nano:  pos.Quantity.Nano,
+				},
+			}, nil
+
+		}
+	}
+	return nil, nil
+}
+
+func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, error) {
+	respInfo, err := c.Client.NewInstrumentsServiceClient().FindInstrument(uid)
+	if err != nil {
+		return nil, err
+	}
+
+	var instrumentInfo *pb.InstrumentShort
+	for _, instr := range respInfo.Instruments {
+		if instr.Uid == uid {
+			instrumentInfo = instr
+			break
+		}
+	}
+	if instrumentInfo == nil {
+		return nil, errors.New(fmt.Sprintf("not found instrument '%s'.", uid))
+	}
+
+	return &datastruct.InstrumentInfo{
+		Isin:                  instrumentInfo.Isin,
+		Figi:                  instrumentInfo.Figi,
+		Ticker:                instrumentInfo.Ticker,
+		ClassCode:             instrumentInfo.ClassCode,
+		Name:                  instrumentInfo.Name,
+		Uid:                   instrumentInfo.Uid,
+		ApiTradeAvailableFlag: instrumentInfo.ApiTradeAvailableFlag,
+		ForQualInvestorFlag:   instrumentInfo.ForQualInvestorFlag,
+		Lot:                   instrumentInfo.Lot,
+	}, nil
 }

@@ -1,5 +1,11 @@
 package strategy
 
+import (
+	"context"
+	"time"
+	"trading_bot/internal/service/datastruct"
+)
+
 type CandleInterval int32
 
 const (
@@ -17,3 +23,10 @@ const (
 	Interval_Week
 	Interval_Month
 )
+
+type IBroker interface {
+	GetCandlesHistory(ctx context.Context, uid string, from, to time.Time, interval CandleInterval) ([]*datastruct.Candle, error)
+	GetOrders(ctx context.Context, uid string) ([]*datastruct.OrderState, error)
+	GetPositions(uid string) (*datastruct.Position, error)
+	GetAccoountId() string
+}
