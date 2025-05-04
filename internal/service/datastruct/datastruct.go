@@ -9,15 +9,15 @@ type InstrumentInfo struct {
 	ClassCode             string
 	Name                  string
 	Uid                   string
+	Lot                   int32
 	ApiTradeAvailableFlag bool
 	ForQualInvestorFlag   bool
-	Lot                   int32
 }
 
 type Candle struct {
 	Open, High, Low, Close Quotation
-	Time                   time.Time
 	Volume                 int64
+	Time                   time.Time
 }
 
 type LastPrice struct {
@@ -39,6 +39,10 @@ func (q *Quotation) ToInt32() int32 {
 	return int32(q.Units) + q.Nano/1000000000
 }
 
+func (q *Quotation) ToInt64() int64 {
+	return q.Units + int64(q.Nano/1000000000)
+}
+
 type OrderState struct {
 	InstrumentUid string
 	OrderId       string
@@ -47,4 +51,12 @@ type OrderState struct {
 type Position struct {
 	AveragePositionPrice Quotation
 	Quantity             Quotation
+}
+
+type PostOrderResult struct {
+	ExecutedCommission    Quotation
+	ExecutedOrderPrice    Quotation
+	InstrumentUid         string
+	ExecutionReportStatus string
+	OrderId               string
 }

@@ -32,7 +32,7 @@ func NewIntervalStrategy(b IBroker) *Interval {
 }
 
 func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice) (service.StrategyAction, error) {
-	errGroup, errGroupCtx := errgroup.WithContext(ctx)
+	errGroup, _ := errgroup.WithContext(ctx)
 
 	var candles []*datastruct.Candle
 	errGroup.Go(func() error {
@@ -44,14 +44,14 @@ func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.
 		}
 
 		var err error
-		candles, err = i.broker.GetCandlesHistory(errGroupCtx, instrInfo.Uid, from, time.Now(), Interval_1_Min)
+		candles, err = i.broker.GetCandlesHistory(instrInfo.Uid, from, time.Now(), Interval_1_Min)
 		return err
 	})
 
-	var orders []*datastruct.OrderState
+	var activeOrders []*datastruct.OrderState
 	errGroup.Go(func() error {
 		var err error
-		orders, err = i.broker.GetOrders(ctx, instrInfo.Uid)
+		activeOrders, err = i.broker.GetOrders(instrInfo.Uid)
 		return err
 	})
 
@@ -66,7 +66,7 @@ func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.
 		return service.StrategyAction{Action: service.Hold}, err
 	}
 
-	if len(orders) >= 0 {
+	if len(activeOrders) >= 0 {
 		return service.StrategyAction{Action: service.Hold}, nil
 	}
 
@@ -74,15 +74,15 @@ func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.
 
 	if i.isStopLossCondition(lastPrice, positions) {
 		return service.StrategyAction{
-			Action:   service.Hold,
-			Quantity: positions.Quantity.ToInt32(),
+			Action:   service.Sell,
+			Quantity: positions.Quantity.ToInt64(),
 		}, nil
 	}
 
 	lowerCoridorBound, higherCoridorBound := i.CalculateCoridorBounds()
 
 	lastPriceValue := lastPrice.Price.ToFloat64()
-	quantity := positions.Quantity.ToInt32()
+	quantity := positions.Quantity.ToInt64()
 	if lastPriceValue >= higherCoridorBound && quantity > 0 {
 
 		return service.StrategyAction{
@@ -125,9 +125,6 @@ func (i *Interval) isStopLossCondition(lastPrice *datastruct.LastPrice, position
 	}
 
 	positionPrice := positions.AveragePositionPrice.ToFloat64()
-	if lastPrice.Price.ToFloat64() <= positionPrice-positionPrice*stopLossPercent { // !!!!!! WTF!!!
-		return true
-	}
 
-	return false
+	return lastPrice.Price.ToFloat64() <= positionPrice-positionPrice*stopLossPercent
 }

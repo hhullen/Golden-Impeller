@@ -1,7 +1,6 @@
 package strategy
 
 import (
-	"context"
 	"time"
 	"trading_bot/internal/service/datastruct"
 )
@@ -25,8 +24,8 @@ const (
 )
 
 type IBroker interface {
-	GetCandlesHistory(ctx context.Context, uid string, from, to time.Time, interval CandleInterval) ([]*datastruct.Candle, error)
-	GetOrders(ctx context.Context, uid string) ([]*datastruct.OrderState, error)
+	GetCandlesHistory(uid string, from, to time.Time, interval CandleInterval) ([]*datastruct.Candle, error)
+	GetOrders(uid string) ([]*datastruct.OrderState, error)
 	GetPositions(uid string) (*datastruct.Position, error)
 	GetAccoountId() string
 }

@@ -58,8 +58,8 @@ func main() {
 	// рабочие костыли
 	printSchedule(investClient, "MOEX")
 	printAccounts(investClient)
-	fundAndPrintInstrument(investClient, "TGLD")
-	listenAndPrintLastPrice(investClient, TGLD)
+	fundAndPrintInstrument(investClient, "GLDRUB_TOM")
+	listenAndPrintLastPrice(investClient, GLDRUB_TOM)
 }
 
 func getEnvCfg() (map[string]string, error) {
@@ -85,7 +85,8 @@ func fundAndPrintInstrument(c *t_api.Client, name string) {
 	}
 
 	for i := range ins.Instruments {
-		fmt.Println(ins.Instruments[i].ClassCode, ins.Instruments[i].Ticker, ins.Instruments[i].Name, ins.Instruments[i].Uid, ins.Instruments[i].Figi)
+		fmt.Println(ins.Instruments[i].ClassCode, ins.Instruments[i].Ticker, ins.Instruments[i].Name, ins.Instruments[i].Uid)
+		fmt.Println("Avail via API?", ins.Instruments[i].ApiTradeAvailableFlag, "For Qual Investor?", ins.Instruments[i].ForQualInvestorFlag)
 	}
 }
 

@@ -12,15 +12,12 @@ import (
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
 )
 
-const (
-	gettingCandlesLimit = 5000
-)
-
 type Client struct {
 	investgo.Client
 
 	marketDataStream *investgo.MarketDataStream
 	lastPriceInput   <-chan *pb.LastPrice
+	ctx              context.Context
 }
 
 func NewClient(ctx context.Context, conf investgo.Config, l investgo.Logger) (*Client, error) {
@@ -29,17 +26,17 @@ func NewClient(ctx context.Context, conf investgo.Config, l investgo.Logger) (*C
 		return nil, err
 	}
 
-	return &Client{Client: *investClient}, nil
+	return &Client{Client: *investClient, ctx: ctx}, nil
 }
 
 func (c *Client) GetAccoountId() string {
 	return c.Config.AccountId
 }
 
-func (c *Client) GetLastPrice(ctx context.Context, instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error) {
+func (c *Client) GetLastPrice(instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error) {
 	if c.marketDataStream == nil {
 
-		if err := c.prepareStreamForInstrument(ctx, instrInfo.Uid); err != nil {
+		if err := c.prepareStreamForInstrument(instrInfo.Uid); err != nil {
 			return nil, err
 		}
 
@@ -62,7 +59,7 @@ func (c *Client) GetLastPrice(ctx context.Context, instrInfo *datastruct.Instrum
 
 }
 
-func (c *Client) prepareStreamForInstrument(ctx context.Context, uid string) error {
+func (c *Client) prepareStreamForInstrument(uid string) error {
 	stream, err := c.NewMarketDataStreamClient().MarketDataStream()
 	if err != nil {
 		return err
@@ -74,7 +71,7 @@ func (c *Client) prepareStreamForInstrument(ctx context.Context, uid string) err
 		return err
 	}
 
-	go c.startListeningInstrumentStream(ctx, uid)
+	go c.startListeningInstrumentStream(uid)
 
 	c.lastPriceInput = ch
 
@@ -82,10 +79,10 @@ func (c *Client) prepareStreamForInstrument(ctx context.Context, uid string) err
 }
 
 // Должен запускаться в отдельной рутине. Блокирующий.
-func (c *Client) startListeningInstrumentStream(ctx context.Context, uid string) {
+func (c *Client) startListeningInstrumentStream(uid string) {
 	for {
 		select {
-		case <-ctx.Done():
+		case <-c.ctx.Done():
 			c.marketDataStream.Stop()
 		default:
 			if err := c.marketDataStream.Listen(); err != nil {
@@ -99,9 +96,7 @@ func (c *Client) startListeningInstrumentStream(ctx context.Context, uid string)
 	}
 }
 
-func (c *Client) GetCandlesHistory(ctx context.Context, uid string, from, to time.Time, interval strategy.CandleInterval) ([]*datastruct.Candle, error) {
-	// r, _ := c.NewMarketDataServiceClient().GetCandles(uid, resolveIntoPbInterval(interval), from, to, pb.GetCandlesRequest_CANDLE_SOURCE_EXCHANGE, gettingCandlesLimit)
-
+func (c *Client) GetCandlesHistory(uid string, from, to time.Time, interval strategy.CandleInterval) ([]*datastruct.Candle, error) {
 	RespCandles, err := c.NewMarketDataServiceClient().GetHistoricCandles(&investgo.GetHistoricCandlesRequest{
 		Instrument: uid,
 		Interval:   resolveIntoPbInterval(interval),
@@ -114,25 +109,28 @@ func (c *Client) GetCandlesHistory(ctx context.Context, uid string, from, to tim
 	}
 
 	candles := make([]*datastruct.Candle, 0, len(RespCandles))
-	for i := range RespCandles {
+	for _, candle := range RespCandles {
+		if !candle.IsComplete {
+			continue
+		}
 		candles = append(candles, &datastruct.Candle{
-			Time:   RespCandles[i].Time.AsTime(),
-			Volume: RespCandles[i].Volume,
+			Time:   candle.Time.AsTime(),
+			Volume: candle.Volume,
 			Open: datastruct.Quotation{
-				Units: RespCandles[i].Open.Units,
-				Nano:  RespCandles[i].Open.Nano,
+				Units: candle.Open.Units,
+				Nano:  candle.Open.Nano,
 			},
 			Close: datastruct.Quotation{
-				Units: RespCandles[i].Close.Units,
-				Nano:  RespCandles[i].Close.Nano,
+				Units: candle.Close.Units,
+				Nano:  candle.Close.Nano,
 			},
 			High: datastruct.Quotation{
-				Units: RespCandles[i].High.Units,
-				Nano:  RespCandles[i].High.Nano,
+				Units: candle.High.Units,
+				Nano:  candle.High.Nano,
 			},
 			Low: datastruct.Quotation{
-				Units: RespCandles[i].Low.Units,
-				Nano:  RespCandles[i].Low.Nano,
+				Units: candle.Low.Units,
+				Nano:  candle.Low.Nano,
 			},
 		})
 	}
@@ -173,8 +171,8 @@ func resolveIntoPbInterval(interval strategy.CandleInterval) pb.CandleInterval {
 	}
 }
 
-func (c *Client) GetOrders(ctx context.Context, uid string) ([]*datastruct.OrderState, error) {
-	ordersResp, err := c.Client.NewOrdersServiceClient().GetOrders(c.Config.AccountId)
+func (c *Client) GetOrders(uid string) ([]*datastruct.OrderState, error) {
+	ordersResp, err := c.NewOrdersServiceClient().GetOrders(c.Config.AccountId)
 	if err != nil {
 		return nil, err
 	}
@@ -193,7 +191,7 @@ func (c *Client) GetOrders(ctx context.Context, uid string) ([]*datastruct.Order
 }
 
 func (c *Client) GetPositions(uid string) (*datastruct.Position, error) {
-	portfResp, err := c.Client.NewOperationsServiceClient().GetPortfolio(c.GetAccoountId(), pb.PortfolioRequest_RUB)
+	portfResp, err := c.NewOperationsServiceClient().GetPortfolio(c.GetAccoountId(), pb.PortfolioRequest_RUB)
 	if err != nil {
 		return nil, err
 	}
@@ -218,7 +216,7 @@ func (c *Client) GetPositions(uid string) (*datastruct.Position, error) {
 }
 
 func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, error) {
-	respInfo, err := c.Client.NewInstrumentsServiceClient().FindInstrument(uid)
+	respInfo, err := c.NewInstrumentsServiceClient().FindInstrument(uid)
 	if err != nil {
 		return nil, err
 	}
@@ -231,7 +229,7 @@ func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, erro
 		}
 	}
 	if instrumentInfo == nil {
-		return nil, errors.New(fmt.Sprintf("not found instrument '%s'.", uid))
+		return nil, fmt.Errorf("not found instrument '%s'", uid)
 	}
 
 	return &datastruct.InstrumentInfo{
@@ -245,4 +243,70 @@ func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, erro
 		ForQualInvestorFlag:   instrumentInfo.ForQualInvestorFlag,
 		Lot:                   instrumentInfo.Lot,
 	}, nil
+}
+
+func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity int64) (*datastruct.PostOrderResult, error) {
+	if !isQuantityCorrect(quantity, int64(instrInfo.Lot)) {
+		return nil, fmt.Errorf("incorrect quantity to make order: %d", quantity/int64(instrInfo.Lot))
+	}
+
+	orderResp, err := c.NewOrdersServiceClient().PostOrder(&investgo.PostOrderRequest{
+		InstrumentId: instrInfo.Uid,
+		Quantity:     quantity,
+		Direction:    pb.OrderDirection_ORDER_DIRECTION_SELL,
+		AccountId:    c.GetAccoountId(),
+		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &datastruct.PostOrderResult{
+		ExecutedCommission: datastruct.Quotation{
+			Units: orderResp.ExecutedCommission.Units,
+			Nano:  orderResp.ExecutedCommission.Nano,
+		},
+		ExecutedOrderPrice: datastruct.Quotation{
+			Units: orderResp.ExecutedOrderPrice.Units,
+			Nano:  orderResp.ExecutedOrderPrice.Nano,
+		},
+		InstrumentUid:         orderResp.InstrumentUid,
+		OrderId:               orderResp.OrderId,
+		ExecutionReportStatus: orderResp.ExecutionReportStatus.String(),
+	}, nil
+}
+
+func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int64) (*datastruct.PostOrderResult, error) {
+	if !isQuantityCorrect(quantity, int64(instrInfo.Lot)) {
+		return nil, fmt.Errorf("incorrect quantity to make order: %d", quantity/int64(instrInfo.Lot))
+	}
+
+	buyResp, err := c.NewOrdersServiceClient().PostOrder(&investgo.PostOrderRequest{
+		InstrumentId: instrInfo.Uid,
+		Quantity:     quantity,
+		Direction:    pb.OrderDirection_ORDER_DIRECTION_BUY,
+		AccountId:    c.GetAccoountId(),
+		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &datastruct.PostOrderResult{
+		ExecutedCommission: datastruct.Quotation{
+			Units: buyResp.ExecutedCommission.Units,
+			Nano:  buyResp.ExecutedCommission.Nano,
+		},
+		ExecutedOrderPrice: datastruct.Quotation{
+			Units: buyResp.ExecutedOrderPrice.Units,
+			Nano:  buyResp.ExecutedOrderPrice.Nano,
+		},
+		InstrumentUid:         buyResp.InstrumentUid,
+		OrderId:               buyResp.OrderId,
+		ExecutionReportStatus: buyResp.ExecutionReportStatus.String(),
+	}, nil
+}
+
+func isQuantityCorrect(quantity, lot int64) bool {
+	return quantity/lot > 0
 }
