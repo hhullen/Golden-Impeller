@@ -24,7 +24,7 @@ type StrategyAction struct {
 
 type IStrategy interface {
 	// Должен получить действие для исполнения. Историческте данные по инструменту внутри стратегии.
-	GetActionDecision(ctx context.Context, instrInfo *datastruct.InstrumentInfo, lp *datastruct.LastPrice) (StrategyAction, error)
+	GetActionDecision(ctx context.Context, instrInfo *datastruct.InstrumentInfo, lp *datastruct.LastPrice) (*StrategyAction, error)
 	// Должен получить имя стратегии
 	GetName() string
 }
@@ -43,49 +43,54 @@ type IBroker interface {
 }
 
 type TraderService struct {
-	ctx       context.Context
-	broker    IBroker
-	logger    ILogger
-	strategy  IStrategy
-	instrInfo *datastruct.InstrumentInfo
+	ctx                 context.Context
+	broker              IBroker
+	logger              ILogger
+	strategy            IStrategy
+	instrInfo           *datastruct.InstrumentInfo
+	delayOnTradingError time.Duration
 }
 
 func NewTraderService(ctx context.Context, b IBroker, l ILogger, i *datastruct.InstrumentInfo, s IStrategy) *TraderService {
 	return &TraderService{
-		ctx:       ctx,
-		broker:    b,
-		logger:    l,
-		strategy:  s,
-		instrInfo: i,
+		ctx:                 ctx,
+		broker:              b,
+		logger:              l,
+		strategy:            s,
+		instrInfo:           i,
+		delayOnTradingError: time.Second * 10,
 	}
 }
 
 func (s *TraderService) RunTrading() {
 	var err error
 	for {
+		if err != nil {
+			time.Sleep(s.delayOnTradingError)
+			err = nil
+		}
+
 		select {
 		case <-s.ctx.Done():
 			s.logger.Infof("context is done on '%s' with strategy '%s'", s.instrInfo.Uid, s.strategy.GetName())
 			return
 		default:
-			if err != nil {
-				time.Sleep(time.Second * 10)
-				err = nil
-			}
-
-			lastPrice, err := s.broker.GetLastPrice(s.instrInfo)
+			var lastPrice *datastruct.LastPrice
+			lastPrice, err = s.broker.GetLastPrice(s.instrInfo)
 			if err != nil {
 				s.logger.Errorf("error getting last price for '%s': %s", s.instrInfo.Uid, err.Error())
 				continue
 			}
 
-			action, err := s.strategy.GetActionDecision(s.ctx, s.instrInfo, lastPrice)
+			var action *StrategyAction
+			action, err = s.strategy.GetActionDecision(s.ctx, s.instrInfo, lastPrice)
 			if err != nil {
 				s.logger.Errorf("error getting action decision '%s': %s", s.instrInfo.Uid, err.Error())
 				continue
 			}
 
-			res, err := s.MakeAction(s.instrInfo, lastPrice, action)
+			var res string
+			res, err = s.MakeAction(s.instrInfo, lastPrice, action)
 			if err != nil {
 				s.logger.Errorf("error making action '%s': %s", s.instrInfo.Uid, err.Error())
 				continue
@@ -95,7 +100,7 @@ func (s *TraderService) RunTrading() {
 	}
 }
 
-func (s *TraderService) MakeAction(instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice, action StrategyAction) (string, error) {
+func (s *TraderService) MakeAction(instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice, action *StrategyAction) (string, error) {
 	if action.Action == Sell {
 		res, err := s.broker.MakeSellOrder(instrInfo, action.Quantity)
 		if err != nil {
@@ -116,5 +121,5 @@ func (s *TraderService) MakeAction(instrInfo *datastruct.InstrumentInfo, lastPri
 
 	}
 
-	return fmt.Sprintf("HOLD: '%s', price: '%d.%d'", instrInfo.Ticker, lastPrice.Price.Units, lastPrice.Price.Nano), nil
+	return fmt.Sprintf("HOLD: '%s', price: '%.2f'", instrInfo.Ticker, lastPrice.Price.ToFloat64()), nil
 }
