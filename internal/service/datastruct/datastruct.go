@@ -1,6 +1,9 @@
 package datastruct
 
-import "time"
+import (
+	"math"
+	"time"
+)
 
 type InstrumentInfo struct {
 	Isin                  string
@@ -32,15 +35,56 @@ type Quotation struct {
 }
 
 func (q *Quotation) ToFloat64() float64 {
-	return float64(q.Units) + float64(q.Nano/1000000000)
+	num := float64(q.Units) + float64(q.Nano)*math.Pow10(-9)
+	num = num * math.Pow10(9)
+	num = math.Round(num)
+	num = num / math.Pow10(9)
+	return num
 }
 
 func (q *Quotation) ToInt32() int32 {
-	return int32(q.Units) + q.Nano/1000000000
+	return int32(q.ToFloat64())
 }
 
 func (q *Quotation) ToInt64() int64 {
-	return q.Units + int64(q.Nano/1000000000)
+	return int64(q.ToFloat64())
+}
+
+func (q1 *Quotation) Sum(q2 Quotation) {
+	q1.FromFloat64(q1.ToFloat64() + q2.ToFloat64())
+}
+
+func (q1 *Quotation) Sub(q2 Quotation) {
+	q1.FromFloat64(q1.ToFloat64() - q2.ToFloat64())
+}
+
+func (q *Quotation) DivideInt64(n int64) {
+	q.DivideFloat64(float64(n))
+}
+
+func (q *Quotation) DivideFloat64(n float64) {
+	q.FromFloat64(q.ToFloat64() / n)
+}
+
+func (q *Quotation) MultiplyInt64(n int64) {
+	q.MultiplyFloat64(float64(n))
+}
+
+func (q *Quotation) MultiplyFloat64(n float64) {
+	q.FromFloat64(q.ToFloat64() * n)
+}
+
+func (q *Quotation) FromFloat64(fl float64) {
+	q.Units = int64(fl)
+	q.Nano = int32((fl - float64(q.Units))) * 1000000000
+	if fl < 0 {
+		if q.Units >= 0 {
+			q.Units *= -1
+		}
+		if q.Nano >= 0 {
+			q.Nano *= -1
+		}
+	}
 }
 
 type OrderState struct {

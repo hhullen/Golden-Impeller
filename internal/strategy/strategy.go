@@ -23,9 +23,25 @@ const (
 	Interval_Month
 )
 
+type PriceColumn string
+
+const (
+	Close PriceColumn = "close"
+	Open  PriceColumn = "open"
+	High  PriceColumn = "high"
+	Low   PriceColumn = "low"
+)
+
 type IBroker interface {
 	GetCandlesHistory(uid string, from, to time.Time, interval CandleInterval) ([]*datastruct.Candle, error)
 	GetOrders(uid string) ([]*datastruct.OrderState, error)
 	GetPositions(uid string) (*datastruct.Position, error)
 	GetAccoountId() string
+}
+
+type IStorage interface {
+	GetCandlesAmount(uid string, interval CandleInterval) (int64, error)
+	GetLastCandle(uid string, interval CandleInterval) (int64, error)
+	AddCandles(uid string, interval CandleInterval, candles []*datastruct.Candle) error
+	GetFloatPrices(uid string, interval CandleInterval, column PriceColumn) ([]float64, error)
 }

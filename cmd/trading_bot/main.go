@@ -10,16 +10,18 @@ import (
 	"trading_bot/internal/clients/t_api"
 	"trading_bot/internal/logger"
 
+	"github.com/google/uuid"
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
 	"gopkg.in/yaml.v3"
 )
 
 const (
-	envFile    = ".env.yaml"
-	TGLD       = "4c466956-d2ce-4a95-abb4-17947a65f18a"
-	TMOS       = "9654c2dd-6993-427e-80fa-04e80a1cf4da"
-	GLDRUB_TOM = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
+	envFile            = ".env.yaml"
+	TGLD               = "4c466956-d2ce-4a95-abb4-17947a65f18a"
+	TMOS               = "9654c2dd-6993-427e-80fa-04e80a1cf4da"
+	GLDRUB_TOM         = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
+	SANDBOX_ACCOUNT_ID = "1d92bbcf-aae0-4912-a478-818031e0cbb0"
 )
 
 func main() {
@@ -56,10 +58,27 @@ func main() {
 	defer investClient.Conn.Close()
 
 	// рабочие костыли
-	printSchedule(investClient, "MOEX")
-	printAccounts(investClient)
-	fundAndPrintInstrument(investClient, "GLDRUB_TOM")
-	listenAndPrintLastPrice(investClient, GLDRUB_TOM)
+	// printSchedule(investClient, "MOEX")
+	// printAccounts(investClient)
+	// fundAndPrintInstrument(investClient, "GLDRUB_TOM")
+	// listenAndPrintLastPrice(investClient, GLDRUB_TOM)
+	buy(investClient, SANDBOX_ACCOUNT_ID, TGLD, 1)
+
+	OperResp, err := investClient.NewOperationsServiceClient().GetOperations(&investgo.GetOperationsRequest{
+		AccountId: SANDBOX_ACCOUNT_ID,
+		Figi:      GLDRUB_TOM,
+		From:      time.Now().Add(-time.Hour * 24),
+		To:        time.Now(),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Operations:", len(OperResp.Operations))
+	for _, v := range OperResp.Operations {
+		fmt.Println(v.Date, v.OperationType, v.Price, v.Quantity, v.Type)
+	}
+
 }
 
 func getEnvCfg() (map[string]string, error) {
@@ -74,6 +93,22 @@ func getEnvCfg() (map[string]string, error) {
 	}
 
 	return envCfg, nil
+}
+
+func buy(c *t_api.Client, accountId, instrumentUID string, quantity int64) {
+	orderResp, err := c.NewOrdersServiceClient().PostOrder(&investgo.PostOrderRequest{
+		InstrumentId: instrumentUID,
+		Quantity:     quantity,
+		Direction:    pb.OrderDirection_ORDER_DIRECTION_BUY,
+		AccountId:    accountId,
+		OrderType:    pb.OrderType_ORDER_TYPE_MARKET,
+		OrderId:      uuid.NewString(),
+	})
+	if err != nil {
+		panic(err.Error())
+	}
+
+	fmt.Println("BUY: ", orderResp.ExecutedCommission, orderResp.ExecutedOrderPrice, orderResp.Message)
 }
 
 func fundAndPrintInstrument(c *t_api.Client, name string) {
