@@ -9,15 +9,14 @@ import (
 	"time"
 	"trading_bot/internal/clients/t_api"
 	"trading_bot/internal/logger"
+	"trading_bot/internal/supports"
 
 	"github.com/google/uuid"
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
-	"gopkg.in/yaml.v3"
 )
 
 const (
-	envFile            = ".env.yaml"
 	TGLD               = "4c466956-d2ce-4a95-abb4-17947a65f18a"
 	TMOS               = "9654c2dd-6993-427e-80fa-04e80a1cf4da"
 	GLDRUB_TOM         = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
@@ -27,7 +26,7 @@ const (
 func main() {
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
-	envCfg, err := getEnvCfg()
+	envCfg, err := supports.GetEnvCfg()
 	if err != nil {
 		panic(err)
 	}
@@ -58,41 +57,27 @@ func main() {
 	defer investClient.Conn.Close()
 
 	// рабочие костыли
-	// printSchedule(investClient, "MOEX")
+	printSchedule(investClient, "MOEX")
 	// printAccounts(investClient)
 	// fundAndPrintInstrument(investClient, "GLDRUB_TOM")
 	// listenAndPrintLastPrice(investClient, GLDRUB_TOM)
-	buy(investClient, SANDBOX_ACCOUNT_ID, TGLD, 1)
+	// buy(investClient, SANDBOX_ACCOUNT_ID, TGLD, 1)
 
-	OperResp, err := investClient.NewOperationsServiceClient().GetOperations(&investgo.GetOperationsRequest{
-		AccountId: SANDBOX_ACCOUNT_ID,
-		Figi:      GLDRUB_TOM,
-		From:      time.Now().Add(-time.Hour * 24),
-		To:        time.Now(),
-	})
-	if err != nil {
-		panic(err)
-	}
+	// OperResp, err := investClient.NewOperationsServiceClient().GetOperations(&investgo.GetOperationsRequest{
+	// 	AccountId: SANDBOX_ACCOUNT_ID,
+	// 	Figi:      GLDRUB_TOM,
+	// 	From:      time.Now().Add(-time.Hour * 24),
+	// 	To:        time.Now(),
+	// })
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	fmt.Println("Operations:", len(OperResp.Operations))
-	for _, v := range OperResp.Operations {
-		fmt.Println(v.Date, v.OperationType, v.Price, v.Quantity, v.Type)
-	}
+	// fmt.Println("Operations:", len(OperResp.Operations))
+	// for _, v := range OperResp.Operations {
+	// 	fmt.Println(v.Date, v.OperationType, v.Price, v.Quantity, v.Type)
+	// }
 
-}
-
-func getEnvCfg() (map[string]string, error) {
-	file, err := os.Open(envFile)
-	if err != nil {
-		return nil, err
-	}
-
-	envCfg := make(map[string]string)
-	if yaml.NewDecoder(file).Decode(envCfg) != nil {
-		return nil, err
-	}
-
-	return envCfg, nil
 }
 
 func buy(c *t_api.Client, accountId, instrumentUID string, quantity int64) {
