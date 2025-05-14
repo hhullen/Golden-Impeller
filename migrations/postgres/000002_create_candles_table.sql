@@ -4,6 +4,7 @@
 CREATE TYPE candle_interval AS ENUM (
     '1min',
     '2min',
+    '3min',
     '5min',
     '10min',
     '15min',

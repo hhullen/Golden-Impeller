@@ -1,6 +1,7 @@
 package datastruct
 
 import (
+	"fmt"
 	"math"
 	"time"
 )
@@ -42,6 +43,19 @@ func (q *Quotation) ToFloat64() float64 {
 	return num
 }
 
+func (q *Quotation) ToString() string {
+	nano := q.Nano
+	if nano < 0 {
+		nano *= -1
+	}
+	return fmt.Sprintf("%d.%d", q.Units, nano)
+}
+
+func (q *Quotation) FromFloat64(fl float64) {
+	q.Units = int64(fl)
+	q.Nano = int32((fl - float64(q.Units)) * 1000000000)
+}
+
 func (q *Quotation) ToInt32() int32 {
 	return int32(q.ToFloat64())
 }
@@ -72,19 +86,6 @@ func (q *Quotation) MultiplyInt64(n int64) {
 
 func (q *Quotation) MultiplyFloat64(n float64) {
 	q.FromFloat64(q.ToFloat64() * n)
-}
-
-func (q *Quotation) FromFloat64(fl float64) {
-	q.Units = int64(fl)
-	q.Nano = int32((fl - float64(q.Units))) * 1000000000
-	if fl < 0 {
-		if q.Units >= 0 {
-			q.Units *= -1
-		}
-		if q.Nano >= 0 {
-			q.Nano *= -1
-		}
-	}
 }
 
 type OrderState struct {

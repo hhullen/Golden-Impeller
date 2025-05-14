@@ -96,7 +96,7 @@ func (c *BacktestBroker) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quan
 	commission := c.lastPrice
 	commission.MultiplyFloat64(c.commissionPercent)
 
-	for i := 0; i < int(quantityToOrder); i++ {
+	for range quantityToOrder {
 		price := c.lastPrice
 		price.MultiplyInt64(int64(instrInfo.Lot))
 
