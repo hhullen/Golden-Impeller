@@ -95,7 +95,9 @@ func (s *TraderService) RunTrading() {
 				s.logger.Errorf("error making action '%s': %s", s.instrInfo.Uid, err.Error())
 				continue
 			}
-			s.logger.Infof(res)
+			if action.Action != Hold {
+				s.logger.Infof(res)
+			}
 		}
 	}
 }
@@ -121,5 +123,5 @@ func (s *TraderService) MakeAction(instrInfo *datastruct.InstrumentInfo, lastPri
 
 	}
 
-	return fmt.Sprintf("HOLD: '%s', price: '%.2f'", instrInfo.Ticker, lastPrice.Price.ToFloat64()), nil
+	return fmt.Sprintf("HOLD: '%s', price: '%.2f', at: %s", instrInfo.Ticker, lastPrice.Price.ToFloat64(), lastPrice.Time.Format(time.DateTime)), nil
 }

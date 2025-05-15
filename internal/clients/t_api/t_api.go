@@ -114,8 +114,8 @@ func (c *Client) GetCandlesHistory(uid string, from, to time.Time, interval stra
 			continue
 		}
 		candles = append(candles, &datastruct.Candle{
-			Time:   candle.Time.AsTime(),
-			Volume: candle.Volume,
+			Timestamp: candle.Time.AsTime(),
+			Volume:    candle.Volume,
 			Open: datastruct.Quotation{
 				Units: candle.Open.Units,
 				Nano:  candle.Open.Nano,
@@ -233,15 +233,15 @@ func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, erro
 	}
 
 	return &datastruct.InstrumentInfo{
-		Isin:                  instrumentInfo.Isin,
-		Figi:                  instrumentInfo.Figi,
-		Ticker:                instrumentInfo.Ticker,
-		ClassCode:             instrumentInfo.ClassCode,
-		Name:                  instrumentInfo.Name,
-		Uid:                   instrumentInfo.Uid,
-		ApiTradeAvailableFlag: instrumentInfo.ApiTradeAvailableFlag,
-		ForQualInvestorFlag:   instrumentInfo.ForQualInvestorFlag,
-		Lot:                   instrumentInfo.Lot,
+		Isin:         instrumentInfo.Isin,
+		Figi:         instrumentInfo.Figi,
+		Ticker:       instrumentInfo.Ticker,
+		ClassCode:    instrumentInfo.ClassCode,
+		Name:         instrumentInfo.Name,
+		Uid:          instrumentInfo.Uid,
+		AvailableApi: instrumentInfo.ApiTradeAvailableFlag,
+		ForQuals:     instrumentInfo.ForQualInvestorFlag,
+		Lot:          instrumentInfo.Lot,
 	}, nil
 }
 

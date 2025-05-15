@@ -14,49 +14,13 @@ import (
 )
 
 const (
-	insertOneTime   = 10
-	interval_1min   = "1min"
-	interval_2min   = "2min"
-	interval_3min   = "3min"
-	interval_5min   = "5min"
-	interval_10min  = "10min"
-	interval_15min  = "15min"
-	interval_30min  = "30min"
-	interval_1hour  = "1hour"
-	interval_2hour  = "2hour"
-	interval_4hour  = "4hour"
-	interval_1day   = "1day"
-	interval_1week  = "1week"
-	interval_1month = "1month"
+	insertOneTime = 1000
 )
-
-type Candle struct {
-	Id           int64     `db:"id"`
-	InstrumentId int64     `db:"instrument_id"`
-	Date         time.Time `db:"date"`
-	Interval     string    `db:"interval"`
-	Open         string    `db:"open"`
-	Close        string    `db:"close"`
-	High         string    `db:"high"`
-	Low          string    `db:"low"`
-	Volume       int64     `db:"volume"`
-}
-
-type Instrument struct {
-	Id           int64  `db:"id"`
-	Uid          string `db:"uid"`
-	Isin         string `db:"isin"`
-	Figi         string `db:"figi"`
-	Ticker       string `db:"ticker"`
-	ClassCode    string `db:"class_code"`
-	Name         string `db:"name"`
-	Lot          int64  `db:"lot"`
-	AvailableApi bool   `db:"available_api"`
-	ForQuals     bool   `db:"for_quals"`
-}
 
 type Client struct {
 	db *sqlx.DB
+
+	buffer map[int64][]*datastruct.Candle
 }
 
 func NewClient(host, port, user, password, dbname string) (*Client, error) {
@@ -68,10 +32,13 @@ func NewClient(host, port, user, password, dbname string) (*Client, error) {
 		return nil, fmt.Errorf("unable to connect to db: %w", err)
 	}
 
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(5)
+	// db.SetMaxOpenConns(10)
+	// db.SetMaxIdleConns(5)
 
-	return &Client{db: db}, nil
+	return &Client{
+		db:     db,
+		buffer: make(map[int64][]*datastruct.Candle),
+	}, nil
 }
 
 func (c *Client) AddInstrumentInfo(ctx context.Context, instrInfo *datastruct.InstrumentInfo) (err error) {
@@ -85,18 +52,18 @@ func (c *Client) AddInstrumentInfo(ctx context.Context, instrInfo *datastruct.In
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (uid, isin, figi, ticker) DO NOTHING`
 
 	_, err = c.db.Exec(query, instrInfo.Uid, instrInfo.Isin, instrInfo.Figi, instrInfo.Ticker,
-		instrInfo.ClassCode, instrInfo.Name, instrInfo.Lot, instrInfo.ApiTradeAvailableFlag, instrInfo.ForQualInvestorFlag)
+		instrInfo.ClassCode, instrInfo.Name, instrInfo.Lot, instrInfo.AvailableApi, instrInfo.ForQuals)
 
 	return
 }
 
-func (c *Client) GetInstrumentInfo(ctx context.Context, uid string) (info *Instrument, err error) {
+func (c *Client) GetInstrumentInfo(ctx context.Context, uid string) (info *datastruct.InstrumentInfo, err error) {
 	defer func() {
 		if p := recover(); p != nil {
 			err = fmt.Errorf("panic recovered: %v", p)
 		}
 	}()
-	info = &Instrument{}
+	info = &datastruct.InstrumentInfo{}
 
 	query := `SELECT * FROM instruments WHERE uid = $1`
 
@@ -112,23 +79,19 @@ func (c *Client) AddCandles(ctx context.Context, instrInfo *datastruct.Instrumen
 	}
 
 	defer func() {
-		if p := recover(); p != nil || err != nil {
+		if p := recover(); p != nil {
 			err = fmt.Errorf("panic recovered: %v. rollback error: %s", p, tx.Rollback().Error())
 		} else {
 			err = tx.Commit()
 		}
 	}()
-	resolvedInterval := resolveInterval(interval)
-	if resolvedInterval == "" {
-		return fmt.Errorf("unspecified interval")
-	}
 
 	instrument, err := c.GetInstrumentInfo(ctx, instrInfo.Uid)
 	if err != nil {
 		return err
 	}
 
-	const fieldsAmount = 8
+	const fieldsAmount = 12
 	for i := 0; i < len(candles); i += insertOneTime {
 		batch := getBatch(i, candles)
 
@@ -137,16 +100,21 @@ func (c *Client) AddCandles(ctx context.Context, instrInfo *datastruct.Instrumen
 
 		for j, candle := range batch {
 			placeholders = append(placeholders,
-				fmt.Sprintf("($%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d)",
+				fmt.Sprintf("($%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d)",
 					j*fieldsAmount+1, j*fieldsAmount+2, j*fieldsAmount+3, j*fieldsAmount+4,
-					j*fieldsAmount+5, j*fieldsAmount+6, j*fieldsAmount+7, j*fieldsAmount+8))
+					j*fieldsAmount+5, j*fieldsAmount+6, j*fieldsAmount+7, j*fieldsAmount+8,
+					j*fieldsAmount+9, j*fieldsAmount+10, j*fieldsAmount+11, j*fieldsAmount+12))
 
 			values = append(values,
-				instrument.Id, candle.Time, resolvedInterval, candle.Open.ToString(),
-				candle.Close.ToString(), candle.High.ToString(), candle.Low.ToString(), candle.Volume)
+				instrument.Id, candle.Timestamp, interval.ToString(),
+				candle.Open.Units, candle.Open.Nano, candle.Close.Units, candle.Close.Nano,
+				candle.High.Units, candle.High.Nano, candle.Low.Units, candle.Low.Nano, candle.Volume)
 		}
 
-		query := makeQuery(placeholders)
+		query := fmt.Sprintf(`INSERT INTO candles 
+			(instrument_id, timestamp, interval, open_units, open_nano, close_units, close_nano, high_units, high_nano, low_units, low_nano, volume)
+			VALUES %s ON CONFLICT (instrument_id, timestamp, interval) DO NOTHING;`, strings.Join(placeholders, ","))
+
 		_, err = tx.Exec(query, values...)
 		if err != nil {
 			return err
@@ -163,47 +131,70 @@ func getBatch(i int, candles []*datastruct.Candle) []*datastruct.Candle {
 	return candles[i : i+insertOneTime]
 }
 
-func resolveInterval(interval strategy.CandleInterval) string {
-	switch interval {
-	case strategy.Interval_1_Min:
-		return interval_1min
-	case strategy.Interval_5_Min:
-		return interval_5min
-	case strategy.Interval_15_Min:
-		return interval_15min
-	case strategy.Interval_Hour:
-		return interval_1hour
-	case strategy.Interval_Day:
-		return interval_1day
-	case strategy.Interval_2_Min:
-		return interval_2min
-	case strategy.Interval_3_Min:
-		return interval_3min
-	case strategy.Interval_10_Min:
-		return interval_10min
-	case strategy.Interval_30_Min:
-		return interval_30min
-	case strategy.Interval_2_Hour:
-		return interval_2hour
-	case strategy.Interval_4_Hour:
-		return interval_4hour
-	case strategy.Interval_Week:
-		return interval_1week
-	case strategy.Interval_Month:
-		return interval_1month
-	default:
-		return ""
+func (c *Client) GetCandlesHistory(uid string, interval strategy.CandleInterval, from, to time.Time) ([]*datastruct.Candle, error) {
+	ctx := context.Background()
+	instrument, err := c.GetInstrumentInfo(ctx, uid)
+	if err != nil {
+		return nil, err
 	}
+
+	query := `SELECT
+		id, instrument_id, timestamp, interval, open_units AS "open.units", open_nano AS "open.nano",
+		close_units AS "close.units", close_nano AS "close.nano", high_units AS "high.units", high_nano AS "high.nano",
+		low_units AS "low.units", low_nano AS "low.nano", volume
+		FROM candles
+		WHERE instrument_id = $1
+		AND interval = $2
+		AND timestamp >= $3
+		AND timestamp <= $4
+		order by timestamp`
+
+	var candles []*datastruct.Candle
+	err = c.db.Select(&candles, query, instrument.Id, interval.ToString(), from, to)
+	if err != nil {
+		return nil, err
+	}
+
+	return candles, nil
 }
 
-func makeQuery(placeholders []string) string {
-	return fmt.Sprintf(`INSERT INTO candles (instrument_id, date, interval, open, close, high, low, volume)
-	VALUES %s ON CONFLICT (instrument_id, date, interval) DO NOTHING;`, strings.Join(placeholders, ","))
+func (c *Client) GetCandleWithOffset(uid string, interval strategy.CandleInterval, from, to time.Time, offset int64) (*datastruct.Candle, error) {
+	ctx := context.Background()
+	instrument, err := c.GetInstrumentInfo(ctx, uid)
+	if err != nil {
+		return nil, err
+	}
+
+	candle := new(datastruct.Candle)
+	if len(c.buffer) != 0 {
+		candles := c.buffer[instrument.Id]
+		candle = candles[0]
+		c.buffer[instrument.Id] = candles[1:]
+	} else {
+		query := `SELECT
+			id, instrument_id, timestamp, interval, open_units AS "open.units", open_nano AS "open.nano",
+			close_units AS "close.units", close_nano AS "close.nano", high_units AS "high.units", high_nano AS "high.nano",
+			low_units AS "low.units", low_nano AS "low.nano", volume
+			FROM candles
+			WHERE instrument_id = $1
+			AND interval = $2
+			AND timestamp >= $3
+			AND timestamp <= $4
+			ORDER BY timestamp
+			LIMIT 100000
+			OFFSET $5`
+
+		var tmp []*datastruct.Candle
+		err := c.db.Select(&tmp, query, instrument.Id, interval.ToString(), from, to, offset)
+		if err != nil {
+			return nil, err
+		}
+		c.buffer[instrument.Id] = tmp
+		if len(tmp) == 0 {
+			return nil, fmt.Errorf("No candles anymore")
+		}
+		candle = tmp[0]
+	}
+
+	return candle, nil
 }
-
-// func (c *Client) GetCandlesHistory(uid string, interval strategy.CandleInterval, from, to time.Time) ([]*datastruct.Candle, error) {
-
-// }
-
-// func (c *Client) GetCandleWithOffset(uid string, interval strategy.CandleInterval, from, to time.Time, offset int64) (*datastruct.Candle, error) {
-// }

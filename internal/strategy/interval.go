@@ -14,7 +14,7 @@ import (
 const (
 	daysToLoadCandlesHiustory  = 10 * time.Hour * 24
 	quantityLimitPerInstrument = 10
-	intervalSize               = 0.8
+	intervalSize               = 0.9
 	stopLossPercent            = 0.02
 )
 
@@ -31,7 +31,7 @@ func NewIntervalStrategy(b IBroker) *Interval {
 	}
 }
 
-func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice) (service.StrategyAction, error) {
+func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice) (*service.StrategyAction, error) {
 	errGroup, _ := errgroup.WithContext(ctx)
 
 	var candles []*datastruct.Candle
@@ -40,7 +40,7 @@ func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.
 		if len(i.candlesStore) == 0 {
 			from = time.Now().Add(-daysToLoadCandlesHiustory)
 		} else {
-			from = i.candlesStore[len(i.candlesStore)-1].Time
+			from = i.candlesStore[len(i.candlesStore)-1].Timestamp
 		}
 
 		var err error
@@ -63,17 +63,17 @@ func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.
 	})
 
 	if err := errGroup.Wait(); err != nil {
-		return service.StrategyAction{Action: service.Hold}, err
+		return &service.StrategyAction{Action: service.Hold}, err
 	}
 
 	if len(activeOrders) >= 0 {
-		return service.StrategyAction{Action: service.Hold}, nil
+		return &service.StrategyAction{Action: service.Hold}, nil
 	}
 
 	i.candlesStore = append(i.candlesStore, candles...)
 
 	if i.isStopLossCondition(lastPrice, positions) {
-		return service.StrategyAction{
+		return &service.StrategyAction{
 			Action:   service.Sell,
 			Quantity: positions.Quantity.ToInt64(),
 		}, nil
@@ -85,20 +85,20 @@ func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.
 	quantity := positions.Quantity.ToInt64()
 	if lastPriceValue >= higherCoridorBound && quantity > 0 {
 
-		return service.StrategyAction{
+		return &service.StrategyAction{
 			Action:   service.Sell,
 			Quantity: quantity,
 		}, nil
 
 	} else if lastPriceValue <= lowerCoridorBound && quantity < quantityLimitPerInstrument {
 
-		return service.StrategyAction{
+		return &service.StrategyAction{
 			Action:   service.Buy,
 			Quantity: quantityLimitPerInstrument - quantity,
 		}, nil
 	}
 
-	return service.StrategyAction{Action: service.Hold}, nil
+	return &service.StrategyAction{Action: service.Hold}, nil
 }
 
 func (i *Interval) CalculateCoridorBounds() (float64, float64) {

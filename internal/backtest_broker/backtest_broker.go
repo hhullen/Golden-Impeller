@@ -46,15 +46,15 @@ func (c *BacktestBroker) GetCandlesHistory(uid string, from, to time.Time, inter
 
 func (c *BacktestBroker) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, error) {
 	return &datastruct.InstrumentInfo{
-		Isin:                  "ISIN",
-		Figi:                  "FIGI",
-		Ticker:                "TICKER",
-		Name:                  "NAME",
-		ClassCode:             "CLASSCODE",
-		Uid:                   uid,
-		Lot:                   1,
-		ApiTradeAvailableFlag: true,
-		ForQualInvestorFlag:   false,
+		Isin:         "ISIN",
+		Figi:         "FIGI",
+		Ticker:       "TICKER",
+		Name:         "NAME",
+		ClassCode:    "CLASSCODE",
+		Uid:          uid,
+		Lot:          1,
+		AvailableApi: true,
+		ForQuals:     false,
 	}, nil
 }
 
@@ -63,7 +63,11 @@ func (c *BacktestBroker) GetLastPrice(instrInfo *datastruct.InstrumentInfo) (*da
 
 	candle, err := c.storage.GetCandleWithOffset(instrInfo.Uid, strategy.Interval_1_Min, c.from, c.to, c.candleHistoryOffset)
 	if err != nil {
-		c.testingTerminate <- err.Error()
+		select {
+		case c.testingTerminate <- err.Error():
+		default:
+		}
+		return nil, err
 	}
 
 	c.lastPrice = candle.Close
@@ -71,7 +75,7 @@ func (c *BacktestBroker) GetLastPrice(instrInfo *datastruct.InstrumentInfo) (*da
 	return &datastruct.LastPrice{
 		Figi: instrInfo.Figi,
 		Uid:  instrInfo.Uid,
-		Time: candle.Time,
+		Time: candle.Timestamp,
 		Price: datastruct.Quotation{
 			Units: candle.Close.Units,
 			Nano:  candle.Close.Nano,

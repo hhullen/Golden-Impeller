@@ -25,15 +25,15 @@ func newTestService(ctx context.Context, t *testing.T) *TestTradingService {
 	mockStrategy := NewMockIStrategy(mc)
 
 	instrInfo := &datastruct.InstrumentInfo{
-		Isin:                  "ISIN",
-		Figi:                  "FIGI",
-		Ticker:                "TICKER",
-		Name:                  "NAME",
-		ClassCode:             "CLASSCODE",
-		Uid:                   "UID",
-		Lot:                   1,
-		ApiTradeAvailableFlag: true,
-		ForQualInvestorFlag:   false,
+		Isin:         "ISIN",
+		Figi:         "FIGI",
+		Ticker:       "TICKER",
+		Name:         "NAME",
+		ClassCode:    "CLASSCODE",
+		Uid:          "UID",
+		Lot:          1,
+		AvailableApi: true,
+		ForQuals:     false,
 	}
 
 	return &TestTradingService{
@@ -62,8 +62,7 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), ts.service.instrInfo, gomock.Any()).Return(&StrategyAction{Action: Hold}, nil).MinTimes(1)
 
-		logCall := ts.mockLogger.EXPECT().Infof(gomock.Any()).MinTimes(1)
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1).After(logCall)
+		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1)
 
 		ts.mockStrategy.EXPECT().GetName().Return("STRATEGY")
 

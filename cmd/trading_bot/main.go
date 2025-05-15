@@ -17,10 +17,9 @@ import (
 )
 
 const (
-	TGLD               = "4c466956-d2ce-4a95-abb4-17947a65f18a"
-	TMOS               = "9654c2dd-6993-427e-80fa-04e80a1cf4da"
-	GLDRUB_TOM         = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
-	SANDBOX_ACCOUNT_ID = "1d92bbcf-aae0-4912-a478-818031e0cbb0"
+	TGLD       = "4c466956-d2ce-4a95-abb4-17947a65f18a"
+	TMOS       = "9654c2dd-6993-427e-80fa-04e80a1cf4da"
+	GLDRUB_TOM = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
 )
 
 func main() {
@@ -38,7 +37,7 @@ func main() {
 		AccountId: envCfg["T_INVEST_ACCOUNT_ID"],
 	}
 
-	logger := &logger.Logger{}
+	logger := logger.NewLogger()
 
 	investClient, err := t_api.NewClient(ctx, investCfg, logger)
 	if err != nil {
@@ -49,7 +48,7 @@ func main() {
 
 	// s.RunTrading(TMOS, strategy.NewIntervalStrategy())
 
-	// investClient, err := investgo.NewClient(ctx, investCfg, &logger.Logger{})
+	// investClient, err := investgo.NewClient(ctx, investCfg, logger.NewLogger())
 	// if err != nil {
 	// 	panic(err)
 	// }

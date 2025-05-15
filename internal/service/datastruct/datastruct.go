@@ -6,22 +6,29 @@ import (
 	"time"
 )
 
-type InstrumentInfo struct {
-	Isin                  string
-	Figi                  string
-	Ticker                string
-	ClassCode             string
-	Name                  string
-	Uid                   string
-	Lot                   int32
-	ApiTradeAvailableFlag bool
-	ForQualInvestorFlag   bool
+type Candle struct {
+	Id           int64     `db:"id"`
+	InstrumentId int64     `db:"instrument_id"`
+	Timestamp    time.Time `db:"timestamp"`
+	Interval     string    `db:"interval"`
+	Open         Quotation `db:"open"`
+	Close        Quotation `db:"close"`
+	High         Quotation `db:"high"`
+	Low          Quotation `db:"low"`
+	Volume       int64     `db:"volume"`
 }
 
-type Candle struct {
-	Open, High, Low, Close Quotation
-	Volume                 int64
-	Time                   time.Time
+type InstrumentInfo struct {
+	Id           int64  `db:"id"`
+	Uid          string `db:"uid"`
+	Isin         string `db:"isin"`
+	Figi         string `db:"figi"`
+	Ticker       string `db:"ticker"`
+	ClassCode    string `db:"class_code"`
+	Name         string `db:"name"`
+	Lot          int32  `db:"lot"`
+	AvailableApi bool   `db:"available_api"`
+	ForQuals     bool   `db:"for_quals"`
 }
 
 type LastPrice struct {
@@ -31,8 +38,8 @@ type LastPrice struct {
 }
 
 type Quotation struct {
-	Units int64
-	Nano  int32
+	Units int64 `db:"units"`
+	Nano  int32 `db:"nano"`
 }
 
 func (q *Quotation) ToFloat64() float64 {

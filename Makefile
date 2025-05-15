@@ -10,12 +10,11 @@ ifndef MOCKGEN
 endif
 	go generate ./...
 
-migration-up:
+migrations-up:
 	go run ./cmd/migrator up
 
-migration-down:
+migrations-down:
 	go run ./cmd/migrator down
 
-migration-status:
+migrations-status:
 	go run ./cmd/migrator status
-	
