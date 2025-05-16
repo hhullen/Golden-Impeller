@@ -38,13 +38,13 @@ func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.
 	errGroup.Go(func() error {
 		var from time.Time
 		if len(i.candlesStore) == 0 {
-			from = time.Now().Add(-daysToLoadCandlesHiustory)
+			from = lastPrice.Time.Add(-daysToLoadCandlesHiustory)
 		} else {
 			from = i.candlesStore[len(i.candlesStore)-1].Timestamp
 		}
 
 		var err error
-		candles, err = i.broker.GetCandlesHistory(instrInfo.Uid, from, time.Now(), Interval_1_Min)
+		candles, err = i.broker.GetCandlesHistory(instrInfo.Uid, from, lastPrice.Time, Interval_1_Min)
 		return err
 	})
 

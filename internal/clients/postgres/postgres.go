@@ -20,7 +20,7 @@ const (
 type Client struct {
 	db *sqlx.DB
 
-	buffer map[int64][]*datastruct.Candle
+	historyBuffer []*datastruct.Candle
 }
 
 func NewClient(host, port, user, password, dbname string) (*Client, error) {
@@ -32,12 +32,8 @@ func NewClient(host, port, user, password, dbname string) (*Client, error) {
 		return nil, fmt.Errorf("unable to connect to db: %w", err)
 	}
 
-	// db.SetMaxOpenConns(10)
-	// db.SetMaxIdleConns(5)
-
 	return &Client{
-		db:     db,
-		buffer: make(map[int64][]*datastruct.Candle),
+		db: db,
 	}, nil
 }
 
@@ -138,6 +134,12 @@ func (c *Client) GetCandlesHistory(uid string, interval strategy.CandleInterval,
 		return nil, err
 	}
 
+	idx1, ok1 := c.seekCandleIdx(from)
+	idx2, ok2 := c.seekCandleIdx(to)
+	if ok1 && ok2 {
+		return c.historyBuffer[idx1 : idx2+1], nil
+	}
+
 	query := `SELECT
 		id, instrument_id, timestamp, interval, open_units AS "open.units", open_nano AS "open.nano",
 		close_units AS "close.units", close_nano AS "close.nano", high_units AS "high.units", high_nano AS "high.nano",
@@ -145,17 +147,23 @@ func (c *Client) GetCandlesHistory(uid string, interval strategy.CandleInterval,
 		FROM candles
 		WHERE instrument_id = $1
 		AND interval = $2
-		AND timestamp >= $3
-		AND timestamp <= $4
 		order by timestamp`
 
-	var candles []*datastruct.Candle
-	err = c.db.Select(&candles, query, instrument.Id, interval.ToString(), from, to)
+	err = c.db.Select(&c.historyBuffer, query, instrument.Id, interval.ToString())
 	if err != nil {
 		return nil, err
 	}
 
-	return candles, nil
+	return c.historyBuffer, nil
+}
+
+func (c *Client) seekCandleIdx(t time.Time) (int64, bool) {
+	for i := range c.historyBuffer {
+		if c.historyBuffer[i].Timestamp.After(t) || c.historyBuffer[i].Timestamp.Equal(t) {
+			return int64(i), true
+		}
+	}
+	return 0, false
 }
 
 func (c *Client) GetCandleWithOffset(uid string, interval strategy.CandleInterval, from, to time.Time, offset int64) (*datastruct.Candle, error) {
@@ -165,36 +173,33 @@ func (c *Client) GetCandleWithOffset(uid string, interval strategy.CandleInterva
 		return nil, err
 	}
 
-	candle := new(datastruct.Candle)
-	if len(c.buffer) != 0 {
-		candles := c.buffer[instrument.Id]
-		candle = candles[0]
-		c.buffer[instrument.Id] = candles[1:]
-	} else {
-		query := `SELECT
-			id, instrument_id, timestamp, interval, open_units AS "open.units", open_nano AS "open.nano",
-			close_units AS "close.units", close_nano AS "close.nano", high_units AS "high.units", high_nano AS "high.nano",
-			low_units AS "low.units", low_nano AS "low.nano", volume
-			FROM candles
-			WHERE instrument_id = $1
-			AND interval = $2
-			AND timestamp >= $3
-			AND timestamp <= $4
-			ORDER BY timestamp
-			LIMIT 100000
-			OFFSET $5`
+	if idx, ok := c.seekCandleIdx(from); ok {
 
-		var tmp []*datastruct.Candle
-		err := c.db.Select(&tmp, query, instrument.Id, interval.ToString(), from, to, offset)
-		if err != nil {
-			return nil, err
+		if idx+offset >= int64(len(c.historyBuffer)) {
+			return nil, fmt.Errorf("no candles anymore")
 		}
-		c.buffer[instrument.Id] = tmp
-		if len(tmp) == 0 {
-			return nil, fmt.Errorf("No candles anymore")
-		}
-		candle = tmp[0]
+		return c.historyBuffer[idx+offset], nil
+
 	}
 
-	return candle, nil
+	query := `SELECT
+		id, instrument_id, timestamp, interval, open_units AS "open.units", open_nano AS "open.nano",
+		close_units AS "close.units", close_nano AS "close.nano", high_units AS "high.units", high_nano AS "high.nano",
+		low_units AS "low.units", low_nano AS "low.nano", volume
+		FROM candles
+		WHERE instrument_id = $1
+		AND interval = $2
+		order by timestamp`
+
+	err = c.db.Select(&c.historyBuffer, query, instrument.Id, interval.ToString())
+	if err != nil {
+		return nil, err
+	}
+
+	if len(c.historyBuffer) == 0 || offset >= int64(len(c.historyBuffer)) {
+		return nil, fmt.Errorf("no candles anymore")
+	}
+
+	return c.historyBuffer[0], nil
+
 }

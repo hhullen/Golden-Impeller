@@ -11,7 +11,6 @@ import (
 	"trading_bot/internal/logger"
 	"trading_bot/internal/supports"
 
-	"github.com/google/uuid"
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
 )
@@ -44,6 +43,16 @@ func main() {
 		panic(err)
 	}
 
+	// sres, err := investClient.NewSandboxServiceClient().SandboxPayIn(&investgo.SandboxPayInRequest{
+	// 	AccountId: investCfg.AccountId,
+	// 	Currency:  "rub",
+	// 	Unit:      100000,
+	// })
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println(sres.Balance)
+
 	// s := service.NewService(ctx, investClient, logger)
 
 	// s.RunTrading(TMOS, strategy.NewIntervalStrategy())
@@ -53,6 +62,12 @@ func main() {
 	// 	panic(err)
 	// }
 
+	// stream, err := investClient.NewOrdersStreamClient().OrderStateStream([]string{investCfg.AccountId}, 200)
+	// go stream.Listen()
+
+	stream, err := investClient.NewOperationsStreamClient().PositionsStream([]string{investCfg.AccountId})
+	go stream.Listen()
+
 	defer investClient.Conn.Close()
 
 	// рабочие костыли
@@ -60,23 +75,30 @@ func main() {
 	// printAccounts(investClient)
 	// fundAndPrintInstrument(investClient, "GLDRUB_TOM")
 	// listenAndPrintLastPrice(investClient, GLDRUB_TOM)
-	// buy(investClient, SANDBOX_ACCOUNT_ID, TGLD, 1)
+	buy(investClient, investCfg.AccountId, TGLD, 1)
+	printOperations(investClient, time.Now().Add(-time.Hour*24), time.Now())
 
-	// OperResp, err := investClient.NewOperationsServiceClient().GetOperations(&investgo.GetOperationsRequest{
-	// 	AccountId: SANDBOX_ACCOUNT_ID,
-	// 	Figi:      GLDRUB_TOM,
-	// 	From:      time.Now().Add(-time.Hour * 24),
-	// 	To:        time.Now(),
-	// })
-	// if err != nil {
-	// 	panic(err)
-	// }
+	vv := <-stream.Positions()
+	fmt.Println(vv)
 
-	// fmt.Println("Operations:", len(OperResp.Operations))
-	// for _, v := range OperResp.Operations {
-	// 	fmt.Println(v.Date, v.OperationType, v.Price, v.Quantity, v.Type)
-	// }
+}
 
+func printOperations(c *t_api.Client, from, to time.Time) {
+	OperResp, err := c.NewOperationsServiceClient().GetOperations(&investgo.GetOperationsRequest{
+		AccountId: c.GetAccoountId(),
+		Figi:      GLDRUB_TOM,
+		From:      from,
+		To:        to,
+		State:     pb.OperationState_OPERATION_STATE_EXECUTED,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Operations:", len(OperResp.Operations))
+	for _, v := range OperResp.Operations {
+		fmt.Println(v.Date.AsTime().Format(time.DateTime), v.OperationType, v.Price.Units, v.Price.Nano, v.Quantity, v.InstrumentUid, v.PositionUid, v.Payment.Units, v.Payment.Nano)
+	}
 }
 
 func buy(c *t_api.Client, accountId, instrumentUID string, quantity int64) {
@@ -85,14 +107,15 @@ func buy(c *t_api.Client, accountId, instrumentUID string, quantity int64) {
 		Quantity:     quantity,
 		Direction:    pb.OrderDirection_ORDER_DIRECTION_BUY,
 		AccountId:    accountId,
-		OrderType:    pb.OrderType_ORDER_TYPE_MARKET,
-		OrderId:      uuid.NewString(),
+		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
+		// OrderId:      uuid.NewString(),
 	})
+
 	if err != nil {
-		panic(err.Error())
+		panic(orderResp.Header)
 	}
 
-	fmt.Println("BUY: ", orderResp.ExecutedCommission, orderResp.ExecutedOrderPrice, orderResp.Message)
+	fmt.Println("BUY: ", orderResp.ExecutedCommission.Units, orderResp.ExecutedOrderPrice, orderResp.Message)
 }
 
 func fundAndPrintInstrument(c *t_api.Client, name string) {

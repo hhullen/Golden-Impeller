@@ -3,10 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	_ "net/http/pprof"
 	"os"
 	"os/signal"
+	"runtime/pprof"
 	"syscall"
 	"time"
+
 	backtest "trading_bot/internal/backtest_broker"
 	"trading_bot/internal/clients/postgres"
 	"trading_bot/internal/clients/t_api"
@@ -63,6 +66,13 @@ func main() {
 	doneCh := make(chan string)
 	from := time.Now().Add(-time.Hour * 24 * 400)
 	to := time.Now()
+
+	dbClient.GetCandleWithOffset(UID, strategy.Interval_1_Min, from, to, 0)
+	fmt.Println("GetCandleWithOffset CACHED")
+
+	dbClient.GetCandlesHistory(UID, strategy.Interval_1_Min, time.Now().Add(-time.Hour*24*500), to)
+	fmt.Println("GetCandlesHistory CACHED")
+
 	backtestBroker := backtest.NewBacktestBroker(datastruct.Quotation{
 		Units: 1000000,
 	}, 0.0004, from, to, doneCh, dbClient)
@@ -70,6 +80,18 @@ func main() {
 	strategyInstance := strategy.NewIntervalStrategy(backtestBroker)
 
 	trader := service.NewTraderService(ctx, backtestBroker, logger, instrInfo, strategyInstance)
+
+	f, err := os.Create("cpu.prof")
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	// Запускаем CPU-профилирование
+	if err := pprof.StartCPUProfile(f); err != nil {
+		panic(err)
+	}
+	defer pprof.StopCPUProfile()
 
 	trader.RunTrading()
 

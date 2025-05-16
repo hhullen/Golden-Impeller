@@ -25,6 +25,5 @@ CREATE TABLE IF NOT EXISTS candles (
 -- +goose StatementBegin
 
 DROP TABLE IF EXISTS candles;
-DROP TYPE IF EXISTS candle_interval;
 
 -- +goose StatementEnd
