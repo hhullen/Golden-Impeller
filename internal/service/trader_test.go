@@ -8,6 +8,7 @@ import (
 	"trading_bot/internal/service/datastruct"
 
 	"github.com/golang/mock/gomock"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
@@ -16,6 +17,7 @@ type TestTradingService struct {
 	mockBrocker  *MockIBroker
 	mockLogger   *MockILogger
 	mockStrategy *MockIStrategy
+	MockStorage  *MockIStorage
 }
 
 func newTestService(ctx context.Context, t *testing.T) *TestTradingService {
@@ -23,6 +25,7 @@ func newTestService(ctx context.Context, t *testing.T) *TestTradingService {
 	mockBrocker := NewMockIBroker(mc)
 	mockLogger := NewMockILogger(mc)
 	mockStrategy := NewMockIStrategy(mc)
+	mockStorage := NewMockIStorage(mc)
 
 	instrInfo := &datastruct.InstrumentInfo{
 		Isin:         "ISIN",
@@ -37,10 +40,12 @@ func newTestService(ctx context.Context, t *testing.T) *TestTradingService {
 	}
 
 	return &TestTradingService{
-		service:      NewTraderService(ctx, mockBrocker, mockLogger, instrInfo, mockStrategy),
+		service: buildTraderService(ctx, mockBrocker, mockLogger, instrInfo,
+			mockStrategy, mockStorage, time.Second*2, uuid.NewString()),
 		mockBrocker:  mockBrocker,
 		mockLogger:   mockLogger,
 		mockStrategy: mockStrategy,
+		MockStorage:  mockStorage,
 	}
 }
 
@@ -49,8 +54,8 @@ func TestTraderService(t *testing.T) {
 
 	t.Run("Create service", func(t *testing.T) {
 		ctx := context.Background()
-		service := newTestService(ctx, t)
-		require.NotNil(t, service)
+		ts := newTestService(ctx, t)
+		require.NotNil(t, ts)
 	})
 
 	t.Run("RunTrading context cancel", func(t *testing.T) {
@@ -58,9 +63,9 @@ func TestTraderService(t *testing.T) {
 
 		ts := newTestService(ctx, t)
 
-		ts.mockBrocker.EXPECT().GetLastPrice(gomock.Any()).Return(&datastruct.LastPrice{}, nil).MinTimes(1)
+		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any()).Return(&datastruct.LastPrice{}, nil).MinTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), ts.service.instrInfo, gomock.Any()).Return(&StrategyAction{Action: Hold}, nil).MinTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.instrInfo, gomock.Any()).Return(&StrategyAction{Action: Hold}, nil).MinTimes(1)
 
 		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1)
 
@@ -69,14 +74,14 @@ func TestTraderService(t *testing.T) {
 		ts.service.RunTrading()
 	})
 
-	t.Run("RunTrading error on GetLastPrice", func(t *testing.T) {
+	t.Run("RunTrading error on RecieveLastPrice", func(t *testing.T) {
 		ctx, _ := context.WithTimeout(context.Background(), time.Millisecond*100)
 
 		ts := newTestService(ctx, t)
 
 		ts.service.delayOnTradingError = time.Millisecond * 200
 
-		ts.mockBrocker.EXPECT().GetLastPrice(gomock.Any()).Return(nil, errors.New("error")).MaxTimes(1)
+		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any()).Return(nil, errors.New("error")).MaxTimes(1)
 
 		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
 		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)
@@ -93,9 +98,9 @@ func TestTraderService(t *testing.T) {
 
 		ts.service.delayOnTradingError = time.Millisecond * 200
 
-		ts.mockBrocker.EXPECT().GetLastPrice(gomock.Any()).Return(&datastruct.LastPrice{}, nil).MaxTimes(1)
+		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any()).Return(&datastruct.LastPrice{}, nil).MaxTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), ts.service.instrInfo, gomock.Any()).Return(nil, errors.New("error")).MaxTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.instrInfo, gomock.Any()).Return(nil, errors.New("error")).MaxTimes(1)
 
 		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
 		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)
@@ -112,11 +117,11 @@ func TestTraderService(t *testing.T) {
 
 		ts.service.delayOnTradingError = time.Millisecond * 200
 
-		ts.mockBrocker.EXPECT().GetLastPrice(gomock.Any()).Return(&datastruct.LastPrice{}, nil).MaxTimes(1)
+		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any()).Return(&datastruct.LastPrice{}, nil).MaxTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), ts.service.instrInfo, gomock.Any()).Return(&StrategyAction{Action: Sell}, nil).MaxTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.instrInfo, gomock.Any()).Return(&StrategyAction{Action: Sell}, nil).MaxTimes(1)
 
-		ts.mockBrocker.EXPECT().MakeSellOrder(gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
+		ts.mockBrocker.EXPECT().MakeSellOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 
 		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
 		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)
@@ -133,11 +138,11 @@ func TestTraderService(t *testing.T) {
 
 		ts.service.delayOnTradingError = time.Millisecond * 200
 
-		ts.mockBrocker.EXPECT().GetLastPrice(gomock.Any()).Return(&datastruct.LastPrice{}, nil).MaxTimes(1)
+		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any()).Return(&datastruct.LastPrice{}, nil).MaxTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), ts.service.instrInfo, gomock.Any()).Return(&StrategyAction{Action: Buy}, nil).MaxTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.instrInfo, gomock.Any()).Return(&StrategyAction{Action: Buy}, nil).MaxTimes(1)
 
-		ts.mockBrocker.EXPECT().MakeBuyOrder(gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
+		ts.mockBrocker.EXPECT().MakeBuyOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 
 		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
 		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)

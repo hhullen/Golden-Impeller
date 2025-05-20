@@ -6,7 +6,6 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
-	"runtime/pprof"
 	"syscall"
 	"time"
 
@@ -29,7 +28,7 @@ const (
 	GLDRUB_TOM = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
 )
 
-var UID = GLDRUB_TOM
+var UID = TGLD
 
 func main() {
 	ctx, cancelCtx := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
@@ -63,23 +62,38 @@ func main() {
 		panic(err)
 	}
 
+	err = dbClient.AddInstrumentInfo(ctx, instrInfo)
+	if err != nil {
+		panic(err)
+	}
+
+	instrInfo, err = dbClient.GetInstrumentInfo(instrInfo.Uid)
+	if err != nil {
+		panic(err)
+	}
+
 	doneCh := make(chan string)
-	from := time.Now().Add(-time.Hour * 24 * 400)
+	// from := time.Now().Add(-time.Hour * 24 * 400)
+	from := time.Date(2023, 1, 1, 0, 0, 0, 0, time.Local)
 	to := time.Now()
 
-	dbClient.GetCandleWithOffset(UID, strategy.Interval_1_Min, from, to, 0)
+	dbClient.GetCandleWithOffset(instrInfo, strategy.Interval_1_Min, from, to, 0)
 	fmt.Println("GetCandleWithOffset CACHED")
 
-	dbClient.GetCandlesHistory(UID, strategy.Interval_1_Min, time.Now().Add(-time.Hour*24*500), to)
+	dbClient.GetCandlesHistory(instrInfo, strategy.Interval_1_Min, time.Now().Add(-time.Hour*24*500), to)
 	fmt.Println("GetCandlesHistory CACHED")
+	startDeposit := float64(10000)
+	comission := float64(0)
 
-	backtestBroker := backtest.NewBacktestBroker(datastruct.Quotation{
-		Units: 1000000,
-	}, 0.0004, from, to, doneCh, dbClient)
+	backtestBroker := backtest.NewBacktestBroker(startDeposit, comission, from, to, doneCh, dbClient)
 
-	strategyInstance := strategy.NewIntervalStrategy(backtestBroker)
+	// strategyInstance := strategy.NewIntervalStrategy(backtestBroker)
+	strategyInstance := strategy.NewBTDSTT(backtestBroker, dbClient, 10)
 
-	trader := service.NewTraderService(ctx, backtestBroker, logger, instrInfo, strategyInstance)
+	trader, err := service.NewTraderService(ctx, backtestBroker, logger, instrInfo, strategyInstance, dbClient)
+	if err != nil {
+		panic(err)
+	}
 
 	f, err := os.Create("cpu.prof")
 	if err != nil {
@@ -87,21 +101,23 @@ func main() {
 	}
 	defer f.Close()
 
-	// Запускаем CPU-профилирование
-	if err := pprof.StartCPUProfile(f); err != nil {
-		panic(err)
-	}
-	defer pprof.StopCPUProfile()
+	// // Запускаем CPU-профилирование
+	// if err := pprof.StartCPUProfile(f); err != nil {
+	// 	panic(err)
+	// }
+	// defer pprof.StopCPUProfile()
 
-	trader.RunTrading()
+	go trader.RunTrading()
 
 	select {
 	case <-ctx.Done():
-		return
+
 	case v := <-doneCh:
 		fmt.Println(v)
 		cancelCtx()
 	}
+
+	fmt.Println("RESULT ACCOUNT:", backtestBroker.GetAccoount(), "RATE %:", backtestBroker.GetAccoount()/startDeposit*100)
 
 	logger.Stop()
 }

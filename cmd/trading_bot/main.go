@@ -62,11 +62,13 @@ func main() {
 	// 	panic(err)
 	// }
 
-	// stream, err := investClient.NewOrdersStreamClient().OrderStateStream([]string{investCfg.AccountId}, 200)
-	// go stream.Listen()
-
-	stream, err := investClient.NewOperationsStreamClient().PositionsStream([]string{investCfg.AccountId})
+	stream, err := investClient.NewOrdersStreamClient().OrderStateStream([]string{investCfg.AccountId}, 0)
 	go stream.Listen()
+
+	// vv, err := investClient.NewOperationsServiceClient().GetPositions(investCfg.AccountId)
+
+	// stream, err := investClient.NewOperationsStreamClient().PositionsStream([]string{investCfg.AccountId})
+	// go stream.Listen()
 
 	defer investClient.Conn.Close()
 
@@ -75,11 +77,34 @@ func main() {
 	// printAccounts(investClient)
 	// fundAndPrintInstrument(investClient, "GLDRUB_TOM")
 	// listenAndPrintLastPrice(investClient, GLDRUB_TOM)
-	buy(investClient, investCfg.AccountId, TGLD, 1)
+	buy(investClient, investCfg.AccountId, TGLD, 2)
 	printOperations(investClient, time.Now().Add(-time.Hour*24), time.Now())
 
-	vv := <-stream.Positions()
-	fmt.Println(vv)
+	for vv := range stream.OrderState() {
+		if vv.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_FILL {
+
+		}
+
+		if vv.CompletionTime == nil {
+			fmt.Println("NIL!!!!")
+		}
+		fmt.Println(vv.ExecutionReportStatus)
+		fmt.Println(vv.OrderPrice.Units, vv.OrderPrice.Nano) // цена за лот
+		fmt.Println(vv.CompletionTime.AsTime().Format(time.DateTime))
+		fmt.Println(vv.CreatedAt.AsTime().Format(time.DateTime))
+		fmt.Println(vv.InstrumentUid)
+		fmt.Println(vv.Direction, vv.LotsRequested, vv.LotsExecuted)
+		fmt.Println(vv.OrderId, *vv.OrderRequestId)
+		fmt.Println("")
+
+	}
+
+	// fmt.Println(vv.Date.AsTime().Format(time.DateTime))
+	// fmt.Println(vv.AccountId)
+	// fmt.Println(vv.Securities)
+	// fmt.Println(vv.Futures)
+	// fmt.Println(vv.Money)
+	// fmt.Println(vv.Options)
 
 }
 
@@ -102,18 +127,24 @@ func printOperations(c *t_api.Client, from, to time.Time) {
 }
 
 func buy(c *t_api.Client, accountId, instrumentUID string, quantity int64) {
+
 	orderResp, err := c.NewOrdersServiceClient().PostOrder(&investgo.PostOrderRequest{
 		InstrumentId: instrumentUID,
 		Quantity:     quantity,
-		Direction:    pb.OrderDirection_ORDER_DIRECTION_BUY,
+		Direction:    pb.OrderDirection_ORDER_DIRECTION_SELL,
 		AccountId:    accountId,
 		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
-		// OrderId:      uuid.NewString(),
+		OrderId:      "e4b886fe-8e77-4d1a-89a3-1eee9bca243b",
 	})
 
 	if err != nil {
-		panic(orderResp.Header)
+		// if orderResp != nil {
+		// 	panic(orderResp.GetHeader())
+		// } else {
+		panic(err)
+		// }
 	}
+	fmt.Println("ORDER ID: ", orderResp.OrderId)
 
 	fmt.Println("BUY: ", orderResp.ExecutedCommission.Units, orderResp.ExecutedOrderPrice, orderResp.Message)
 }

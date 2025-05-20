@@ -53,7 +53,7 @@ func (c *Client) AddInstrumentInfo(ctx context.Context, instrInfo *datastruct.In
 	return
 }
 
-func (c *Client) GetInstrumentInfo(ctx context.Context, uid string) (info *datastruct.InstrumentInfo, err error) {
+func (c *Client) GetInstrumentInfo(uid string) (info *datastruct.InstrumentInfo, err error) {
 	defer func() {
 		if p := recover(); p != nil {
 			err = fmt.Errorf("panic recovered: %v", p)
@@ -69,11 +69,7 @@ func (c *Client) GetInstrumentInfo(ctx context.Context, uid string) (info *datas
 }
 
 func (c *Client) AddCandles(ctx context.Context, instrInfo *datastruct.InstrumentInfo, candles []*datastruct.Candle, interval strategy.CandleInterval) (err error) {
-	tx, err := c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
-	if err != nil {
-		return err
-	}
-
+	var tx *sql.Tx
 	defer func() {
 		if p := recover(); p != nil {
 			err = fmt.Errorf("panic recovered: %v. rollback error: %s", p, tx.Rollback().Error())
@@ -82,7 +78,7 @@ func (c *Client) AddCandles(ctx context.Context, instrInfo *datastruct.Instrumen
 		}
 	}()
 
-	instrument, err := c.GetInstrumentInfo(ctx, instrInfo.Uid)
+	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
 	if err != nil {
 		return err
 	}
@@ -102,7 +98,7 @@ func (c *Client) AddCandles(ctx context.Context, instrInfo *datastruct.Instrumen
 					j*fieldsAmount+9, j*fieldsAmount+10, j*fieldsAmount+11, j*fieldsAmount+12))
 
 			values = append(values,
-				instrument.Id, candle.Timestamp, interval.ToString(),
+				instrInfo.Id, candle.Timestamp, interval.ToString(),
 				candle.Open.Units, candle.Open.Nano, candle.Close.Units, candle.Close.Nano,
 				candle.High.Units, candle.High.Nano, candle.Low.Units, candle.Low.Nano, candle.Volume)
 		}
@@ -127,13 +123,7 @@ func getBatch(i int, candles []*datastruct.Candle) []*datastruct.Candle {
 	return candles[i : i+insertOneTime]
 }
 
-func (c *Client) GetCandlesHistory(uid string, interval strategy.CandleInterval, from, to time.Time) ([]*datastruct.Candle, error) {
-	ctx := context.Background()
-	instrument, err := c.GetInstrumentInfo(ctx, uid)
-	if err != nil {
-		return nil, err
-	}
-
+func (c *Client) GetCandlesHistory(instrInfo *datastruct.InstrumentInfo, interval strategy.CandleInterval, from, to time.Time) ([]*datastruct.Candle, error) {
 	idx1, ok1 := c.seekCandleIdx(from)
 	idx2, ok2 := c.seekCandleIdx(to)
 	if ok1 && ok2 {
@@ -149,7 +139,7 @@ func (c *Client) GetCandlesHistory(uid string, interval strategy.CandleInterval,
 		AND interval = $2
 		order by timestamp`
 
-	err = c.db.Select(&c.historyBuffer, query, instrument.Id, interval.ToString())
+	err := c.db.Select(&c.historyBuffer, query, instrInfo.Id, interval.ToString())
 	if err != nil {
 		return nil, err
 	}
@@ -166,13 +156,7 @@ func (c *Client) seekCandleIdx(t time.Time) (int64, bool) {
 	return 0, false
 }
 
-func (c *Client) GetCandleWithOffset(uid string, interval strategy.CandleInterval, from, to time.Time, offset int64) (*datastruct.Candle, error) {
-	ctx := context.Background()
-	instrument, err := c.GetInstrumentInfo(ctx, uid)
-	if err != nil {
-		return nil, err
-	}
-
+func (c *Client) GetCandleWithOffset(instrInfo *datastruct.InstrumentInfo, interval strategy.CandleInterval, from, to time.Time, offset int64) (*datastruct.Candle, error) {
 	if idx, ok := c.seekCandleIdx(from); ok {
 
 		if idx+offset >= int64(len(c.historyBuffer)) {
@@ -191,7 +175,7 @@ func (c *Client) GetCandleWithOffset(uid string, interval strategy.CandleInterva
 		AND interval = $2
 		order by timestamp`
 
-	err = c.db.Select(&c.historyBuffer, query, instrument.Id, interval.ToString())
+	err := c.db.Select(&c.historyBuffer, query, instrInfo.Id, interval.ToString())
 	if err != nil {
 		return nil, err
 	}
@@ -202,4 +186,82 @@ func (c *Client) GetCandleWithOffset(uid string, interval strategy.CandleInterva
 
 	return c.historyBuffer[0], nil
 
+}
+
+func (c *Client) PutOrder(trId string, instrInfo *datastruct.InstrumentInfo, order datastruct.Order) (err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	var tx *sql.Tx
+	defer func() {
+		if p := recover(); p != nil {
+			err = fmt.Errorf("panic recovered: %v. rollback error: %v", p, tx.Rollback())
+		} else if err == nil {
+			err = tx.Commit()
+		}
+	}()
+
+	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
+	if err != nil {
+		return
+	}
+
+	query := `INSERT INTO orders 
+		(instrument_id, created_at, completed_at, order_id, direction, exec_report_status, 
+		price_units, price_nano, lots_requested, lots_executed, trader_id)
+		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+		ON CONFLICT (instrument_id, order_id) DO UPDATE SET
+		completed_at = EXCLUDED.completed_at,
+		direction = EXCLUDED.direction,
+		exec_report_status = EXCLUDED.exec_report_status,
+		price_units = EXCLUDED.price_units,
+		price_nano = EXCLUDED.price_nano,
+		lots_executed = EXCLUDED.lots_executed;`
+
+	_, err = tx.ExecContext(ctx, query,
+		instrInfo.Id, order.CreatedAt, order.CompletionTime, order.OrderId, order.Direction,
+		order.ExecutionReportStatus, order.OrderPrice.Units, order.OrderPrice.Nano,
+		order.LotsRequested, order.LotsExecuted, trId)
+
+	return
+}
+
+func (c *Client) GetLastLowestExcecutedOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error) {
+	query := `SELECT id, created_at, completed_at, order_id, direction, exec_report_status,
+		price_units AS "price.units", price_nano AS "price.nano", lots_requested, 
+		lots_executed, additional_info
+		FROM orders
+		WHERE instrument_id = $1
+		AND direction = 'BUY'
+		AND exec_report_status = 'FILL'
+		AND trader_id = $2
+		ORDER BY price_units, price_nano
+		LIMIT 1;`
+
+	var orders []*datastruct.Order
+	err := c.db.Select(&orders, query, instrInfo.Id, trId)
+	if err != nil {
+		return nil, false, err
+	}
+
+	if len(orders) == 0 {
+		return nil, false, nil
+	}
+
+	orders[0].InstrumentUid = instrInfo.Uid
+
+	return orders[0], true, err
+}
+
+func (c *Client) GetUnsoldOrdersAmount(trId string, instrInfo *datastruct.InstrumentInfo) (int64, error) {
+	query := `SELECT COUNT(*) FROM orders
+		WHERE instrument_id = $1
+		AND direction = 'BUY'
+		AND exec_report_status = 'FILL'
+		AND trader_id = $2;`
+
+	var res int64
+	err := c.db.Get(&res, query, instrInfo.Id, trId)
+
+	return res, err
 }

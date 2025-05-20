@@ -44,7 +44,7 @@ func (i *Interval) GetActionDecision(ctx context.Context, instrInfo *datastruct.
 		}
 
 		var err error
-		candles, err = i.broker.GetCandlesHistory(instrInfo.Uid, from, lastPrice.Time, Interval_1_Min)
+		candles, err = i.broker.GetCandlesHistory(instrInfo, from, lastPrice.Time, Interval_1_Min)
 		return err
 	})
 

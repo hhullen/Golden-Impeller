@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"time"
 	"trading_bot/internal/service/datastruct"
+
+	"github.com/google/uuid"
 )
 
-//go:generate mockgen -source=trader.go -destination=trader_mock.go -package=service IStrategy,ILogger,IBroker
+//go:generate mockgen -source=trader.go -destination=trader_mock.go -package=service IStrategy,ILogger,IBroker,IStorage
 
 type Action int8
 
@@ -18,14 +20,13 @@ const (
 )
 
 type StrategyAction struct {
-	Action   Action
-	Quantity int64
+	Action    Action
+	Quantity  int64
+	RequestId string
 }
 
 type IStrategy interface {
-	// Должен получить действие для исполнения. Историческте данные по инструменту внутри стратегии.
-	GetActionDecision(ctx context.Context, instrInfo *datastruct.InstrumentInfo, lp *datastruct.LastPrice) (*StrategyAction, error)
-	// Должен получить имя стратегии
+	GetActionDecision(ctx context.Context, trId string, instrInfo *datastruct.InstrumentInfo, lp *datastruct.LastPrice) (*StrategyAction, error)
 	GetName() string
 }
 
@@ -36,29 +37,74 @@ type ILogger interface {
 }
 
 type IBroker interface {
-	// Должен получить последнюю цену для инструмента по uid из стрима. Блокирующая.
-	GetLastPrice(instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error)
-	MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity int64) (*datastruct.PostOrderResult, error)
-	MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int64) (*datastruct.PostOrderResult, error)
+	RecieveLastPrice(instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error)
+	MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error)
+	MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error)
+	RecieveOrdersUpdate(instrInfo *datastruct.InstrumentInfo) (datastruct.Order, error)
+}
+
+type IStorage interface {
+	PutOrder(trId string, instrInfo *datastruct.InstrumentInfo, order datastruct.Order) error
+	GetInstrumentInfo(uid string) (info *datastruct.InstrumentInfo, err error)
 }
 
 type TraderService struct {
+	traderId            string
 	ctx                 context.Context
 	broker              IBroker
 	logger              ILogger
 	strategy            IStrategy
+	storage             IStorage
 	instrInfo           *datastruct.InstrumentInfo
 	delayOnTradingError time.Duration
 }
 
-func NewTraderService(ctx context.Context, b IBroker, l ILogger, i *datastruct.InstrumentInfo, s IStrategy) *TraderService {
+func NewTraderService(ctx context.Context, b IBroker, l ILogger, i *datastruct.InstrumentInfo, s IStrategy, store IStorage) (*TraderService, error) {
+	traderId := uuid.NewString()
+	delayOnTradingError := time.Second * 10
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				l.Infof("Orders listener: context is done")
+				return
+			default:
+				operateError := func(err error) {
+					delay := time.Second * 10
+					l.Errorf("error operating orders update: %v. Delay for %s", err, delay.String())
+					time.Sleep(delay)
+				}
+
+				order, err := b.RecieveOrdersUpdate(i)
+				if err != nil {
+					operateError(err)
+					continue
+				}
+
+				if order.CreatedAt != nil {
+					err := store.PutOrder(traderId, i, order)
+					if err != nil {
+						operateError(err)
+					}
+				}
+			}
+		}
+	}()
+
+	return buildTraderService(ctx, b, l, i, s, store, delayOnTradingError, traderId), nil
+}
+
+func buildTraderService(ctx context.Context, b IBroker, l ILogger, i *datastruct.InstrumentInfo,
+	s IStrategy, store IStorage, delayOnTradingError time.Duration, trId string) *TraderService {
 	return &TraderService{
+		traderId:            trId,
 		ctx:                 ctx,
 		broker:              b,
 		logger:              l,
 		strategy:            s,
+		storage:             store,
 		instrInfo:           i,
-		delayOnTradingError: time.Second * 10,
+		delayOnTradingError: delayOnTradingError,
 	}
 }
 
@@ -76,14 +122,14 @@ func (s *TraderService) RunTrading() {
 			return
 		default:
 			var lastPrice *datastruct.LastPrice
-			lastPrice, err = s.broker.GetLastPrice(s.instrInfo)
+			lastPrice, err = s.broker.RecieveLastPrice(s.instrInfo)
 			if err != nil {
-				s.logger.Errorf("error getting last price for '%s': %s", s.instrInfo.Uid, err.Error())
+				s.logger.Errorf("error recieving last price for '%s': %s", s.instrInfo.Uid, err.Error())
 				continue
 			}
 
 			var action *StrategyAction
-			action, err = s.strategy.GetActionDecision(s.ctx, s.instrInfo, lastPrice)
+			action, err = s.strategy.GetActionDecision(s.ctx, s.traderId, s.instrInfo, lastPrice)
 			if err != nil {
 				s.logger.Errorf("error getting action decision '%s': %s", s.instrInfo.Uid, err.Error())
 				continue
@@ -104,21 +150,21 @@ func (s *TraderService) RunTrading() {
 
 func (s *TraderService) MakeAction(instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice, action *StrategyAction) (string, error) {
 	if action.Action == Sell {
-		res, err := s.broker.MakeSellOrder(instrInfo, action.Quantity)
+		res, err := s.broker.MakeSellOrder(instrInfo, action.Quantity, action.RequestId)
 		if err != nil {
 			return "", err
 		}
 
-		return fmt.Sprintf("SELL order %s: %s; Price: %.2f; Commission: %.2f",
+		return fmt.Sprintf("SELL order %s: %s; Price: %.2f; Commission: %.6f",
 			instrInfo.Name, res.ExecutionReportStatus, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
 
 	} else if action.Action == Buy {
-		res, err := s.broker.MakeBuyOrder(instrInfo, action.Quantity)
+		res, err := s.broker.MakeBuyOrder(instrInfo, action.Quantity, action.RequestId)
 		if err != nil {
 			return "", err
 		}
 
-		return fmt.Sprintf("SELL order %s: %s; Price: %.2f; Commission: %.2f",
+		return fmt.Sprintf("BUY order %s: %s; Price: %.2f; Commission: %.6f",
 			instrInfo.Name, res.ExecutionReportStatus, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
 
 	}

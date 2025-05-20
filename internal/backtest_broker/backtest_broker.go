@@ -8,24 +8,25 @@ import (
 )
 
 type IStorage interface {
-	GetCandlesHistory(uid string, interval strategy.CandleInterval, from, to time.Time) ([]*datastruct.Candle, error)
-	GetCandleWithOffset(uid string, interval strategy.CandleInterval, from, to time.Time, offset int64) (*datastruct.Candle, error)
+	GetCandlesHistory(instrInfo *datastruct.InstrumentInfo, interval strategy.CandleInterval, from, to time.Time) ([]*datastruct.Candle, error)
+	GetCandleWithOffset(instrInfo *datastruct.InstrumentInfo, interval strategy.CandleInterval, from, to time.Time, offset int64) (*datastruct.Candle, error)
 }
 
 type BacktestBroker struct {
-	account, lastPrice datastruct.Quotation
-	dealings           []datastruct.Quotation
-	position           *datastruct.Position
-	commissionPercent  float64
+	account, lastPrice float64
+	// dealings           []datastruct.Quotation
+	position          *datastruct.Position
+	commissionPercent float64
 
 	candleHistoryOffset int64
 	from, to            time.Time
 	testingTerminate    chan string
+	ordersCh            chan datastruct.Order
 
 	storage IStorage
 }
 
-func NewBacktestBroker(account datastruct.Quotation, commision float64, from, to time.Time, terminator chan string, storage IStorage) *BacktestBroker {
+func NewBacktestBroker(account, commision float64, from, to time.Time, terminator chan string, storage IStorage) *BacktestBroker {
 	return &BacktestBroker{
 		account:           account,
 		commissionPercent: commision,
@@ -33,6 +34,7 @@ func NewBacktestBroker(account datastruct.Quotation, commision float64, from, to
 		to:                to,
 		testingTerminate:  terminator,
 		storage:           storage,
+		ordersCh:          make(chan datastruct.Order),
 	}
 }
 
@@ -40,8 +42,12 @@ func (c *BacktestBroker) GetAccoountId() string {
 	return "TEST_ACCOUNT"
 }
 
-func (c *BacktestBroker) GetCandlesHistory(uid string, from, to time.Time, interval strategy.CandleInterval) ([]*datastruct.Candle, error) {
-	return c.storage.GetCandlesHistory(uid, interval, from, to)
+func (c *BacktestBroker) GetAccoount() float64 {
+	return c.account
+}
+
+func (c *BacktestBroker) GetCandlesHistory(instrInfo *datastruct.InstrumentInfo, from, to time.Time, interval strategy.CandleInterval) ([]*datastruct.Candle, error) {
+	return c.storage.GetCandlesHistory(instrInfo, interval, from, to)
 }
 
 func (c *BacktestBroker) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, error) {
@@ -58,19 +64,20 @@ func (c *BacktestBroker) GetInstrumentInfo(uid string) (*datastruct.InstrumentIn
 	}, nil
 }
 
-func (c *BacktestBroker) GetLastPrice(instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error) {
+func (c *BacktestBroker) RecieveLastPrice(instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error) {
 	c.candleHistoryOffset++
 
-	candle, err := c.storage.GetCandleWithOffset(instrInfo.Uid, strategy.Interval_1_Min, c.from, c.to, c.candleHistoryOffset)
+	candle, err := c.storage.GetCandleWithOffset(instrInfo, strategy.Interval_1_Min, c.from, c.to, c.candleHistoryOffset)
 	if err != nil {
 		select {
 		case c.testingTerminate <- err.Error():
+			close(c.testingTerminate)
 		default:
 		}
 		return nil, err
 	}
 
-	c.lastPrice = candle.Close
+	c.lastPrice = candle.Close.ToFloat64()
 
 	return &datastruct.LastPrice{
 		Figi: instrInfo.Figi,
@@ -91,75 +98,82 @@ func (c *BacktestBroker) GetPositions(uid string) (*datastruct.Position, error) 
 	return c.position, nil
 }
 
-func (c *BacktestBroker) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int64) (*datastruct.PostOrderResult, error) {
+func (c *BacktestBroker) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error) {
 	quantityToOrder := quantity / int64(instrInfo.Lot)
 	if quantityToOrder <= 0 {
-		return nil, fmt.Errorf("invalid quantity amount. quantity: %d but lot is %d", quantity, quantityToOrder)
+		return nil, fmt.Errorf("invalid buy quantity amount. quantity: %d but lot is %d", quantity, quantityToOrder)
 	}
 
-	commission := c.lastPrice
-	commission.MultiplyFloat64(c.commissionPercent)
+	price := c.lastPrice * float64(instrInfo.Lot) * float64(quantityToOrder)
 
-	for range quantityToOrder {
-		price := c.lastPrice
-		price.MultiplyInt64(int64(instrInfo.Lot))
+	commission := price * c.commissionPercent
+	c.account -= (price + commission)
 
-		c.dealings = append(c.dealings, price)
+	t := time.Now()
+	orderPrice := datastruct.Quotation{}
+	orderPrice.FromFloat64(c.lastPrice)
 
-		cost := c.lastPrice
-		cost.Sum(commission)
-
-		c.account.Sub(cost)
+	c.ordersCh <- datastruct.Order{
+		CreatedAt:             &t,
+		CompletionTime:        &t,
+		OrderId:               requestId,
+		Direction:             "BUY",
+		ExecutionReportStatus: "FILL",
+		OrderPrice:            orderPrice,
+		LotsRequested:         quantityToOrder,
+		LotsExecuted:          quantityToOrder,
 	}
 
-	var summ datastruct.Quotation
-	for _, v := range c.dealings {
-		summ.Sum(v)
-	}
-	summ.DivideInt64(int64(len(c.dealings)))
-
-	c.position = &datastruct.Position{
-		AveragePositionPrice: summ,
-		Quantity: datastruct.Quotation{
-			Units: int64(len(c.dealings)) * int64(instrInfo.Lot),
-		},
-	}
+	commissionQuotation := datastruct.Quotation{}
+	commissionQuotation.FromFloat64(commission)
 
 	return &datastruct.PostOrderResult{
-		ExecutedOrderPrice:    c.lastPrice,
-		ExecutedCommission:    commission,
+		ExecutedOrderPrice:    orderPrice,
+		ExecutedCommission:    commissionQuotation,
 		InstrumentUid:         instrInfo.Uid,
-		ExecutionReportStatus: "success test BUY order",
-		OrderId:               fmt.Sprintf("%d", len(c.dealings)),
+		ExecutionReportStatus: "success",
+		OrderId:               requestId,
 	}, nil
 }
 
-func (c *BacktestBroker) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity int64) (*datastruct.PostOrderResult, error) {
+func (c *BacktestBroker) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error) {
 	quantityToOrder := quantity / int64(instrInfo.Lot)
 	if quantityToOrder <= 0 {
 		return nil, fmt.Errorf("invalid quantity amount. quantity: %d but lot is %d", quantity, quantityToOrder)
 	}
-	if quantityToOrder > int64(len(c.dealings)) {
-		return nil, fmt.Errorf("invalid quantity amount. quantity in lots: %d but available: %d", quantityToOrder, len(c.dealings))
+
+	price := c.lastPrice * float64(instrInfo.Lot) * float64(quantityToOrder)
+
+	commission := price * c.commissionPercent
+	c.account += (price - commission)
+
+	t := time.Now()
+	orderPrice := datastruct.Quotation{}
+	orderPrice.FromFloat64(c.lastPrice)
+
+	c.ordersCh <- datastruct.Order{
+		CreatedAt:             &t,
+		CompletionTime:        &t,
+		OrderId:               requestId,
+		Direction:             "SELL",
+		ExecutionReportStatus: "FILL",
+		OrderPrice:            orderPrice,
+		LotsRequested:         quantityToOrder,
+		LotsExecuted:          quantityToOrder,
 	}
 
-	commission := c.lastPrice
-	commission.MultiplyFloat64(c.commissionPercent)
-
-	var sold datastruct.Quotation
-	for i := 0; i < int(quantityToOrder); i++ {
-		sold.Sum(c.dealings[len(c.dealings)-1])
-		c.dealings = c.dealings[:len(c.dealings)-1]
-	}
-
-	sold.Sub(commission)
-	c.account.Sum(sold)
+	commissionQuotation := datastruct.Quotation{}
+	commissionQuotation.FromFloat64(commission)
 
 	return &datastruct.PostOrderResult{
-		ExecutedOrderPrice:    c.lastPrice,
-		ExecutedCommission:    commission,
+		ExecutedOrderPrice:    orderPrice,
+		ExecutedCommission:    commissionQuotation,
 		InstrumentUid:         instrInfo.Uid,
-		ExecutionReportStatus: "success test SELL order",
-		OrderId:               fmt.Sprintf("%d", len(c.dealings)),
+		ExecutionReportStatus: "success",
+		OrderId:               requestId,
 	}, nil
+}
+
+func (c *BacktestBroker) RecieveOrdersUpdate(instrInfo *datastruct.InstrumentInfo) (datastruct.Order, error) {
+	return <-c.ordersCh, nil
 }

@@ -12,6 +12,22 @@ import (
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
 )
 
+var intervalMap = map[strategy.CandleInterval]pb.CandleInterval{
+	strategy.Interval_1_Min:  pb.CandleInterval_CANDLE_INTERVAL_1_MIN,
+	strategy.Interval_5_Min:  pb.CandleInterval_CANDLE_INTERVAL_5_MIN,
+	strategy.Interval_15_Min: pb.CandleInterval_CANDLE_INTERVAL_15_MIN,
+	strategy.Interval_Hour:   pb.CandleInterval_CANDLE_INTERVAL_HOUR,
+	strategy.Interval_Day:    pb.CandleInterval_CANDLE_INTERVAL_DAY,
+	strategy.Interval_2_Min:  pb.CandleInterval_CANDLE_INTERVAL_2_MIN,
+	strategy.Interval_3_Min:  pb.CandleInterval_CANDLE_INTERVAL_3_MIN,
+	strategy.Interval_10_Min: pb.CandleInterval_CANDLE_INTERVAL_10_MIN,
+	strategy.Interval_30_Min: pb.CandleInterval_CANDLE_INTERVAL_30_MIN,
+	strategy.Interval_2_Hour: pb.CandleInterval_CANDLE_INTERVAL_2_HOUR,
+	strategy.Interval_4_Hour: pb.CandleInterval_CANDLE_INTERVAL_4_HOUR,
+	strategy.Interval_Week:   pb.CandleInterval_CANDLE_INTERVAL_WEEK,
+	strategy.Interval_Month:  pb.CandleInterval_CANDLE_INTERVAL_MONTH,
+}
+
 type Client struct {
 	investgo.Client
 
@@ -139,36 +155,10 @@ func (c *Client) GetCandlesHistory(uid string, from, to time.Time, interval stra
 }
 
 func resolveIntoPbInterval(interval strategy.CandleInterval) pb.CandleInterval {
-	switch interval {
-	case strategy.Interval_1_Min:
-		return pb.CandleInterval_CANDLE_INTERVAL_1_MIN
-	case strategy.Interval_5_Min:
-		return pb.CandleInterval_CANDLE_INTERVAL_5_MIN
-	case strategy.Interval_15_Min:
-		return pb.CandleInterval_CANDLE_INTERVAL_15_MIN
-	case strategy.Interval_Hour:
-		return pb.CandleInterval_CANDLE_INTERVAL_HOUR
-	case strategy.Interval_Day:
-		return pb.CandleInterval_CANDLE_INTERVAL_DAY
-	case strategy.Interval_2_Min:
-		return pb.CandleInterval_CANDLE_INTERVAL_2_MIN
-	case strategy.Interval_3_Min:
-		return pb.CandleInterval_CANDLE_INTERVAL_3_MIN
-	case strategy.Interval_10_Min:
-		return pb.CandleInterval_CANDLE_INTERVAL_10_MIN
-	case strategy.Interval_30_Min:
-		return pb.CandleInterval_CANDLE_INTERVAL_30_MIN
-	case strategy.Interval_2_Hour:
-		return pb.CandleInterval_CANDLE_INTERVAL_2_HOUR
-	case strategy.Interval_4_Hour:
-		return pb.CandleInterval_CANDLE_INTERVAL_4_HOUR
-	case strategy.Interval_Week:
-		return pb.CandleInterval_CANDLE_INTERVAL_WEEK
-	case strategy.Interval_Month:
-		return pb.CandleInterval_CANDLE_INTERVAL_MONTH
-	default:
-		return pb.CandleInterval_CANDLE_INTERVAL_UNSPECIFIED
+	if v, ok := intervalMap[interval]; ok {
+		return v
 	}
+	return pb.CandleInterval_CANDLE_INTERVAL_UNSPECIFIED
 }
 
 func (c *Client) GetOrders(uid string) ([]*datastruct.OrderState, error) {
@@ -245,7 +235,7 @@ func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, erro
 	}, nil
 }
 
-func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity int64) (*datastruct.PostOrderResult, error) {
+func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error) {
 	if !isQuantityCorrect(quantity, int64(instrInfo.Lot)) {
 		return nil, fmt.Errorf("incorrect quantity to make order: %d", quantity/int64(instrInfo.Lot))
 	}
@@ -256,6 +246,7 @@ func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity in
 		Direction:    pb.OrderDirection_ORDER_DIRECTION_SELL,
 		AccountId:    c.GetAccoountId(),
 		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
+		OrderId:      requestId,
 	})
 	if err != nil {
 		return nil, err
@@ -276,7 +267,7 @@ func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity in
 	}, nil
 }
 
-func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int64) (*datastruct.PostOrderResult, error) {
+func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error) {
 	if !isQuantityCorrect(quantity, int64(instrInfo.Lot)) {
 		return nil, fmt.Errorf("incorrect quantity to make order: %d", quantity/int64(instrInfo.Lot))
 	}
@@ -287,6 +278,7 @@ func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int
 		Direction:    pb.OrderDirection_ORDER_DIRECTION_BUY,
 		AccountId:    c.GetAccoountId(),
 		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
+		OrderId:      requestId,
 	})
 	if err != nil {
 		return nil, err

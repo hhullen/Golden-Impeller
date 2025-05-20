@@ -22,10 +22,10 @@ const (
 	TGLD       = "4c466956-d2ce-4a95-abb4-17947a65f18a"
 	TMOS       = "9654c2dd-6993-427e-80fa-04e80a1cf4da"
 	GLDRUB_TOM = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
-	MonthsLoad = 24
+	MonthsLoad = 36
 )
 
-var UID = GLDRUB_TOM
+var UID = TGLD
 
 func main() {
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
@@ -60,6 +60,11 @@ func main() {
 	}
 
 	err = dbClient.AddInstrumentInfo(ctx, instrInfo)
+	if err != nil {
+		panic(err)
+	}
+
+	instrInfo, err = dbClient.GetInstrumentInfo(instrInfo.Uid)
 	if err != nil {
 		panic(err)
 	}

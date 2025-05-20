@@ -58,9 +58,9 @@ func (q *Quotation) ToString() string {
 	return fmt.Sprintf("%d.%d", q.Units, nano)
 }
 
-func (q *Quotation) FromFloat64(fl float64) {
-	q.Units = int64(fl)
-	q.Nano = int32((fl - float64(q.Units)) * 1000000000)
+func (q *Quotation) FromFloat64(f float64) {
+	q.Units = int64(f)
+	q.Nano = int32(math.Round((f - float64(q.Units)) * 1_000_000_000))
 }
 
 func (q *Quotation) ToInt32() int32 {
@@ -69,30 +69,6 @@ func (q *Quotation) ToInt32() int32 {
 
 func (q *Quotation) ToInt64() int64 {
 	return int64(q.ToFloat64())
-}
-
-func (q1 *Quotation) Sum(q2 Quotation) {
-	q1.FromFloat64(q1.ToFloat64() + q2.ToFloat64())
-}
-
-func (q1 *Quotation) Sub(q2 Quotation) {
-	q1.FromFloat64(q1.ToFloat64() - q2.ToFloat64())
-}
-
-func (q *Quotation) DivideInt64(n int64) {
-	q.DivideFloat64(float64(n))
-}
-
-func (q *Quotation) DivideFloat64(n float64) {
-	q.FromFloat64(q.ToFloat64() / n)
-}
-
-func (q *Quotation) MultiplyInt64(n int64) {
-	q.MultiplyFloat64(float64(n))
-}
-
-func (q *Quotation) MultiplyFloat64(n float64) {
-	q.FromFloat64(q.ToFloat64() * n)
 }
 
 type OrderState struct {
@@ -111,4 +87,19 @@ type PostOrderResult struct {
 	InstrumentUid         string
 	ExecutionReportStatus string
 	OrderId               string
+}
+
+type Order struct {
+	Id                    int64      `db:"id"`
+	CreatedAt             *time.Time `db:"created_at"`
+	CompletionTime        *time.Time `db:"completed_at"`
+	OrderId               string     `db:"order_id"`
+	Direction             string     `db:"direction"`
+	ExecutionReportStatus string     `db:"exec_report_status"`
+	OrderPrice            Quotation  `db:"price"`
+	LotsRequested         int64      `db:"lots_requested"`
+	LotsExecuted          int64      `db:"lots_executed"`
+	AdditionalInfo        *string    `db:"additional_info"`
+	TraderId              string     `db:"trader_id"`
+	InstrumentUid         string
 }

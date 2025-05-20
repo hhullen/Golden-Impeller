@@ -24,7 +24,7 @@ func NewLogger() *Logger {
 	}
 
 	go listenCh(l.infoCh, log.Printf)
-	go listenCh(l.errCh, log.Fatalf)
+	go listenCh(l.errCh, log.Printf)
 	go listenCh(l.fatalCh, log.Panicf)
 
 	return l

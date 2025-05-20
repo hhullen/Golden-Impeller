@@ -53,15 +53,13 @@ const (
 )
 
 type IBroker interface {
-	GetCandlesHistory(uid string, from, to time.Time, interval CandleInterval) ([]*datastruct.Candle, error)
+	GetCandlesHistory(instrInfo *datastruct.InstrumentInfo, from, to time.Time, interval CandleInterval) ([]*datastruct.Candle, error)
 	GetOrders(uid string) ([]*datastruct.OrderState, error)
 	GetPositions(uid string) (*datastruct.Position, error)
 	GetAccoountId() string
 }
 
 type IStorage interface {
-	GetCandlesAmount(uid string, interval CandleInterval) (int64, error)
-	GetLastCandle(uid string, interval CandleInterval) (int64, error)
-	AddCandles(uid string, interval CandleInterval, candles []*datastruct.Candle) error
-	GetFloatPrices(uid string, interval CandleInterval, column PriceColumn) ([]float64, error)
+	GetLastLowestExcecutedOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error)
+	GetUnsoldOrdersAmount(trId string, instrInfo *datastruct.InstrumentInfo) (int64, error)
 }
