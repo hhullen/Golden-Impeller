@@ -42,15 +42,6 @@ func (c *CandleInterval) ToString() string {
 	return intervalMap[*c]
 }
 
-type PriceColumn string
-
-const (
-	Close PriceColumn = "close"
-	Open  PriceColumn = "open"
-	High  PriceColumn = "high"
-	Low   PriceColumn = "low"
-)
-
 type IStorage interface {
 	GetLastLowestExcecutedOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error)
 	GetUnsoldOrdersAmount(trId string, instrInfo *datastruct.InstrumentInfo) (int64, error)

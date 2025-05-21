@@ -123,7 +123,7 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().MakeSellOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 
-		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
+		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
 		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)
 
 		ts.mockStrategy.EXPECT().GetName().Return("STRATEGY")
@@ -144,7 +144,7 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().MakeBuyOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 
-		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
+		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
 		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)
 
 		ts.mockStrategy.EXPECT().GetName().Return("STRATEGY")

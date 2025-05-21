@@ -29,6 +29,13 @@ var intervalMap = map[strategy.CandleInterval]pb.CandleInterval{
 	strategy.Interval_Month:  pb.CandleInterval_CANDLE_INTERVAL_MONTH,
 }
 
+func resolveIntoPbInterval(interval strategy.CandleInterval) pb.CandleInterval {
+	if v, ok := intervalMap[interval]; ok {
+		return v
+	}
+	return pb.CandleInterval_CANDLE_INTERVAL_UNSPECIFIED
+}
+
 type IStream interface {
 	Listen() error
 	Stop()
@@ -116,13 +123,6 @@ func (c *Client) startListeningInstrumentStream(uid string, s IStream) {
 			}
 		}
 	}
-}
-
-func resolveIntoPbInterval(interval strategy.CandleInterval) pb.CandleInterval {
-	if v, ok := intervalMap[interval]; ok {
-		return v
-	}
-	return pb.CandleInterval_CANDLE_INTERVAL_UNSPECIFIED
 }
 
 func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, error) {
