@@ -11,6 +11,14 @@ import (
 
 //go:generate mockgen -source=trader.go -destination=trader_mock.go -package=service IStrategy,ILogger,IBroker,IStorage
 
+type OrderStatus int8
+
+const (
+	Fill OrderStatus = iota
+	New
+	Cancelled
+)
+
 type Action int8
 
 const (
@@ -19,9 +27,31 @@ const (
 	Sell
 )
 
+var (
+	actionMap map[Action]string = map[Action]string{
+		Buy:  "BUY",
+		Hold: "HOLD",
+		Sell: "SELL",
+	}
+
+	orderStatusMap map[OrderStatus]string = map[OrderStatus]string{
+		Fill:      "FILL",
+		New:       "NEW",
+		Cancelled: "CANCELLED",
+	}
+)
+
+func (a Action) ToString() string {
+	return actionMap[a]
+}
+
+func (os OrderStatus) ToString() string {
+	return orderStatusMap[os]
+}
+
 type StrategyAction struct {
 	Action    Action
-	Quantity  int64
+	Lots      int64
 	RequestId string
 }
 
@@ -38,30 +68,34 @@ type ILogger interface {
 
 type IBroker interface {
 	RecieveLastPrice(instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error)
-	MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error)
-	MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error)
-	RecieveOrdersUpdate(instrInfo *datastruct.InstrumentInfo) (datastruct.Order, error)
+	MakeSellOrder(instrInfo *datastruct.InstrumentInfo, lots int64, requestId string) (*datastruct.PostOrderResult, error)
+	MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, lots int64, requestId string) (*datastruct.PostOrderResult, error)
+	RecieveOrdersUpdate(instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, error)
 }
 
 type IStorage interface {
-	PutOrder(trId string, instrInfo *datastruct.InstrumentInfo, order datastruct.Order) error
+	PutOrder(trId string, instrInfo *datastruct.InstrumentInfo, order *datastruct.Order) error
 	GetInstrumentInfo(uid string) (info *datastruct.InstrumentInfo, err error)
 }
 
 type TraderService struct {
 	traderId            string
 	ctx                 context.Context
+	instrInfo           *datastruct.InstrumentInfo
 	broker              IBroker
 	logger              ILogger
 	strategy            IStrategy
 	storage             IStorage
-	instrInfo           *datastruct.InstrumentInfo
 	delayOnTradingError time.Duration
 }
 
-func NewTraderService(ctx context.Context, b IBroker, l ILogger, i *datastruct.InstrumentInfo, s IStrategy, store IStorage) (*TraderService, error) {
-	traderId := uuid.NewString()
-	delayOnTradingError := time.Second * 10
+func NewTraderService(ctx context.Context, b IBroker, l ILogger, s IStrategy,
+	store IStorage, i *datastruct.InstrumentInfo, traderId string) *TraderService {
+	if traderId == "" {
+		traderId = uuid.NewString()
+	}
+	delayOnTradingError := time.Second * 15
+
 	go func() {
 		for {
 			select {
@@ -91,7 +125,7 @@ func NewTraderService(ctx context.Context, b IBroker, l ILogger, i *datastruct.I
 		}
 	}()
 
-	return buildTraderService(ctx, b, l, i, s, store, delayOnTradingError, traderId), nil
+	return buildTraderService(ctx, b, l, i, s, store, delayOnTradingError, traderId)
 }
 
 func buildTraderService(ctx context.Context, b IBroker, l ILogger, i *datastruct.InstrumentInfo,
@@ -138,7 +172,7 @@ func (s *TraderService) RunTrading() {
 			var res string
 			res, err = s.MakeAction(s.instrInfo, lastPrice, action)
 			if err != nil {
-				s.logger.Errorf("error making action '%s': %s", s.instrInfo.Uid, err.Error())
+				s.logger.Errorf("error making action '%s:%d' for '%s': %s", action.Action.ToString(), action.Lots, s.instrInfo.Uid, err.Error())
 				continue
 			}
 			if action.Action != Hold {
@@ -150,21 +184,21 @@ func (s *TraderService) RunTrading() {
 
 func (s *TraderService) MakeAction(instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice, action *StrategyAction) (string, error) {
 	if action.Action == Sell {
-		res, err := s.broker.MakeSellOrder(instrInfo, action.Quantity, action.RequestId)
+		res, err := s.broker.MakeSellOrder(instrInfo, action.Lots, action.RequestId)
 		if err != nil {
 			return "", err
 		}
 
-		return fmt.Sprintf("SELL order %s: %s; Price: %.2f; Commission: %.6f",
+		return fmt.Sprintf("SELL order %s: %s; Price: %.2f; Commission: %.8f",
 			instrInfo.Name, res.ExecutionReportStatus, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
 
 	} else if action.Action == Buy {
-		res, err := s.broker.MakeBuyOrder(instrInfo, action.Quantity, action.RequestId)
+		res, err := s.broker.MakeBuyOrder(instrInfo, action.Lots, action.RequestId)
 		if err != nil {
 			return "", err
 		}
 
-		return fmt.Sprintf("BUY order %s: %s; Price: %.2f; Commission: %.6f",
+		return fmt.Sprintf("BUY order %s: %s; Price: %.2f; Commission: %.8f",
 			instrInfo.Name, res.ExecutionReportStatus, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
 
 	}

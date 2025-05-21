@@ -1,7 +1,6 @@
 package strategy
 
 import (
-	"time"
 	"trading_bot/internal/service/datastruct"
 )
 
@@ -51,13 +50,6 @@ const (
 	High  PriceColumn = "high"
 	Low   PriceColumn = "low"
 )
-
-type IBroker interface {
-	GetCandlesHistory(instrInfo *datastruct.InstrumentInfo, from, to time.Time, interval CandleInterval) ([]*datastruct.Candle, error)
-	GetOrders(uid string) ([]*datastruct.OrderState, error)
-	GetPositions(uid string) (*datastruct.Position, error)
-	GetAccoountId() string
-}
 
 type IStorage interface {
 	GetLastLowestExcecutedOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error)

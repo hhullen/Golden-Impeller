@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"trading_bot/internal/service"
 	"trading_bot/internal/service/datastruct"
 	"trading_bot/internal/strategy"
 
@@ -28,10 +29,16 @@ var intervalMap = map[strategy.CandleInterval]pb.CandleInterval{
 	strategy.Interval_Month:  pb.CandleInterval_CANDLE_INTERVAL_MONTH,
 }
 
+type IStream interface {
+	Listen() error
+	Stop()
+}
+
 type Client struct {
 	investgo.Client
 
 	marketDataStream *investgo.MarketDataStream
+	ordersDataStream *investgo.OrderStateStream
 	lastPriceInput   <-chan *pb.LastPrice
 	ctx              context.Context
 }
@@ -49,7 +56,7 @@ func (c *Client) GetAccoountId() string {
 	return c.Config.AccountId
 }
 
-func (c *Client) GetLastPrice(instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error) {
+func (c *Client) RecieveLastPrice(instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error) {
 	if c.marketDataStream == nil {
 
 		if err := c.prepareStreamForInstrument(instrInfo.Uid); err != nil {
@@ -87,21 +94,20 @@ func (c *Client) prepareStreamForInstrument(uid string) error {
 		return err
 	}
 
-	go c.startListeningInstrumentStream(uid)
+	go c.startListeningInstrumentStream(uid, c.marketDataStream)
 
 	c.lastPriceInput = ch
 
 	return nil
 }
 
-// Должен запускаться в отдельной рутине. Блокирующий.
-func (c *Client) startListeningInstrumentStream(uid string) {
+func (c *Client) startListeningInstrumentStream(uid string, s IStream) {
 	for {
 		select {
 		case <-c.ctx.Done():
-			c.marketDataStream.Stop()
+			s.Stop()
 		default:
-			if err := c.marketDataStream.Listen(); err != nil {
+			if err := s.Listen(); err != nil {
 				c.Logger.Errorf("failed starting listening stream for '%s': %s", uid, err.Error())
 
 				const sleepToListenRetry = 5
@@ -112,97 +118,11 @@ func (c *Client) startListeningInstrumentStream(uid string) {
 	}
 }
 
-func (c *Client) GetCandlesHistory(uid string, from, to time.Time, interval strategy.CandleInterval) ([]*datastruct.Candle, error) {
-	RespCandles, err := c.NewMarketDataServiceClient().GetHistoricCandles(&investgo.GetHistoricCandlesRequest{
-		Instrument: uid,
-		Interval:   resolveIntoPbInterval(interval),
-		From:       from,
-		To:         to,
-		Source:     pb.GetCandlesRequest_CANDLE_SOURCE_EXCHANGE,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	candles := make([]*datastruct.Candle, 0, len(RespCandles))
-	for _, candle := range RespCandles {
-		if !candle.IsComplete {
-			continue
-		}
-		candles = append(candles, &datastruct.Candle{
-			Timestamp: candle.Time.AsTime(),
-			Volume:    candle.Volume,
-			Open: datastruct.Quotation{
-				Units: candle.Open.Units,
-				Nano:  candle.Open.Nano,
-			},
-			Close: datastruct.Quotation{
-				Units: candle.Close.Units,
-				Nano:  candle.Close.Nano,
-			},
-			High: datastruct.Quotation{
-				Units: candle.High.Units,
-				Nano:  candle.High.Nano,
-			},
-			Low: datastruct.Quotation{
-				Units: candle.Low.Units,
-				Nano:  candle.Low.Nano,
-			},
-		})
-	}
-
-	return candles, nil
-}
-
 func resolveIntoPbInterval(interval strategy.CandleInterval) pb.CandleInterval {
 	if v, ok := intervalMap[interval]; ok {
 		return v
 	}
 	return pb.CandleInterval_CANDLE_INTERVAL_UNSPECIFIED
-}
-
-func (c *Client) GetOrders(uid string) ([]*datastruct.OrderState, error) {
-	ordersResp, err := c.NewOrdersServiceClient().GetOrders(c.Config.AccountId)
-	if err != nil {
-		return nil, err
-	}
-
-	orders := []*datastruct.OrderState{}
-	for _, order := range ordersResp.Orders {
-		if order.InstrumentUid == uid {
-			orders = append(orders, &datastruct.OrderState{
-				InstrumentUid: order.InstrumentUid,
-				OrderId:       order.OrderId,
-			})
-		}
-	}
-
-	return orders, nil
-}
-
-func (c *Client) GetPositions(uid string) (*datastruct.Position, error) {
-	portfResp, err := c.NewOperationsServiceClient().GetPortfolio(c.GetAccoountId(), pb.PortfolioRequest_RUB)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, pos := range portfResp.PortfolioResponse.Positions {
-		if pos.InstrumentUid == uid {
-
-			return &datastruct.Position{
-				AveragePositionPrice: datastruct.Quotation{
-					Units: pos.AveragePositionPrice.Units,
-					Nano:  pos.AveragePositionPrice.Nano,
-				},
-				Quantity: datastruct.Quotation{
-					Units: pos.Quantity.Units,
-					Nano:  pos.Quantity.Nano,
-				},
-			}, nil
-
-		}
-	}
-	return nil, nil
 }
 
 func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, error) {
@@ -235,14 +155,14 @@ func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, erro
 	}, nil
 }
 
-func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error) {
-	if !isQuantityCorrect(quantity, int64(instrInfo.Lot)) {
-		return nil, fmt.Errorf("incorrect quantity to make order: %d", quantity/int64(instrInfo.Lot))
+func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, lots int64, requestId string) (*datastruct.PostOrderResult, error) {
+	if lots < 1 {
+		return nil, fmt.Errorf("incorrect lots to make order: %d", lots)
 	}
 
 	orderResp, err := c.NewOrdersServiceClient().PostOrder(&investgo.PostOrderRequest{
 		InstrumentId: instrInfo.Uid,
-		Quantity:     quantity,
+		Quantity:     lots,
 		Direction:    pb.OrderDirection_ORDER_DIRECTION_SELL,
 		AccountId:    c.GetAccoountId(),
 		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
@@ -267,14 +187,14 @@ func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity in
 	}, nil
 }
 
-func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error) {
-	if !isQuantityCorrect(quantity, int64(instrInfo.Lot)) {
-		return nil, fmt.Errorf("incorrect quantity to make order: %d", quantity/int64(instrInfo.Lot))
+func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, lots int64, requestId string) (*datastruct.PostOrderResult, error) {
+	if lots < 1 {
+		return nil, fmt.Errorf("incorrect lots to make order: %d", lots)
 	}
 
 	buyResp, err := c.NewOrdersServiceClient().PostOrder(&investgo.PostOrderRequest{
 		InstrumentId: instrInfo.Uid,
-		Quantity:     quantity,
+		Quantity:     lots,
 		Direction:    pb.OrderDirection_ORDER_DIRECTION_BUY,
 		AccountId:    c.GetAccoountId(),
 		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
@@ -299,6 +219,67 @@ func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int
 	}, nil
 }
 
-func isQuantityCorrect(quantity, lot int64) bool {
-	return quantity/lot > 0
+func (c *Client) RecieveOrdersUpdate(instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, error) {
+	if c.ordersDataStream == nil {
+		stream, err := c.NewOrdersStreamClient().OrderStateStream([]string{c.GetAccoountId()}, 0)
+		if err != nil {
+			return nil, err
+		}
+		c.ordersDataStream = stream
+		go c.startListeningInstrumentStream(instrInfo.Uid, c.ordersDataStream)
+	}
+
+	order, ok := <-c.ordersDataStream.OrderState()
+	if !ok {
+		return nil, fmt.Errorf("ordersDataStream closed")
+	}
+
+	returnable := &datastruct.Order{
+		ExecutionReportStatus: order.ExecutionReportStatus.String(),
+		OrderPrice: datastruct.Quotation{
+			Units: order.OrderPrice.Units,
+			Nano:  order.OrderPrice.Nano,
+		},
+		LotsRequested: order.LotsRequested,
+		LotsExecuted:  order.LotsExecuted,
+		InstrumentUid: instrInfo.Uid,
+	}
+
+	if order.CreatedAt != nil {
+		t := order.CreatedAt.AsTime()
+		returnable.CreatedAt = &t
+	}
+
+	if order.CompletionTime != nil {
+		t := order.CompletionTime.AsTime()
+		returnable.CompletionTime = &t
+	}
+
+	if order.OrderRequestId != nil {
+		returnable.OrderId = *order.OrderRequestId
+	} else {
+		returnable.OrderId = order.OrderId
+	}
+
+	if order.Direction == pb.OrderDirection_ORDER_DIRECTION_BUY {
+		returnable.Direction = service.Buy.ToString()
+	} else {
+		returnable.Direction = service.Sell.ToString()
+	}
+
+	if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_FILL ||
+		order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_PARTIALLYFILL {
+
+		returnable.ExecutionReportStatus = service.Fill.ToString()
+
+	} else if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_REJECTED ||
+		order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_CANCELLED {
+
+		returnable.ExecutionReportStatus = service.Cancelled.ToString()
+
+	} else {
+		returnable.ExecutionReportStatus = service.New.ToString()
+	}
+
+	return returnable, nil
 }

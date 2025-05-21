@@ -8,31 +8,30 @@ import (
 	"github.com/google/uuid"
 )
 
-const (
-	percentLowerToBuy   = 0.005
-	percentHigherToSell = 0.025
+// Buy the deep, sell the fix
+type BTDSTF struct {
+	name string
+	cfg  ConfigBTDSTF
 
-	AmountToBuy = 100
-)
-
-type BTDSTT struct {
-	name    string
-	broker  IBroker
 	storage IStorage
-
-	maxBought int64
 }
 
-func NewBTDSTT(b IBroker, s IStorage, maxBought int64) *BTDSTT {
-	return &BTDSTT{
-		name:      "btdstt",
-		broker:    b,
-		storage:   s,
-		maxBought: maxBought,
+type ConfigBTDSTF struct {
+	MaxDepth         int64
+	LotsToBuy        int64
+	PercentDownToBuy float64
+	PercentUpToSell  float64
+}
+
+func NewBTDSTF(s IStorage, cfg ConfigBTDSTF) *BTDSTF {
+	return &BTDSTF{
+		name:    "btdstf",
+		storage: s,
+		cfg:     cfg,
 	}
 }
 
-func (b *BTDSTT) GetActionDecision(ctx context.Context, trId string, instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice) (*service.StrategyAction, error) {
+func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice) (*service.StrategyAction, error) {
 	orders, err := b.storage.GetUnsoldOrdersAmount(trId, instrInfo)
 	if err != nil {
 		return nil, err
@@ -46,7 +45,7 @@ func (b *BTDSTT) GetActionDecision(ctx context.Context, trId string, instrInfo *
 	if !exist {
 		return &service.StrategyAction{
 			Action:    service.Buy,
-			Quantity:  AmountToBuy,
+			Lots:      b.cfg.LotsToBuy,
 			RequestId: uuid.NewString(),
 		}, nil
 	}
@@ -54,14 +53,14 @@ func (b *BTDSTT) GetActionDecision(ctx context.Context, trId string, instrInfo *
 	orF := order.OrderPrice.ToFloat64()
 	lpF := lastPrice.Price.ToFloat64()
 
-	IsDownToBuy := func() bool { return lpF*(1+percentLowerToBuy) <= orF }
-	IsUpToSell := func() bool { return orF*(1+percentHigherToSell) <= lpF }
+	IsDownToBuy := func() bool { return lpF*(1+b.cfg.PercentDownToBuy) < orF }
+	IsUpToSell := func() bool { return orF*(1+b.cfg.PercentUpToSell) < lpF }
 
-	if IsDownToBuy() && orders < b.maxBought {
+	if IsDownToBuy() && orders < b.cfg.MaxDepth {
 
 		return &service.StrategyAction{
 			Action:    service.Buy,
-			Quantity:  AmountToBuy,
+			Lots:      b.cfg.LotsToBuy,
 			RequestId: uuid.NewString(),
 		}, nil
 
@@ -69,7 +68,7 @@ func (b *BTDSTT) GetActionDecision(ctx context.Context, trId string, instrInfo *
 
 		return &service.StrategyAction{
 			Action:    service.Sell,
-			Quantity:  order.LotsExecuted,
+			Lots:      order.LotsExecuted,
 			RequestId: order.OrderId,
 		}, nil
 
@@ -78,6 +77,6 @@ func (b *BTDSTT) GetActionDecision(ctx context.Context, trId string, instrInfo *
 	return &service.StrategyAction{Action: service.Hold}, nil
 }
 
-func (b *BTDSTT) GetName() string {
+func (b *BTDSTF) GetName() string {
 	return b.name
 }

@@ -3,7 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	_ "net/http/pprof"
+
+	// _ "net/http/pprof"
 	"os"
 	"os/signal"
 	"syscall"
@@ -28,7 +29,7 @@ const (
 	GLDRUB_TOM = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
 )
 
-var UID = TGLD
+var UID = TMOS
 
 func main() {
 	ctx, cancelCtx := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
@@ -39,7 +40,7 @@ func main() {
 	}
 
 	investCfg := investgo.Config{
-		AppName:   "trading_bot",
+		AppName:   "Golden_Impeller",
 		EndPoint:  envCfg["T_INVEST_SANDBOX_ADDRESS"],
 		Token:     envCfg["T_INVEST_TOKEN"],
 		AccountId: envCfg["T_INVEST_ACCOUNT_ID"],
@@ -74,7 +75,7 @@ func main() {
 
 	doneCh := make(chan string)
 	// from := time.Now().Add(-time.Hour * 24 * 400)
-	from := time.Date(2023, 1, 1, 0, 0, 0, 0, time.Local)
+	from := time.Date(2024, 1, 1, 0, 0, 0, 0, time.Local)
 	to := time.Now()
 
 	dbClient.GetCandleWithOffset(instrInfo, strategy.Interval_1_Min, from, to, 0)
@@ -86,20 +87,23 @@ func main() {
 	comission := float64(0)
 
 	backtestBroker := backtest.NewBacktestBroker(startDeposit, comission, from, to, doneCh, dbClient)
-
+	cfg := strategy.ConfigBTDSTF{
+		MaxDepth:         10,
+		LotsToBuy:        100,
+		PercentDownToBuy: 0.0075,
+		PercentUpToSell:  0.015,
+	}
 	// strategyInstance := strategy.NewIntervalStrategy(backtestBroker)
-	strategyInstance := strategy.NewBTDSTT(backtestBroker, dbClient, 10)
+	strategyInstance := strategy.NewBTDSTF(dbClient, cfg)
 
-	trader, err := service.NewTraderService(ctx, backtestBroker, logger, instrInfo, strategyInstance, dbClient)
-	if err != nil {
-		panic(err)
-	}
+	traider := "golden_impeller"
+	trader := service.NewTraderService(ctx, backtestBroker, logger, strategyInstance, dbClient, instrInfo, traider)
 
-	f, err := os.Create("cpu.prof")
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
+	// f, err := os.Create("cpu.prof")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// defer f.Close()
 
 	// // Запускаем CPU-профилирование
 	// if err := pprof.StartCPUProfile(f); err != nil {

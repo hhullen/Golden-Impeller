@@ -71,15 +71,15 @@ func (q *Quotation) ToInt64() int64 {
 	return int64(q.ToFloat64())
 }
 
-type OrderState struct {
-	InstrumentUid string
-	OrderId       string
-}
+// type OrderState struct {
+// 	InstrumentUid string
+// 	OrderId       string
+// }
 
-type Position struct {
-	AveragePositionPrice Quotation
-	Quantity             Quotation
-}
+// type Position struct {
+// 	AveragePositionPrice Quotation
+// 	Quantity             Quotation
+// }
 
 type PostOrderResult struct {
 	ExecutedCommission    Quotation

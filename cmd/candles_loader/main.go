@@ -25,7 +25,7 @@ const (
 	MonthsLoad = 36
 )
 
-var UID = TGLD
+var UID = TMOS
 
 func main() {
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)

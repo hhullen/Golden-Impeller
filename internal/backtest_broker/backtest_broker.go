@@ -15,7 +15,7 @@ type IStorage interface {
 type BacktestBroker struct {
 	account, lastPrice float64
 	// dealings           []datastruct.Quotation
-	position          *datastruct.Position
+	// position          *datastruct.Position
 	commissionPercent float64
 
 	candleHistoryOffset int64
@@ -90,21 +90,13 @@ func (c *BacktestBroker) RecieveLastPrice(instrInfo *datastruct.InstrumentInfo) 
 	}, nil
 }
 
-func (c *BacktestBroker) GetOrders(uid string) ([]*datastruct.OrderState, error) {
-	return []*datastruct.OrderState{}, nil
-}
+func (c *BacktestBroker) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, lots int64, requestId string) (*datastruct.PostOrderResult, error) {
 
-func (c *BacktestBroker) GetPositions(uid string) (*datastruct.Position, error) {
-	return c.position, nil
-}
-
-func (c *BacktestBroker) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error) {
-	quantityToOrder := quantity / int64(instrInfo.Lot)
-	if quantityToOrder <= 0 {
-		return nil, fmt.Errorf("invalid buy quantity amount. quantity: %d but lot is %d", quantity, quantityToOrder)
+	if lots < 1 {
+		return nil, fmt.Errorf("invalid buy lots amount. lots: %d", lots)
 	}
 
-	price := c.lastPrice * float64(instrInfo.Lot) * float64(quantityToOrder)
+	price := c.lastPrice * float64(lots)
 
 	commission := price * c.commissionPercent
 	c.account -= (price + commission)
@@ -120,8 +112,8 @@ func (c *BacktestBroker) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quan
 		Direction:             "BUY",
 		ExecutionReportStatus: "FILL",
 		OrderPrice:            orderPrice,
-		LotsRequested:         quantityToOrder,
-		LotsExecuted:          quantityToOrder,
+		LotsRequested:         lots,
+		LotsExecuted:          lots,
 	}
 
 	commissionQuotation := datastruct.Quotation{}
@@ -136,13 +128,12 @@ func (c *BacktestBroker) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, quan
 	}, nil
 }
 
-func (c *BacktestBroker) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, quantity int64, requestId string) (*datastruct.PostOrderResult, error) {
-	quantityToOrder := quantity / int64(instrInfo.Lot)
-	if quantityToOrder <= 0 {
-		return nil, fmt.Errorf("invalid quantity amount. quantity: %d but lot is %d", quantity, quantityToOrder)
+func (c *BacktestBroker) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, lots int64, requestId string) (*datastruct.PostOrderResult, error) {
+	if lots < 1 {
+		return nil, fmt.Errorf("invalid lots amount. lots: %d", lots)
 	}
 
-	price := c.lastPrice * float64(instrInfo.Lot) * float64(quantityToOrder)
+	price := c.lastPrice * float64(lots)
 
 	commission := price * c.commissionPercent
 	c.account += (price - commission)
@@ -158,8 +149,8 @@ func (c *BacktestBroker) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, qua
 		Direction:             "SELL",
 		ExecutionReportStatus: "FILL",
 		OrderPrice:            orderPrice,
-		LotsRequested:         quantityToOrder,
-		LotsExecuted:          quantityToOrder,
+		LotsRequested:         lots,
+		LotsExecuted:          lots,
 	}
 
 	commissionQuotation := datastruct.Quotation{}
@@ -174,6 +165,7 @@ func (c *BacktestBroker) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, qua
 	}, nil
 }
 
-func (c *BacktestBroker) RecieveOrdersUpdate(instrInfo *datastruct.InstrumentInfo) (datastruct.Order, error) {
-	return <-c.ordersCh, nil
+func (c *BacktestBroker) RecieveOrdersUpdate(instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, error) {
+	v := <-c.ordersCh
+	return &v, nil
 }

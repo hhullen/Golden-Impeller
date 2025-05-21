@@ -3,16 +3,21 @@ package main
 import (
 	"context"
 	"fmt"
+
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
+
+	"trading_bot/internal/clients/postgres"
 	"trading_bot/internal/clients/t_api"
 	"trading_bot/internal/logger"
+	"trading_bot/internal/service"
+	"trading_bot/internal/service/datastruct"
+	"trading_bot/internal/strategy"
 	"trading_bot/internal/supports"
 
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
-	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
+	investapi "github.com/russianinvestments/invest-api-go-sdk/proto"
 )
 
 const (
@@ -21,8 +26,11 @@ const (
 	GLDRUB_TOM = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
 )
 
+var UID = TGLD
+
 func main() {
-	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	ctx, cancelCtx := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	defer cancelCtx()
 
 	envCfg, err := supports.GetEnvCfg()
 	if err != nil {
@@ -30,7 +38,7 @@ func main() {
 	}
 
 	investCfg := investgo.Config{
-		AppName:   "trading_bot",
+		AppName:   "Golden_Impeller",
 		EndPoint:  envCfg["T_INVEST_SANDBOX_ADDRESS"],
 		Token:     envCfg["T_INVEST_TOKEN"],
 		AccountId: envCfg["T_INVEST_ACCOUNT_ID"],
@@ -43,166 +51,84 @@ func main() {
 		panic(err)
 	}
 
-	// sres, err := investClient.NewSandboxServiceClient().SandboxPayIn(&investgo.SandboxPayInRequest{
-	// 	AccountId: investCfg.AccountId,
-	// 	Currency:  "rub",
-	// 	Unit:      100000,
-	// })
+	dbClient, err := postgres.NewClient(envCfg["DB_HOST"], envCfg["DB_PORT"], envCfg["DB_USER"], envCfg["DB_PASSWORD"], envCfg["DB_NAME"])
+	if err != nil {
+		panic(err)
+	}
+
+	instrInfo, err := getInstrument(ctx, investClient, dbClient, UID)
+	if err != nil {
+		panic(err)
+	}
+
+	cfg := strategy.ConfigBTDSTF{
+		MaxDepth:         10,
+		LotsToBuy:        100,
+		PercentDownToBuy: 0.0075,
+		PercentUpToSell:  0.015,
+	}
+
+	strategyInstance := strategy.NewBTDSTF(dbClient, cfg)
+
+	traiderId := "Golden_Impeller"
+	trader := service.NewTraderService(ctx,
+		investClient, logger, strategyInstance, dbClient, instrInfo, traiderId)
+
+	// f, err := os.Create("cpu.prof")
 	// if err != nil {
 	// 	panic(err)
 	// }
-	// fmt.Println(sres.Balance)
+	// defer f.Close()
 
-	// s := service.NewService(ctx, investClient, logger)
-
-	// s.RunTrading(TMOS, strategy.NewIntervalStrategy())
-
-	// investClient, err := investgo.NewClient(ctx, investCfg, logger.NewLogger())
-	// if err != nil {
+	// // Запускаем CPU-профилирование
+	// if err := pprof.StartCPUProfile(f); err != nil {
 	// 	panic(err)
 	// }
+	// defer pprof.StopCPUProfile()
 
-	stream, err := investClient.NewOrdersStreamClient().OrderStateStream([]string{investCfg.AccountId}, 0)
-	go stream.Listen()
+	trader.RunTrading()
 
-	// vv, err := investClient.NewOperationsServiceClient().GetPositions(investCfg.AccountId)
-
-	// stream, err := investClient.NewOperationsStreamClient().PositionsStream([]string{investCfg.AccountId})
-	// go stream.Listen()
-
-	defer investClient.Conn.Close()
-
-	// рабочие костыли
-	printSchedule(investClient, "MOEX")
-	// printAccounts(investClient)
-	// fundAndPrintInstrument(investClient, "GLDRUB_TOM")
-	// listenAndPrintLastPrice(investClient, GLDRUB_TOM)
-	buy(investClient, investCfg.AccountId, TGLD, 2)
-	printOperations(investClient, time.Now().Add(-time.Hour*24), time.Now())
-
-	for vv := range stream.OrderState() {
-		if vv.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_FILL {
-
-		}
-
-		if vv.CompletionTime == nil {
-			fmt.Println("NIL!!!!")
-		}
-		fmt.Println(vv.ExecutionReportStatus)
-		fmt.Println(vv.OrderPrice.Units, vv.OrderPrice.Nano) // цена за лот
-		fmt.Println(vv.CompletionTime.AsTime().Format(time.DateTime))
-		fmt.Println(vv.CreatedAt.AsTime().Format(time.DateTime))
-		fmt.Println(vv.InstrumentUid)
-		fmt.Println(vv.Direction, vv.LotsRequested, vv.LotsExecuted)
-		fmt.Println(vv.OrderId, *vv.OrderRequestId)
-		fmt.Println("")
-
-	}
-
-	// fmt.Println(vv.Date.AsTime().Format(time.DateTime))
-	// fmt.Println(vv.AccountId)
-	// fmt.Println(vv.Securities)
-	// fmt.Println(vv.Futures)
-	// fmt.Println(vv.Money)
-	// fmt.Println(vv.Options)
-
+	logger.Stop()
 }
 
-func printOperations(c *t_api.Client, from, to time.Time) {
-	OperResp, err := c.NewOperationsServiceClient().GetOperations(&investgo.GetOperationsRequest{
-		AccountId: c.GetAccoountId(),
-		Figi:      GLDRUB_TOM,
-		From:      from,
-		To:        to,
-		State:     pb.OperationState_OPERATION_STATE_EXECUTED,
-	})
+func getInstrument(ctx context.Context, c *t_api.Client, db *postgres.Client, UID string) (*datastruct.InstrumentInfo, error) {
+	instrs, err := c.NewInstrumentsServiceClient().FindInstrument(UID)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	fmt.Println("Operations:", len(OperResp.Operations))
-	for _, v := range OperResp.Operations {
-		fmt.Println(v.Date.AsTime().Format(time.DateTime), v.OperationType, v.Price.Units, v.Price.Nano, v.Quantity, v.InstrumentUid, v.PositionUid, v.Payment.Units, v.Payment.Nano)
-	}
-}
-
-func buy(c *t_api.Client, accountId, instrumentUID string, quantity int64) {
-
-	orderResp, err := c.NewOrdersServiceClient().PostOrder(&investgo.PostOrderRequest{
-		InstrumentId: instrumentUID,
-		Quantity:     quantity,
-		Direction:    pb.OrderDirection_ORDER_DIRECTION_SELL,
-		AccountId:    accountId,
-		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
-		OrderId:      "e4b886fe-8e77-4d1a-89a3-1eee9bca243b",
-	})
-
-	if err != nil {
-		// if orderResp != nil {
-		// 	panic(orderResp.GetHeader())
-		// } else {
-		panic(err)
-		// }
-	}
-	fmt.Println("ORDER ID: ", orderResp.OrderId)
-
-	fmt.Println("BUY: ", orderResp.ExecutedCommission.Units, orderResp.ExecutedOrderPrice, orderResp.Message)
-}
-
-func fundAndPrintInstrument(c *t_api.Client, name string) {
-	instrumentsServiceClient := c.NewInstrumentsServiceClient()
-
-	ins, err := instrumentsServiceClient.FindInstrument(name)
-	if err != nil {
-		panic(err)
-	}
-
-	for i := range ins.Instruments {
-		fmt.Println(ins.Instruments[i].ClassCode, ins.Instruments[i].Ticker, ins.Instruments[i].Name, ins.Instruments[i].Uid)
-		fmt.Println("Avail via API?", ins.Instruments[i].ApiTradeAvailableFlag, "For Qual Investor?", ins.Instruments[i].ForQualInvestorFlag)
-	}
-}
-
-func printSchedule(c *t_api.Client, excange string) {
-	schedule, _ := c.NewInstrumentsServiceClient().TradingSchedules(excange, time.Now(), time.Now().Add(1*time.Hour))
-
-	for _, exs := range schedule.GetExchanges() {
-		for _, day := range exs.Days {
-			fmt.Printf("Дата: %s, работает: %v, с %s по %s\n",
-				day.Date.AsTime().Format("2006-01-02"),
-				day.IsTradingDay,
-				day.StartTime.AsTime().Local().Format(time.TimeOnly),
-				day.EndTime.AsTime().Local().Format(time.TimeOnly),
-			)
+	var instr *investapi.InstrumentShort
+	for _, v := range instrs.Instruments {
+		if v.Uid == UID {
+			instr = v
+			break
 		}
 	}
-}
-
-func printAccounts(c *t_api.Client) {
-	r, _ := c.NewUsersServiceClient().GetAccounts(pb.AccountStatus_ACCOUNT_STATUS_ALL.Enum())
-	for i := range r.Accounts {
-		fmt.Println(r.Accounts[i].String())
+	if instr == nil {
+		return nil, fmt.Errorf("Not found instrument '%s'", UID)
 	}
-}
 
-func listenAndPrintLastPrice(c *t_api.Client, uid string) {
-	stream, err := c.NewMarketDataStreamClient().MarketDataStream()
+	instrInfo := &datastruct.InstrumentInfo{
+		Isin:         instr.Isin,
+		Figi:         instr.Figi,
+		Ticker:       instr.Ticker,
+		ClassCode:    instr.ClassCode,
+		Name:         instr.Name,
+		Uid:          instr.Uid,
+		Lot:          instr.Lot,
+		AvailableApi: instr.ApiTradeAvailableFlag,
+		ForQuals:     instr.ForQualInvestorFlag,
+	}
+
+	err = db.AddInstrumentInfo(ctx, instrInfo)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	prices, err := stream.SubscribeLastPrice([]string{uid})
+	instrInfo, err = db.GetInstrumentInfo(instrInfo.Uid)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
-	go func() {
-		if err := stream.Listen(); err != nil {
-			panic(err)
-		}
-	}()
-
-	for lp := range prices {
-		fmt.Println(lp.Time.AsTime().Local().Format(time.TimeOnly), lp.Figi, lp.Price, lp.LastPriceType)
-	}
+	return instrInfo, nil
 }

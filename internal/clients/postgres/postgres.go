@@ -188,7 +188,7 @@ func (c *Client) GetCandleWithOffset(instrInfo *datastruct.InstrumentInfo, inter
 
 }
 
-func (c *Client) PutOrder(trId string, instrInfo *datastruct.InstrumentInfo, order datastruct.Order) (err error) {
+func (c *Client) PutOrder(trId string, instrInfo *datastruct.InstrumentInfo, order *datastruct.Order) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
@@ -257,7 +257,6 @@ func (c *Client) GetUnsoldOrdersAmount(trId string, instrInfo *datastruct.Instru
 	query := `SELECT COUNT(*) FROM orders
 		WHERE instrument_id = $1
 		AND direction = 'BUY'
-		AND exec_report_status = 'FILL'
 		AND trader_id = $2;`
 
 	var res int64
