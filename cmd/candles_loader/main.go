@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 	"trading_bot/internal/clients/postgres"
@@ -30,6 +31,7 @@ func main() {
 		fmt.Println("HISTORY_CANDLES_LOADER list is empty")
 		return
 	}
+	fmt.Printf("Instruments to load candles: %d\n", len(envCfg.HistoryCandlesLoader))
 
 	investCfg := investgo.Config{
 		AppName:   envCfg.AppName,
@@ -51,34 +53,57 @@ func main() {
 		panic(err)
 	}
 
+	msgCh := make(chan string)
+	go func() {
+		for msg := range msgCh {
+			fmt.Println(msg)
+		}
+	}()
+
+	var wg sync.WaitGroup
+	pool := make(chan struct{}, 2)
 	for _, instr := range envCfg.HistoryCandlesLoader {
 
-		instrInfo, err := supports.GetInstrument(ctx, investClient, dbClient, instr.UID)
-		if err != nil {
-			panic(err)
-		}
+		wg.Add(1)
+		pool <- struct{}{}
+		go func() {
+			defer wg.Done()
 
-		from, err := supports.ParseDate(instr.From)
-		if err != nil {
-			panic(err)
-		}
-		to, err := supports.ParseDate(instr.To)
-		if err != nil {
-			panic(err)
-		}
+			instrInfo, err := supports.GetInstrument(ctx, investClient, dbClient, instr.UID)
+			if err != nil {
+				panic(err)
+			}
 
-		interval, ok := strategy.CandleIntervalFromString(instr.Interval)
-		if !ok {
-			panic("incorrect interval value")
-		}
+			from, err := supports.ParseDate(instr.From)
+			if err != nil {
+				panic(err)
+			}
+			to, err := supports.ParseDate(instr.To)
+			if err != nil {
+				panic(err)
+			}
 
-		fmt.Printf("Start loading: %s\n", instr.Ticker)
-		loadCandlesToDB(ctx, investClient, dbClient, instrInfo, from, to, interval)
+			interval, ok := strategy.CandleIntervalFromString(instr.Interval)
+			if !ok {
+				panic("incorrect interval value")
+			}
+
+			fmt.Printf("Start loading: %s\n", instr.Ticker)
+			loadCandlesToDB(ctx, investClient, dbClient, instrInfo, from, to, interval, msgCh)
+
+			<-pool
+		}()
+
 	}
+
+	wg.Wait()
+	close(msgCh)
+	close(pool)
 }
 
 func loadCandlesToDB(ctx context.Context, c *t_api.Client, db *postgres.Client,
-	instrInfo *datastruct.InstrumentInfo, from, to time.Time, interval strategy.CandleInterval) {
+	instrInfo *datastruct.InstrumentInfo, from, to time.Time, interval strategy.CandleInterval, ch chan string) {
+	tick := time.NewTicker(time.Second * 2)
 
 	for t := from; t.Before(to); t = t.AddDate(0, 1, 0) {
 
@@ -91,7 +116,11 @@ func loadCandlesToDB(ctx context.Context, c *t_api.Client, db *postgres.Client,
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("Loaded: %d candles with interval '%s' for: %s - %s\n", len(candles), interval.ToString(), t.Format(time.DateOnly), t.AddDate(0, 1, 0).Format(time.DateOnly))
+
+		ch <- fmt.Sprintf("Loaded: %d candles for [%s] with interval '%s' for: %s - %s",
+			len(candles), instrInfo.Ticker, interval.ToString(), t.Format(time.DateOnly), t.AddDate(0, 1, 0).Format(time.DateOnly))
+
+		<-tick.C
 	}
 }
 
