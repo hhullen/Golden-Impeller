@@ -18,15 +18,6 @@ import (
 	investapi "github.com/russianinvestments/invest-api-go-sdk/proto"
 )
 
-const (
-	TGLD       = "4c466956-d2ce-4a95-abb4-17947a65f18a"
-	TMOS       = "9654c2dd-6993-427e-80fa-04e80a1cf4da"
-	GLDRUB_TOM = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
-	MonthsLoad = 36
-)
-
-var UID = TMOS
-
 func main() {
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
@@ -35,11 +26,16 @@ func main() {
 		panic(err)
 	}
 
+	if len(envCfg.HistoryCandlesLoader) == 0 {
+		fmt.Println("HISTORY_CANDLES_LOADER list is empty")
+		return
+	}
+
 	investCfg := investgo.Config{
-		AppName:   "trading_bot",
-		EndPoint:  envCfg["T_INVEST_SANDBOX_ADDRESS"],
-		Token:     envCfg["T_INVEST_TOKEN"],
-		AccountId: envCfg["T_INVEST_ACCOUNT_ID"],
+		AppName:   envCfg.AppName,
+		EndPoint:  envCfg.TInvestAddress,
+		Token:     envCfg.TInvestToken,
+		AccountId: envCfg.TInvestAccountID,
 	}
 
 	logger := logger.NewLogger()
@@ -49,72 +45,53 @@ func main() {
 		panic(err)
 	}
 
-	instrInfo, err := getInstrument(investClient, UID)
+	dbClient, err := postgres.NewClient(envCfg.TestDBHost, envCfg.TestDBPort,
+		envCfg.TestDBUser, envCfg.TestDBPassword, envCfg.TestDBName)
 	if err != nil {
 		panic(err)
 	}
 
-	dbClient, err := postgres.NewClient(envCfg["DB_HOST"], envCfg["DB_PORT"], envCfg["DB_USER"], envCfg["DB_PASSWORD"], envCfg["DB_NAME"])
-	if err != nil {
-		panic(err)
-	}
+	for _, instr := range envCfg.HistoryCandlesLoader {
 
-	err = dbClient.AddInstrumentInfo(ctx, instrInfo)
-	if err != nil {
-		panic(err)
-	}
-
-	instrInfo, err = dbClient.GetInstrumentInfo(instrInfo.Uid)
-	if err != nil {
-		panic(err)
-	}
-
-	uploadCandlesToDBForMonths(ctx, investClient, dbClient, MonthsLoad, instrInfo)
-}
-
-func getInstrument(c *t_api.Client, UID string) (*datastruct.InstrumentInfo, error) {
-	instrs, err := c.NewInstrumentsServiceClient().FindInstrument(UID)
-	if err != nil {
-		return nil, err
-	}
-
-	var instr *investapi.InstrumentShort
-	for _, v := range instrs.Instruments {
-		if v.Uid == UID {
-			instr = v
-			break
-		}
-	}
-
-	return &datastruct.InstrumentInfo{
-		Isin:         instr.Isin,
-		Figi:         instr.Figi,
-		Ticker:       instr.Ticker,
-		ClassCode:    instr.ClassCode,
-		Name:         instr.Name,
-		Uid:          instr.Uid,
-		Lot:          instr.Lot,
-		AvailableApi: instr.ApiTradeAvailableFlag,
-		ForQuals:     instr.ForQualInvestorFlag,
-	}, nil
-}
-
-func uploadCandlesToDBForMonths(ctx context.Context, c *t_api.Client, db *postgres.Client, month int64, instr *datastruct.InstrumentInfo) {
-	for i := month; i > 0; i-- {
-		from := time.Now().Add(-time.Hour * time.Duration(24*30*i))
-		to := time.Now().Add(-time.Hour * time.Duration(24*30*(i-1)))
-		fmt.Printf("Candles period: %s - %s\n", from.Format(time.DateTime), to.Format(time.DateTime))
-
-		candles, err := getCandles(c, from, to, instr.Uid)
+		instrInfo, err := supports.GetInstrument(ctx, investClient, dbClient, instr.UID)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println("Candles:", len(candles))
 
-		err = db.AddCandles(ctx, instr, candles, strategy.Interval_1_Min)
+		from, err := supports.ParseDate(instr.From)
 		if err != nil {
 			panic(err)
 		}
+		to, err := supports.ParseDate(instr.To)
+		if err != nil {
+			panic(err)
+		}
+
+		interval, ok := strategy.CandleIntervalFromString(instr.Interval)
+		if !ok {
+			panic("incorrect interval value")
+		}
+
+		fmt.Printf("Start loading: %s\n", instr.Ticker)
+		loadCandlesToDB(ctx, investClient, dbClient, instrInfo, from, to, interval)
+	}
+}
+
+func loadCandlesToDB(ctx context.Context, c *t_api.Client, db *postgres.Client,
+	instrInfo *datastruct.InstrumentInfo, from, to time.Time, interval strategy.CandleInterval) {
+
+	for t := from; t.Before(to); t = t.AddDate(0, 1, 0) {
+
+		candles, err := getCandles(c, t, t.AddDate(0, 1, 0), instrInfo.Uid)
+		if err != nil {
+			panic(err)
+		}
+
+		err = db.AddCandles(ctx, instrInfo, candles, interval)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("Loaded: %d candles with interval '%s' for: %s - %s\n", len(candles), interval.ToString(), t.Format(time.DateOnly), t.AddDate(0, 1, 0).Format(time.DateOnly))
 	}
 }
 

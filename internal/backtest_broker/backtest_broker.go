@@ -8,14 +8,14 @@ import (
 )
 
 type IStorage interface {
-	GetCandlesHistory(instrInfo *datastruct.InstrumentInfo, interval strategy.CandleInterval, from, to time.Time) ([]*datastruct.Candle, error)
 	GetCandleWithOffset(instrInfo *datastruct.InstrumentInfo, interval strategy.CandleInterval, from, to time.Time, offset int64) (*datastruct.Candle, error)
 }
 
 type BacktestBroker struct {
-	account, lastPrice float64
-	// dealings           []datastruct.Quotation
-	// position          *datastruct.Position
+	account           float64
+	minAccount        float64
+	maxAccount        float64
+	lastPrice         float64
 	commissionPercent float64
 
 	candleHistoryOffset int64
@@ -29,6 +29,8 @@ type BacktestBroker struct {
 func NewBacktestBroker(account, commision float64, from, to time.Time, terminator chan string, storage IStorage) *BacktestBroker {
 	return &BacktestBroker{
 		account:           account,
+		minAccount:        account,
+		maxAccount:        account,
 		commissionPercent: commision,
 		from:              from,
 		to:                to,
@@ -46,8 +48,12 @@ func (c *BacktestBroker) GetAccoount() float64 {
 	return c.account
 }
 
-func (c *BacktestBroker) GetCandlesHistory(instrInfo *datastruct.InstrumentInfo, from, to time.Time, interval strategy.CandleInterval) ([]*datastruct.Candle, error) {
-	return c.storage.GetCandlesHistory(instrInfo, interval, from, to)
+func (c *BacktestBroker) GetMinAccoount() float64 {
+	return c.minAccount
+}
+
+func (c *BacktestBroker) GetMaxAccoount() float64 {
+	return c.maxAccount
 }
 
 func (c *BacktestBroker) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, error) {
@@ -100,6 +106,9 @@ func (c *BacktestBroker) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, lots
 
 	commission := price * c.commissionPercent
 	c.account -= (price + commission)
+	if c.account < c.minAccount {
+		c.minAccount = c.account
+	}
 
 	t := time.Now()
 	orderPrice := datastruct.Quotation{}
@@ -137,6 +146,9 @@ func (c *BacktestBroker) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, lot
 
 	commission := price * c.commissionPercent
 	c.account += (price - commission)
+	if c.account > c.maxAccount {
+		c.maxAccount = c.account
+	}
 
 	t := time.Now()
 	orderPrice := datastruct.Quotation{}

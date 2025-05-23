@@ -24,14 +24,14 @@ func main() {
 	}
 	command := os.Args[1]
 
-	cfg, err := supports.GetEnvCfg()
+	envCfg, err := supports.GetEnvCfg()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	db, err := sql.Open("postgres",
 		fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-			cfg["DB_HOST"], cfg["DB_PORT"], cfg["DB_USER"], cfg["DB_PASSWORD"], cfg["DB_NAME"]))
+			envCfg.DBHost, envCfg.DBPort, envCfg.DBUser, envCfg.DBPassword, envCfg.DBName))
 	if err != nil {
 		log.Fatalf("failed to open DB: %v", err)
 	}

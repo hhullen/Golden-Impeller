@@ -36,10 +36,10 @@ func (m *MockIStrategy) EXPECT() *MockIStrategyMockRecorder {
 }
 
 // GetActionDecision mocks base method.
-func (m *MockIStrategy) GetActionDecision(ctx context.Context, trId string, instrInfo *datastruct.InstrumentInfo, lp *datastruct.LastPrice) (*StrategyAction, error) {
+func (m *MockIStrategy) GetActionDecision(ctx context.Context, trId string, instrInfo *datastruct.InstrumentInfo, lp *datastruct.LastPrice) ([]*StrategyAction, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetActionDecision", ctx, trId, instrInfo, lp)
-	ret0, _ := ret[0].(*StrategyAction)
+	ret0, _ := ret[0].([]*StrategyAction)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

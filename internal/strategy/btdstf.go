@@ -31,7 +31,7 @@ func NewBTDSTF(s IStorage, cfg ConfigBTDSTF) *BTDSTF {
 	}
 }
 
-func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice) (*service.StrategyAction, error) {
+func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *datastruct.InstrumentInfo, lastPrice *datastruct.LastPrice) ([]*service.StrategyAction, error) {
 	orders, err := b.storage.GetUnsoldOrdersAmount(trId, instrInfo)
 	if err != nil {
 		return nil, err
@@ -43,10 +43,12 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 	}
 
 	if !exist {
-		return &service.StrategyAction{
-			Action:    service.Buy,
-			Lots:      b.cfg.LotsToBuy,
-			RequestId: uuid.NewString(),
+		return []*service.StrategyAction{
+			{
+				Action:    service.Buy,
+				Lots:      b.cfg.LotsToBuy,
+				RequestId: uuid.NewString(),
+			},
 		}, nil
 	}
 
@@ -58,23 +60,27 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 
 	if IsDownToBuy() && orders < b.cfg.MaxDepth {
 
-		return &service.StrategyAction{
-			Action:    service.Buy,
-			Lots:      b.cfg.LotsToBuy,
-			RequestId: uuid.NewString(),
+		return []*service.StrategyAction{
+			{
+				Action:    service.Buy,
+				Lots:      b.cfg.LotsToBuy,
+				RequestId: uuid.NewString(),
+			},
 		}, nil
 
 	} else if IsUpToSell() {
 
-		return &service.StrategyAction{
-			Action:    service.Sell,
-			Lots:      order.LotsExecuted,
-			RequestId: order.OrderId,
+		return []*service.StrategyAction{
+			{
+				Action:    service.Sell,
+				Lots:      order.LotsExecuted,
+				RequestId: order.OrderId,
+			},
 		}, nil
 
 	}
 
-	return &service.StrategyAction{Action: service.Hold}, nil
+	return []*service.StrategyAction{{Action: service.Hold}}, nil
 }
 
 func (b *BTDSTF) GetName() string {

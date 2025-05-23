@@ -56,7 +56,7 @@ type StrategyAction struct {
 }
 
 type IStrategy interface {
-	GetActionDecision(ctx context.Context, trId string, instrInfo *datastruct.InstrumentInfo, lp *datastruct.LastPrice) (*StrategyAction, error)
+	GetActionDecision(ctx context.Context, trId string, instrInfo *datastruct.InstrumentInfo, lp *datastruct.LastPrice) ([]*StrategyAction, error)
 	GetName() string
 }
 
@@ -162,21 +162,23 @@ func (s *TraderService) RunTrading() {
 				continue
 			}
 
-			var action *StrategyAction
-			action, err = s.strategy.GetActionDecision(s.ctx, s.traderId, s.instrInfo, lastPrice)
+			var actions []*StrategyAction
+			actions, err = s.strategy.GetActionDecision(s.ctx, s.traderId, s.instrInfo, lastPrice)
 			if err != nil {
 				s.logger.Errorf("error getting action decision '%s': %s", s.instrInfo.Uid, err.Error())
 				continue
 			}
 
-			var res string
-			res, err = s.MakeAction(s.instrInfo, lastPrice, action)
-			if err != nil {
-				s.logger.Errorf("error making action '%s:%d' for '%s': %s", action.Action.ToString(), action.Lots, s.instrInfo.Uid, err.Error())
-				continue
-			}
-			if action.Action != Hold {
-				s.logger.Infof(res)
+			for _, action := range actions {
+				var res string
+				res, err = s.MakeAction(s.instrInfo, lastPrice, action)
+				if err != nil {
+					s.logger.Errorf("error making action '%s:%d' for '%s': %s", action.Action.ToString(), action.Lots, s.instrInfo.Uid, err.Error())
+					continue
+				}
+				if action.Action != Hold {
+					s.logger.Infof(res)
+				}
 			}
 		}
 	}

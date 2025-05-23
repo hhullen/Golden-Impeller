@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/csv"
 	"fmt"
 	"os"
 	"os/signal"
@@ -15,11 +16,8 @@ import (
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
 )
 
-const (
-	TGLD       = "4c466956-d2ce-4a95-abb4-17947a65f18a"
-	TMOS       = "9654c2dd-6993-427e-80fa-04e80a1cf4da"
-	GLDRUB_TOM = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
-)
+type Load struct {
+}
 
 func main() {
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
@@ -29,11 +27,15 @@ func main() {
 		panic(err)
 	}
 
+	fmt.Println(envCfg)
+	return
+
 	investCfg := investgo.Config{
-		AppName:   "trading_bot",
-		EndPoint:  envCfg["T_INVEST_SANDBOX_ADDRESS"],
-		Token:     envCfg["T_INVEST_TOKEN"],
-		AccountId: envCfg["T_INVEST_ACCOUNT_ID"],
+		// AppName:  "trading_bot",
+		// EndPoint: envCfg["T_INVEST_SANDBOX_ADDRESS"],
+		// Token:    envCfg["T_INVEST_TOKEN"],
+		// // AccountId: envCfg["T_INVEST_ACCOUNT_ID"],
+		// AccountId: envCfg["ACCOUNT_2"],
 	}
 
 	logger := logger.NewLogger()
@@ -43,32 +45,29 @@ func main() {
 		panic(err)
 	}
 
-	// resp, err := investClient.NewInstrumentsServiceClient().Shares(pb.InstrumentStatus_INSTRUMENT_STATUS_BASE)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// f, err := os.Create("shares.txt")
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// defer f.Close()
-
-	// for _, instr := range resp.Instruments {
-	// 	// fmt.Println(instr)
-	// 	f.Write([]byte(fmt.Sprintf("%s", instr)))
-	// }
+	getShares(investClient, "shares.txt")
+	getEtfs(investClient, "etfs.txt")
+	getBonds(investClient, "bonds.txt")
+	getCurrencies(investClient, "currencies.txt")
 	// return
+
 	sres, err := investClient.NewSandboxServiceClient().SandboxPayIn(&investgo.SandboxPayInRequest{
 		AccountId: investCfg.AccountId,
 		Currency:  "rub",
-		Unit:      0,
+		Unit:      10000,
 	})
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(sres.Balance)
 	return
+
+	// r, err := investClient.NewSandboxServiceClient().OpenSandboxAccount()
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println(r.AccountId)
+	// return
 
 	// s := service.NewService(ctx, investClient, logger)
 
@@ -222,5 +221,109 @@ func listenAndPrintLastPrice(c *t_api.Client, uid string) {
 
 	for lp := range prices {
 		fmt.Println(lp.Time.AsTime().Local().Format(time.TimeOnly), lp.Figi, lp.Price, lp.LastPriceType)
+	}
+}
+
+func getShares(c *t_api.Client, filePath string) {
+	resp, err := c.NewInstrumentsServiceClient().Shares(pb.InstrumentStatus_INSTRUMENT_STATUS_BASE)
+	if err != nil {
+		panic(err)
+	}
+
+	f, err := os.Create(filePath)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	w := csv.NewWriter(f)
+	defer w.Flush()
+
+	w.Write([]string{"uid", "figi", "isin", "ticker", "class_code", "lot",
+		"currency", "name", "country_name", "first_candle_date", "for_qual", "name"})
+
+	for _, i := range resp.Instruments {
+		line := []string{i.Uid, i.Figi, i.Isin, i.Ticker, i.ClassCode, fmt.Sprint(i.Lot),
+			i.Currency, i.CountryOfRisk, i.First_1MinCandleDate.AsTime().Format(time.DateTime),
+			fmt.Sprint(i.ForQualInvestorFlag), i.Name}
+		w.Write(line)
+	}
+}
+
+func getEtfs(c *t_api.Client, filePath string) {
+	resp, err := c.NewInstrumentsServiceClient().Etfs(pb.InstrumentStatus_INSTRUMENT_STATUS_BASE)
+	if err != nil {
+		panic(err)
+	}
+
+	f, err := os.Create(filePath)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	w := csv.NewWriter(f)
+	defer w.Flush()
+
+	w.Write([]string{"uid", "figi", "isin", "ticker", "class_code", "lot",
+		"currency", "name", "country_name", "first_candle_date", "for_qual", "name"})
+
+	for _, i := range resp.Instruments {
+		line := []string{i.Uid, i.Figi, i.Isin, i.Ticker, i.ClassCode, fmt.Sprint(i.Lot),
+			i.Currency, i.CountryOfRisk, i.First_1MinCandleDate.AsTime().Format(time.DateTime),
+			fmt.Sprint(i.ForQualInvestorFlag), i.Name}
+		w.Write(line)
+	}
+}
+
+func getBonds(c *t_api.Client, filePath string) {
+	resp, err := c.NewInstrumentsServiceClient().Bonds(pb.InstrumentStatus_INSTRUMENT_STATUS_BASE)
+	if err != nil {
+		panic(err)
+	}
+
+	f, err := os.Create(filePath)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	w := csv.NewWriter(f)
+	defer w.Flush()
+
+	w.Write([]string{"uid", "figi", "isin", "ticker", "class_code", "lot",
+		"currency", "name", "country_name", "first_candle_date", "for_qual", "name"})
+
+	for _, i := range resp.Instruments {
+		line := []string{i.Uid, i.Figi, i.Isin, i.Ticker, i.ClassCode, fmt.Sprint(i.Lot),
+			i.Currency, i.CountryOfRisk, i.First_1MinCandleDate.AsTime().Format(time.DateTime),
+			fmt.Sprint(i.ForQualInvestorFlag), i.Name}
+		w.Write(line)
+	}
+}
+
+func getCurrencies(c *t_api.Client, filePath string) {
+	resp, err := c.NewInstrumentsServiceClient().Currencies(pb.InstrumentStatus_INSTRUMENT_STATUS_BASE)
+	if err != nil {
+		panic(err)
+	}
+
+	f, err := os.Create(filePath)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	w := csv.NewWriter(f)
+	defer w.Flush()
+
+	w.Write([]string{"uid", "figi", "isin", "ticker", "class_code", "lot",
+		"currency", "name", "country_name", "first_candle_date", "for_qual", "name"})
+
+	for _, i := range resp.Instruments {
+		line := []string{i.Uid, i.Figi, i.Isin, i.Ticker, i.ClassCode, fmt.Sprint(i.Lot),
+			i.Currency, i.CountryOfRisk, i.First_1MinCandleDate.AsTime().Format(time.DateTime),
+			fmt.Sprint(i.ForQualInvestorFlag), i.Name}
+		w.Write(line)
 	}
 }

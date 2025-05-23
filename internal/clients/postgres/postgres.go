@@ -32,6 +32,9 @@ func NewClient(host, port, user, password, dbname string) (*Client, error) {
 		return nil, fmt.Errorf("unable to connect to db: %w", err)
 	}
 
+	db.SetMaxIdleConns(5)
+	db.SetMaxOpenConns(10)
+
 	return &Client{
 		db: db,
 	}, nil
@@ -121,30 +124,6 @@ func getBatch(i int, candles []*datastruct.Candle) []*datastruct.Candle {
 		return candles[i:]
 	}
 	return candles[i : i+insertOneTime]
-}
-
-func (c *Client) GetCandlesHistory(instrInfo *datastruct.InstrumentInfo, interval strategy.CandleInterval, from, to time.Time) ([]*datastruct.Candle, error) {
-	idx1, ok1 := c.seekCandleIdx(from)
-	idx2, ok2 := c.seekCandleIdx(to)
-	if ok1 && ok2 {
-		return c.historyBuffer[idx1 : idx2+1], nil
-	}
-
-	query := `SELECT
-		id, instrument_id, timestamp, interval, open_units AS "open.units", open_nano AS "open.nano",
-		close_units AS "close.units", close_nano AS "close.nano", high_units AS "high.units", high_nano AS "high.nano",
-		low_units AS "low.units", low_nano AS "low.nano", volume
-		FROM candles
-		WHERE instrument_id = $1
-		AND interval = $2
-		order by timestamp`
-
-	err := c.db.Select(&c.historyBuffer, query, instrInfo.Id, interval.ToString())
-	if err != nil {
-		return nil, err
-	}
-
-	return c.historyBuffer, nil
 }
 
 func (c *Client) seekCandleIdx(t time.Time) (int64, bool) {
@@ -263,4 +242,13 @@ func (c *Client) GetUnsoldOrdersAmount(trId string, instrInfo *datastruct.Instru
 	err := c.db.Get(&res, query, instrInfo.Id, trId)
 
 	return res, err
+}
+
+func (c *Client) ClearOrdersForTrader(trId string) error {
+	query := `DELETE FROM orders
+		WHERE trader_id = $1;`
+
+	_, err := c.db.Exec(query, trId)
+
+	return err
 }

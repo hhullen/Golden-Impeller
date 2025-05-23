@@ -26,8 +26,6 @@ const (
 	GLDRUB_TOM = "258e2b93-54e8-4f2d-ba3d-a507c47e3ae2"
 )
 
-var UID = TGLD
-
 func main() {
 	ctx, cancelCtx := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer cancelCtx()
@@ -38,57 +36,57 @@ func main() {
 	}
 
 	investCfg := investgo.Config{
-		AppName:   "Golden_Impeller",
-		EndPoint:  envCfg["T_INVEST_SANDBOX_ADDRESS"],
-		Token:     envCfg["T_INVEST_TOKEN"],
-		AccountId: envCfg["T_INVEST_ACCOUNT_ID"],
+		AppName:  "Golden_Impeller",
+		EndPoint: envCfg["T_INVEST_SANDBOX_ADDRESS"],
+		Token:    envCfg["T_INVEST_TOKEN"],
+		// AccountId: envCfg["T_INVEST_ACCOUNT_ID"],
+		AccountId: envCfg["ACCOUNT_2"],
 	}
 
-	logger := logger.NewLogger()
-
-	investClient, err := t_api.NewClient(ctx, investCfg, logger)
-	if err != nil {
-		panic(err)
-	}
-
-	dbClient, err := postgres.NewClient(envCfg["DB_HOST"], envCfg["DB_PORT"], envCfg["DB_USER"], envCfg["DB_PASSWORD"], envCfg["DB_NAME"])
-	if err != nil {
-		panic(err)
-	}
-
-	instrInfo, err := getInstrument(ctx, investClient, dbClient, UID)
-	if err != nil {
-		panic(err)
-	}
-
-	cfg := strategy.ConfigBTDSTF{
+	strategyCfg := strategy.ConfigBTDSTF{
 		MaxDepth:         10,
 		LotsToBuy:        100,
 		PercentDownToBuy: 0.0075,
 		PercentUpToSell:  0.015,
 	}
 
-	strategyInstance := strategy.NewBTDSTF(dbClient, cfg)
+	traiderId := ""
+	// traiderId := "Moscow_Chicks_test"
+	// traiderId := "Golden_Impeller"
+	uid := TGLD
 
-	traiderId := "Golden_Impeller"
+	run(ctx, uid, investCfg, strategyCfg, envCfg, traiderId)
+
+}
+
+func run(ctx context.Context, uid string, investCfg investgo.Config, strategyCfg strategy.ConfigBTDSTF,
+	envCfg map[string]string, traiderId string) {
+
+	logger := logger.NewLogger()
+	defer logger.Stop()
+
+	investClient, err := t_api.NewClient(ctx, investCfg, logger)
+	if err != nil {
+		panic(err)
+	}
+
+	dbClient, err := postgres.NewClient(envCfg["DB_HOST"], envCfg["DB_PORT"],
+		envCfg["DB_USER"], envCfg["DB_PASSWORD"], envCfg["DB_NAME"])
+	if err != nil {
+		panic(err)
+	}
+
+	instrInfo, err := getInstrument(ctx, investClient, dbClient, uid)
+	if err != nil {
+		panic(err)
+	}
+
+	strategyInstance := strategy.NewBTDSTF(dbClient, strategyCfg)
+
 	trader := service.NewTraderService(ctx,
 		investClient, logger, strategyInstance, dbClient, instrInfo, traiderId)
 
-	// f, err := os.Create("cpu.prof")
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// defer f.Close()
-
-	// // Запускаем CPU-профилирование
-	// if err := pprof.StartCPUProfile(f); err != nil {
-	// 	panic(err)
-	// }
-	// defer pprof.StopCPUProfile()
-
 	trader.RunTrading()
-
-	logger.Stop()
 }
 
 func getInstrument(ctx context.Context, c *t_api.Client, db *postgres.Client, UID string) (*datastruct.InstrumentInfo, error) {
