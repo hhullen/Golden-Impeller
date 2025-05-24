@@ -167,6 +167,31 @@ func (c *Client) GetCandleWithOffset(instrInfo *datastruct.InstrumentInfo, inter
 
 }
 
+func (c *Client) GetCandles(instrInfo *datastruct.InstrumentInfo, interval strategy.CandleInterval, from, to time.Time) ([]*datastruct.Candle, error) {
+	query := `SELECT
+		id, instrument_id, timestamp, interval, open_units AS "open.units", open_nano AS "open.nano",
+		close_units AS "close.units", close_nano AS "close.nano", high_units AS "high.units", high_nano AS "high.nano",
+		low_units AS "low.units", low_nano AS "low.nano", volume
+		FROM candles
+		WHERE instrument_id = $1
+		AND interval = $2
+		AND timestamp >= $3
+		AND timestamp <= $4
+		order by timestamp`
+
+	var candles []*datastruct.Candle
+	err := c.db.Select(&candles, query, instrInfo.Id, interval.ToString(), from, to)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(candles) == 0 {
+		return nil, fmt.Errorf("no candles for %s - %s", from.Format(time.DateOnly), to.Format(time.DateOnly))
+	}
+
+	return candles, nil
+}
+
 func (c *Client) PutOrder(trId string, instrInfo *datastruct.InstrumentInfo, order *datastruct.Order) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()

@@ -191,8 +191,8 @@ func (s *TraderService) MakeAction(instrInfo *datastruct.InstrumentInfo, lastPri
 			return "", err
 		}
 
-		return fmt.Sprintf("SELL order %s: %s; Price: %.2f; Commission: %.8f",
-			instrInfo.Name, res.ExecutionReportStatus, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
+		return fmt.Sprintf("[%s] SELL order %s: %s; Lots: %d; Price: %.2f; Commission: %.8f", lastPrice.Time.Format(time.DateOnly),
+			instrInfo.Name, res.ExecutionReportStatus, res.LotsExecuted, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
 
 	} else if action.Action == Buy {
 		res, err := s.broker.MakeBuyOrder(instrInfo, action.Lots, action.RequestId)
@@ -200,10 +200,11 @@ func (s *TraderService) MakeAction(instrInfo *datastruct.InstrumentInfo, lastPri
 			return "", err
 		}
 
-		return fmt.Sprintf("BUY order %s: %s; Price: %.2f; Commission: %.8f",
-			instrInfo.Name, res.ExecutionReportStatus, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
+		return fmt.Sprintf("[%s] BUY order %s: %s; Lots: %d; Price: %.2f; Commission: %.8f", lastPrice.Time.Format(time.DateOnly),
+			instrInfo.Name, res.ExecutionReportStatus, res.LotsExecuted, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
 
 	}
 
-	return fmt.Sprintf("HOLD: '%s', price: '%.2f', at: %s", instrInfo.Ticker, lastPrice.Price.ToFloat64(), lastPrice.Time.Format(time.DateTime)), nil
+	// return fmt.Sprintf("HOLD: '%s', price: '%.2f', at: %s", instrInfo.Ticker, lastPrice.Price.ToFloat64(), lastPrice.Time.Format(time.DateTime)), nil
+	return "", nil
 }

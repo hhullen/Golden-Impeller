@@ -19,16 +19,17 @@ type Candle struct {
 }
 
 type InstrumentInfo struct {
-	Id           int64  `db:"id"`
-	Uid          string `db:"uid"`
-	Isin         string `db:"isin"`
-	Figi         string `db:"figi"`
-	Ticker       string `db:"ticker"`
-	ClassCode    string `db:"class_code"`
-	Name         string `db:"name"`
-	Lot          int32  `db:"lot"`
-	AvailableApi bool   `db:"available_api"`
-	ForQuals     bool   `db:"for_quals"`
+	Id              int64  `db:"id"`
+	Uid             string `db:"uid"`
+	Isin            string `db:"isin"`
+	Figi            string `db:"figi"`
+	Ticker          string `db:"ticker"`
+	ClassCode       string `db:"class_code"`
+	Name            string `db:"name"`
+	Lot             int32  `db:"lot"`
+	AvailableApi    bool   `db:"available_api"`
+	ForQuals        bool   `db:"for_quals"`
+	FirstCandleDate time.Time
 }
 
 type LastPrice struct {
@@ -87,6 +88,7 @@ type PostOrderResult struct {
 	InstrumentUid         string
 	ExecutionReportStatus string
 	OrderId               string
+	LotsExecuted          int64
 }
 
 type Order struct {

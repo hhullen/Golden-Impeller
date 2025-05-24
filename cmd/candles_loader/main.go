@@ -88,6 +88,10 @@ func main() {
 				panic("incorrect interval value")
 			}
 
+			if from.Before(instrInfo.FirstCandleDate) {
+				from = instrInfo.FirstCandleDate
+			}
+
 			fmt.Printf("Start loading: %s\n", instr.Ticker)
 			loadCandlesToDB(ctx, investClient, dbClient, instrInfo, from, to, interval, msgCh)
 

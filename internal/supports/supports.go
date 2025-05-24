@@ -123,15 +123,16 @@ func GetInstrument(ctx context.Context, c *t_api.Client, db *postgres.Client, UI
 	}
 
 	instrInfo := &datastruct.InstrumentInfo{
-		Isin:         instr.Isin,
-		Figi:         instr.Figi,
-		Ticker:       instr.Ticker,
-		ClassCode:    instr.ClassCode,
-		Name:         instr.Name,
-		Uid:          instr.Uid,
-		Lot:          instr.Lot,
-		AvailableApi: instr.ApiTradeAvailableFlag,
-		ForQuals:     instr.ForQualInvestorFlag,
+		Isin:            instr.Isin,
+		Figi:            instr.Figi,
+		Ticker:          instr.Ticker,
+		ClassCode:       instr.ClassCode,
+		Name:            instr.Name,
+		Uid:             instr.Uid,
+		Lot:             instr.Lot,
+		AvailableApi:    instr.ApiTradeAvailableFlag,
+		ForQuals:        instr.ForQualInvestorFlag,
+		FirstCandleDate: instr.First_1MinCandleDate.AsTime(),
 	}
 
 	err = db.AddInstrumentInfo(ctx, instrInfo)
