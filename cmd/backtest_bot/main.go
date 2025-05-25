@@ -50,6 +50,8 @@ func main() {
 		panic(err)
 	}
 
+	startTime := time.Now()
+
 	results := make([]string, len(envCfg.Backtester))
 	var wg sync.WaitGroup
 	for i, test := range envCfg.Backtester {
@@ -101,7 +103,7 @@ func main() {
 
 		backtestStorage := backtest.NewBacktestStorage(*instrInfo, candles)
 
-		backtestBroker := backtest.NewBacktestBroker(test.StartDeposit, test.CommissionPercent/100, from, to, doneCh, backtestStorage, test.UniqueTraderId)
+		backtestBroker := backtest.NewBacktestBroker(test.StartDeposit, test.CommissionPercent/100, from, to, doneCh, backtestStorage, logger, test.UniqueTraderId)
 
 		wg.Add(1)
 		go func(ctx context.Context, i int, doneCh chan string, b *backtest.BacktestBroker, s *backtest.BacktestStorage, t supports.BacktesterCfg) {
@@ -113,8 +115,11 @@ func main() {
 			case <-doneCh:
 			}
 
-			results[i] = fmt.Sprintf("Result for %s. account: %f; max: %f; min: %f; in instr: %f; rate: %f",
-				t.UniqueTraderId, b.GetAccoount(), b.GetMaxAccoount(), b.GetMinAccoount(), s.GetInInstrumentsSum(), b.GetAccoount()/t.StartDeposit*100)
+			inInstr := s.GetInInstrumentsSum()
+			acc := b.GetAccoount()
+			total := inInstr + acc
+			results[i] = fmt.Sprintf("Result for %s. account: %.2f; max: %.2f; min: %.2f; in instr: %.2f; rate: %.2f; total: %.2f; total rate: %.2f;",
+				t.UniqueTraderId, acc, b.GetMaxAccoount(), b.GetMinAccoount(), inInstr, acc/t.StartDeposit*100, total, total/t.StartDeposit*100.0)
 
 		}(ctx, i, doneCh, backtestBroker, backtestStorage, test)
 
@@ -136,6 +141,7 @@ func main() {
 	for _, res := range results {
 		fmt.Println(res)
 	}
+	fmt.Println("Time:", time.Since(startTime))
 }
 
 func resolveStrategy(cfg map[string]any, db strategy.IStorage) (service.IStrategy, error) {

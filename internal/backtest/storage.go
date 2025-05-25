@@ -26,7 +26,9 @@ func NewBacktestStorage(i datastruct.InstrumentInfo, b []*datastruct.Candle) *Ba
 func (bs *BacktestStorage) GetInInstrumentsSum() float64 {
 	summ := float64(0)
 	for _, v := range bs.orders {
-		summ += v.OrderPrice.ToFloat64()
+		if v.Direction == service.Buy.ToString() && v.ExecutionReportStatus == service.Fill.ToString() {
+			summ += v.OrderPrice.ToFloat64() * float64(v.LotsExecuted) * float64(bs.instrument.Lot)
+		}
 	}
 	return summ
 }
@@ -52,7 +54,7 @@ func (bs *BacktestStorage) GetInstrumentInfo(uid string) (info *datastruct.Instr
 	return &bs.instrument, nil
 }
 
-func (bs *BacktestStorage) GetLastLowestExcecutedOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error) {
+func (bs *BacktestStorage) GetLastLowestExcecutedBuyOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error) {
 	if len(bs.orders) == 0 {
 		return nil, false, nil
 	}
@@ -78,6 +80,72 @@ func (bs *BacktestStorage) GetLastLowestExcecutedOrder(trId string, instrInfo *d
 			v.ExecutionReportStatus == service.Fill.ToString() &&
 			v.OrderPrice.ToFloat64() < minPrice {
 			minPrice = v.OrderPrice.ToFloat64()
+			order = v
+		}
+	}
+
+	return order, true, nil
+}
+
+func (bs *BacktestStorage) GetLatestExecutedSellOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error) {
+	if len(bs.orders) == 0 {
+		return nil, false, nil
+	}
+
+	latest := time.Time{}
+	var order *datastruct.Order
+	found := false
+	for _, v := range bs.orders {
+		if v.Direction == service.Sell.ToString() &&
+			v.ExecutionReportStatus == service.Fill.ToString() {
+			latest = *v.CompletionTime
+			order = v
+			found = true
+			break
+		}
+	}
+	if !found {
+		return nil, false, nil
+	}
+
+	for _, v := range bs.orders {
+		if v.Direction == service.Sell.ToString() &&
+			v.ExecutionReportStatus == service.Fill.ToString() &&
+			v.CompletionTime.After(latest) {
+			latest = *v.CompletionTime
+			order = v
+		}
+	}
+
+	return order, true, nil
+}
+
+func (bs *BacktestStorage) GetHighestExecutedBuyOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error) {
+	if len(bs.orders) == 0 {
+		return nil, false, nil
+	}
+
+	highest := float64(0)
+	var order *datastruct.Order
+	found := false
+	for _, v := range bs.orders {
+		if v.Direction == service.Buy.ToString() &&
+			v.ExecutionReportStatus == service.Fill.ToString() {
+			highest = v.OrderPrice.ToFloat64()
+			order = v
+			found = true
+			break
+		}
+	}
+	if !found {
+		return nil, false, nil
+	}
+
+	for _, v := range bs.orders {
+		if v.Direction == service.Buy.ToString() &&
+			v.ExecutionReportStatus == service.Fill.ToString() &&
+			v.OrderPrice.ToFloat64() > highest {
+			highest = v.OrderPrice.ToFloat64()
 			order = v
 		}
 	}

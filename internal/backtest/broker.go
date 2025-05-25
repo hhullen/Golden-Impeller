@@ -3,6 +3,7 @@ package backtest
 import (
 	"fmt"
 	"time"
+	"trading_bot/internal/service"
 	"trading_bot/internal/service/datastruct"
 	"trading_bot/internal/strategy"
 )
@@ -26,9 +27,11 @@ type BacktestBroker struct {
 	trId                string
 
 	storage IStorage
+	logger  service.ILogger
+	timer   time.Time
 }
 
-func NewBacktestBroker(account, commision float64, from, to time.Time, terminator chan string, storage IStorage, trId string) *BacktestBroker {
+func NewBacktestBroker(account, commision float64, from, to time.Time, terminator chan string, storage IStorage, l service.ILogger, trId string) *BacktestBroker {
 	return &BacktestBroker{
 		account:           account,
 		minAccount:        account,
@@ -39,6 +42,7 @@ func NewBacktestBroker(account, commision float64, from, to time.Time, terminato
 		testingTerminate:  terminator,
 		trId:              trId,
 		storage:           storage,
+		logger:            l,
 		ordersCh:          make(chan datastruct.Order),
 	}
 }
@@ -109,11 +113,15 @@ func (c *BacktestBroker) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, lots
 
 	commission := price * c.commissionPercent
 	c.account -= (price + commission)
+	// c.logger.Infof("buy: %f; %s", c.account, requestId)
 	if c.account < c.minAccount {
 		c.minAccount = c.account
 	}
 
-	t := time.Now()
+	// t := time.Now()
+	t := c.timer
+	c.timer = c.timer.Add(time.Second)
+
 	orderPrice := datastruct.Quotation{}
 	orderPrice.FromFloat64(c.lastPrice)
 
@@ -150,11 +158,15 @@ func (c *BacktestBroker) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, lot
 
 	commission := price * c.commissionPercent
 	c.account += (price - commission)
+	// c.logger.Infof("sell: %f; %s", c.account, requestId)
 	if c.account > c.maxAccount {
 		c.maxAccount = c.account
 	}
 
-	t := time.Now()
+	t := c.timer
+	c.timer = c.timer.Add(time.Second)
+
+	// t := time.Now()
 	orderPrice := datastruct.Quotation{}
 	orderPrice.FromFloat64(c.lastPrice)
 

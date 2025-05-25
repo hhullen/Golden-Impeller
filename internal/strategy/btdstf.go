@@ -37,19 +37,30 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 		return nil, err
 	}
 
-	order, exist, err := b.storage.GetLastLowestExcecutedOrder(trId, instrInfo)
+	order, existBuy, err := b.storage.GetLastLowestExcecutedBuyOrder(trId, instrInfo)
 	if err != nil {
 		return nil, err
 	}
 
-	if !exist {
-		return []*service.StrategyAction{
-			{
-				Action:    service.Buy,
-				Lots:      b.cfg.LotsToBuy,
-				RequestId: uuid.NewString(),
-			},
-		}, nil
+	allowToSell := true
+	existSell := true
+	if !existBuy {
+		allowToSell = false
+
+		order, existSell, err = b.storage.GetLatestExecutedSellOrder(trId, instrInfo)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	returnable := make([]*service.StrategyAction, 0, 1)
+	if !existSell {
+		returnable = append(returnable, &service.StrategyAction{
+			Action:    service.Buy,
+			Lots:      b.cfg.LotsToBuy * (b.cfg.MaxDepth - orders + 1),
+			RequestId: uuid.NewString(),
+		})
+		return returnable, nil
 	}
 
 	orF := order.OrderPrice.ToFloat64()
@@ -58,26 +69,44 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 	IsDownToBuy := func() bool { return lpF*(1+b.cfg.PercentDownToBuy) < orF }
 	IsUpToSell := func() bool { return orF*(1+b.cfg.PercentUpToSell) < lpF }
 
-	if IsDownToBuy() && orders < b.cfg.MaxDepth {
+	allSold := !existBuy && existSell
 
-		return []*service.StrategyAction{
-			{
-				Action:    service.Buy,
-				Lots:      b.cfg.LotsToBuy,
-				RequestId: uuid.NewString(),
-			},
-		}, nil
+	if IsDownToBuy() || allSold {
+		var toSell []*service.StrategyAction
+		if orders >= b.cfg.MaxDepth {
+			orderHigh, exist, err := b.storage.GetHighestExecutedBuyOrder(trId, instrInfo)
+			if err != nil {
+				return nil, err
+			}
 
-	} else if IsUpToSell() {
+			if exist {
+				toSell = append(returnable, &service.StrategyAction{
+					Action:    service.Sell,
+					Lots:      orderHigh.LotsExecuted,
+					RequestId: order.OrderId,
+				})
+			}
+		}
+		returnable = append(returnable, toSell...)
 
-		return []*service.StrategyAction{
-			{
-				Action:    service.Sell,
-				Lots:      order.LotsExecuted,
-				RequestId: order.OrderId,
-			},
-		}, nil
+		orders -= int64(len(toSell))
 
+		returnable = append(returnable, &service.StrategyAction{
+			Action:    service.Buy,
+			Lots:      b.cfg.LotsToBuy * (b.cfg.MaxDepth - orders + 1),
+			RequestId: uuid.NewString(),
+		})
+
+		return returnable, nil
+
+	} else if IsUpToSell() && allowToSell {
+		returnable = append(returnable, &service.StrategyAction{
+			Action:    service.Sell,
+			Lots:      order.LotsExecuted,
+			RequestId: order.OrderId,
+		})
+
+		return returnable, nil
 	}
 
 	return []*service.StrategyAction{{Action: service.Hold}}, nil

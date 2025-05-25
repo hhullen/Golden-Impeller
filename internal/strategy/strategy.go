@@ -66,6 +66,8 @@ func CandleIntervalFromString(s string) (CandleInterval, bool) {
 }
 
 type IStorage interface {
-	GetLastLowestExcecutedOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error)
+	GetLastLowestExcecutedBuyOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error)
+	GetLatestExecutedSellOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error)
+	GetHighestExecutedBuyOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error)
 	GetUnsoldOrdersAmount(trId string, instrInfo *datastruct.InstrumentInfo) (int64, error)
 }
