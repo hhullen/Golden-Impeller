@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 	"trading_bot/internal/clients/t_api"
+	"trading_bot/internal/config"
 	"trading_bot/internal/logger"
-	"trading_bot/internal/supports"
 
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
@@ -22,23 +22,22 @@ type Load struct {
 func main() {
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
-	envCfg, err := supports.GetEnvCfg()
+	envCfg, err := config.GetEnvCfg()
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(envCfg)
-	return
-
-	investCfg := investgo.Config{
-		// AppName:  "trading_bot",
-		// EndPoint: envCfg["T_INVEST_SANDBOX_ADDRESS"],
-		// Token:    envCfg["T_INVEST_TOKEN"],
-		// // AccountId: envCfg["T_INVEST_ACCOUNT_ID"],
-		// AccountId: envCfg["ACCOUNT_2"],
+	if len(envCfg.Trader) == 0 {
+		panic("no traders specified in config")
 	}
 
-	logger := logger.NewLogger()
+	investCfg := investgo.Config{
+		AppName:   envCfg.AppName,
+		EndPoint:  envCfg.TInvestAddress,
+		Token:     envCfg.TInvestToken,
+		AccountId: envCfg.TInvestAccountID,
+	}
+	logger := logger.NewLogger(os.Stdout, "TEST_MAIN")
 
 	investClient, err := t_api.NewClient(ctx, investCfg, logger)
 	if err != nil {
@@ -54,7 +53,7 @@ func main() {
 	sres, err := investClient.NewSandboxServiceClient().SandboxPayIn(&investgo.SandboxPayInRequest{
 		AccountId: investCfg.AccountId,
 		Currency:  "rub",
-		Unit:      10000,
+		Unit:      200000,
 	})
 	if err != nil {
 		panic(err)
@@ -78,39 +77,23 @@ func main() {
 	// 	panic(err)
 	// }
 
-	stream, err := investClient.NewOrdersStreamClient().OrderStateStream([]string{investCfg.AccountId}, 0)
-	go stream.Listen()
+	// stream, err := investClient.NewOrdersStreamClient().OrderStateStream([]string{investCfg.AccountId}, 0)
+	// go stream.Listen()
 
 	// vv, err := investClient.NewOperationsServiceClient().GetPositions(investCfg.AccountId)
 
 	// stream, err := investClient.NewOperationsStreamClient().PositionsStream([]string{investCfg.AccountId})
 	// go stream.Listen()
 
-	defer investClient.Conn.Close()
+	// defer investClient.Conn.Close()
 
 	// рабочие костыли
-	printSchedule(investClient, "MOEX")
+	// printSchedule(investClient, "MOEX")
 	// printAccounts(investClient)
 	// fundAndPrintInstrument(investClient, "GLDRUB_TOM")
 	// listenAndPrintLastPrice(investClient, GLDRUB_TOM)
-	order(investClient, investCfg.AccountId, TGLD, 1, pb.OrderDirection_ORDER_DIRECTION_SELL)
-	printOperations(investClient, time.Now().Add(-time.Hour*24), time.Now())
-
-	for vv := range stream.OrderState() {
-
-		fmt.Println(vv.ExecutionReportStatus)
-		fmt.Println(vv.OrderPrice.Units, vv.OrderPrice.Nano) // цена за лот
-		fmt.Println(vv.CompletionTime.AsTime().Format(time.DateTime))
-		fmt.Println(vv.CreatedAt.AsTime().Format(time.DateTime))
-		fmt.Println(vv.InstrumentUid)
-		fmt.Println(vv.Direction, vv.LotsRequested, vv.LotsExecuted)
-		fmt.Println(vv.OrderId)
-		if vv.OrderRequestId != nil {
-			fmt.Println("Custom", *vv.OrderRequestId)
-		}
-		fmt.Println("")
-
-	}
+	// order(investClient, investCfg.AccountId, TGLD, 1, pb.OrderDirection_ORDER_DIRECTION_SELL)
+	// printOperations(investClient, time.Now().Add(-time.Hour*24), time.Now())
 
 	// fmt.Println(vv.Date.AsTime().Format(time.DateTime))
 	// fmt.Println(vv.AccountId)
@@ -121,23 +104,23 @@ func main() {
 
 }
 
-func printOperations(c *t_api.Client, from, to time.Time) {
-	OperResp, err := c.NewOperationsServiceClient().GetOperations(&investgo.GetOperationsRequest{
-		AccountId: c.GetAccoountId(),
-		Figi:      GLDRUB_TOM,
-		From:      from,
-		To:        to,
-		State:     pb.OperationState_OPERATION_STATE_EXECUTED,
-	})
-	if err != nil {
-		panic(err)
-	}
+// func printOperations(c *t_api.Client, from, to time.Time) {
+// 	OperResp, err := c.NewOperationsServiceClient().GetOperations(&investgo.GetOperationsRequest{
+// 		AccountId: c.GetAccoountId(),
+// 		Figi:      GLDRUB_TOM,
+// 		From:      from,
+// 		To:        to,
+// 		State:     pb.OperationState_OPERATION_STATE_EXECUTED,
+// 	})
+// 	if err != nil {
+// 		panic(err)
+// 	}
 
-	fmt.Println("Operations:", len(OperResp.Operations))
-	for _, v := range OperResp.Operations {
-		fmt.Println(v.Date.AsTime().Format(time.DateTime), v.OperationType, v.Price.Units, v.Price.Nano, v.Quantity, v.InstrumentUid, v.PositionUid, v.Payment.Units, v.Payment.Nano)
-	}
-}
+// 	fmt.Println("Operations:", len(OperResp.Operations))
+// 	for _, v := range OperResp.Operations {
+// 		fmt.Println(v.Date.AsTime().Format(time.DateTime), v.OperationType, v.Price.Units, v.Price.Nano, v.Quantity, v.InstrumentUid, v.PositionUid, v.Payment.Units, v.Payment.Nano)
+// 	}
+// }
 
 func order(c *t_api.Client, accountId, instrumentUID string, quantity int64, dir pb.OrderDirection) {
 

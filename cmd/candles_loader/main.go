@@ -10,10 +10,11 @@ import (
 	"time"
 	"trading_bot/internal/clients/postgres"
 	"trading_bot/internal/clients/t_api"
+	"trading_bot/internal/config"
 	"trading_bot/internal/logger"
 	"trading_bot/internal/service/datastruct"
-	"trading_bot/internal/strategy"
 	"trading_bot/internal/supports"
+	mainsupports "trading_bot/internal/supports/main"
 
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 	investapi "github.com/russianinvestments/invest-api-go-sdk/proto"
@@ -22,7 +23,7 @@ import (
 func main() {
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
-	envCfg, err := supports.GetEnvCfg()
+	envCfg, err := config.GetEnvCfg()
 	if err != nil {
 		panic(err)
 	}
@@ -40,7 +41,7 @@ func main() {
 		AccountId: envCfg.TInvestAccountID,
 	}
 
-	logger := logger.NewLogger()
+	logger := logger.NewLogger(os.Stdout, "LOADER")
 
 	investClient, err := t_api.NewClient(ctx, investCfg, logger)
 	if err != nil {
@@ -69,7 +70,7 @@ func main() {
 		go func() {
 			defer wg.Done()
 
-			instrInfo, err := supports.GetInstrument(ctx, investClient, dbClient, instr.UID)
+			instrInfo, err := mainsupports.GetInstrument(ctx, investClient, dbClient, instr.UID)
 			if err != nil {
 				panic(err)
 			}
@@ -83,7 +84,7 @@ func main() {
 				panic(err)
 			}
 
-			interval, ok := strategy.CandleIntervalFromString(instr.Interval)
+			interval, ok := datastruct.CandleIntervalFromString(instr.Interval)
 			if !ok {
 				panic("incorrect interval value")
 			}
@@ -106,7 +107,7 @@ func main() {
 }
 
 func loadCandlesToDB(ctx context.Context, c *t_api.Client, db *postgres.Client,
-	instrInfo *datastruct.InstrumentInfo, from, to time.Time, interval strategy.CandleInterval, ch chan string) {
+	instrInfo *datastruct.InstrumentInfo, from, to time.Time, interval datastruct.CandleInterval, ch chan string) {
 	tick := time.NewTicker(time.Second * 2)
 
 	for t := from; t.Before(to); t = t.AddDate(0, 1, 0) {

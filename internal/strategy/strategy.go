@@ -1,73 +1,53 @@
 package strategy
 
 import (
-	"trading_bot/internal/service/datastruct"
+	"fmt"
+	"trading_bot/internal/service"
+	"trading_bot/internal/strategy/btdstf"
 )
 
-type CandleInterval int32
+func ResolveStrategy(cfg map[string]any, db any) (s service.IStrategy, err error) {
+	defer func() {
+		if p := recover(); p != nil {
+			s = nil
+			err = fmt.Errorf("%v", p)
+		}
+	}()
 
-const (
-	Interval_1_Min CandleInterval = iota
-	Interval_2_Min
-	Interval_3_Min
-	Interval_5_Min
-	Interval_10_Min
-	Interval_15_Min
-	Interval_30_Min
-	Interval_Hour
-	Interval_2_Hour
-	Interval_4_Hour
-	Interval_Day
-	Interval_Week
-	Interval_Month
-)
+	name := cfg["name"].(string)
 
-var (
-	stringIntervalMap = map[CandleInterval]string{
-		Interval_1_Min:  "1min",
-		Interval_2_Min:  "2min",
-		Interval_3_Min:  "3min",
-		Interval_5_Min:  "5min",
-		Interval_10_Min: "10min",
-		Interval_15_Min: "15min",
-		Interval_30_Min: "30min",
-		Interval_Hour:   "1hour",
-		Interval_2_Hour: "2hour",
-		Interval_4_Hour: "4hour",
-		Interval_Day:    "1day",
-		Interval_Week:   "1week",
-		Interval_Month:  "1month",
+	if name == btdstf.GetName() {
+		cfg := btdstf.ConfigBTDSTF{
+			MaxDepth:         castToInt64(cfg["max_depth"]),
+			LotsToBuy:        castToInt64(cfg["lots_to_buy"]),
+			PercentDownToBuy: castToFloat64(cfg["percent_down_to_buy"]) / 100,
+			PercentUpToSell:  castToFloat64(cfg["percent_up_to_sell"]) / 100,
+		}
+
+		return btdstf.NewBTDSTF(db.(btdstf.IStorage), cfg), nil
 	}
 
-	typeIntervalMap = map[string]CandleInterval{
-		"1min":   Interval_1_Min,
-		"2min":   Interval_2_Min,
-		"3min":   Interval_3_Min,
-		"5min":   Interval_5_Min,
-		"10min":  Interval_10_Min,
-		"15min":  Interval_15_Min,
-		"30min":  Interval_30_Min,
-		"1hour":  Interval_Hour,
-		"2hour":  Interval_2_Hour,
-		"4hour":  Interval_4_Hour,
-		"1day":   Interval_Day,
-		"1week":  Interval_Week,
-		"1month": Interval_Month,
+	return nil, fmt.Errorf("incorect strategy name specified")
+}
+
+func castToFloat64(n any) float64 {
+	if f, ok := n.(float64); ok {
+		return f
 	}
-)
 
-func (c *CandleInterval) ToString() string {
-	return stringIntervalMap[*c]
+	if i, ok := n.(int); ok {
+		return float64(i)
+	}
+	panic(fmt.Sprintf("impossible cast to number: %v", n))
 }
 
-func CandleIntervalFromString(s string) (CandleInterval, bool) {
-	v, ok := typeIntervalMap[s]
-	return v, ok
-}
+func castToInt64(n any) int64 {
+	if i, ok := n.(int); ok {
+		return int64(i)
+	}
 
-type IStorage interface {
-	GetLastLowestExcecutedBuyOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error)
-	GetLatestExecutedSellOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error)
-	GetHighestExecutedBuyOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error)
-	GetUnsoldOrdersAmount(trId string, instrInfo *datastruct.InstrumentInfo) (int64, error)
+	if f, ok := n.(float64); ok {
+		return int64(f)
+	}
+	panic(fmt.Sprintf("impossible cast to number: %v", n))
 }

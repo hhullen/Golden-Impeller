@@ -4,32 +4,34 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
 	"time"
-	"trading_bot/internal/service"
-	"trading_bot/internal/service/datastruct"
-	"trading_bot/internal/strategy"
 
+	ds "trading_bot/internal/service/datastruct"
+	"trading_bot/internal/supports"
+
+	"github.com/google/uuid"
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
 )
 
-var intervalMap = map[strategy.CandleInterval]pb.CandleInterval{
-	strategy.Interval_1_Min:  pb.CandleInterval_CANDLE_INTERVAL_1_MIN,
-	strategy.Interval_5_Min:  pb.CandleInterval_CANDLE_INTERVAL_5_MIN,
-	strategy.Interval_15_Min: pb.CandleInterval_CANDLE_INTERVAL_15_MIN,
-	strategy.Interval_Hour:   pb.CandleInterval_CANDLE_INTERVAL_HOUR,
-	strategy.Interval_Day:    pb.CandleInterval_CANDLE_INTERVAL_DAY,
-	strategy.Interval_2_Min:  pb.CandleInterval_CANDLE_INTERVAL_2_MIN,
-	strategy.Interval_3_Min:  pb.CandleInterval_CANDLE_INTERVAL_3_MIN,
-	strategy.Interval_10_Min: pb.CandleInterval_CANDLE_INTERVAL_10_MIN,
-	strategy.Interval_30_Min: pb.CandleInterval_CANDLE_INTERVAL_30_MIN,
-	strategy.Interval_2_Hour: pb.CandleInterval_CANDLE_INTERVAL_2_HOUR,
-	strategy.Interval_4_Hour: pb.CandleInterval_CANDLE_INTERVAL_4_HOUR,
-	strategy.Interval_Week:   pb.CandleInterval_CANDLE_INTERVAL_WEEK,
-	strategy.Interval_Month:  pb.CandleInterval_CANDLE_INTERVAL_MONTH,
+var intervalMap = map[ds.CandleInterval]pb.CandleInterval{
+	ds.Interval_1_Min:  pb.CandleInterval_CANDLE_INTERVAL_1_MIN,
+	ds.Interval_5_Min:  pb.CandleInterval_CANDLE_INTERVAL_5_MIN,
+	ds.Interval_15_Min: pb.CandleInterval_CANDLE_INTERVAL_15_MIN,
+	ds.Interval_Hour:   pb.CandleInterval_CANDLE_INTERVAL_HOUR,
+	ds.Interval_Day:    pb.CandleInterval_CANDLE_INTERVAL_DAY,
+	ds.Interval_2_Min:  pb.CandleInterval_CANDLE_INTERVAL_2_MIN,
+	ds.Interval_3_Min:  pb.CandleInterval_CANDLE_INTERVAL_3_MIN,
+	ds.Interval_10_Min: pb.CandleInterval_CANDLE_INTERVAL_10_MIN,
+	ds.Interval_30_Min: pb.CandleInterval_CANDLE_INTERVAL_30_MIN,
+	ds.Interval_2_Hour: pb.CandleInterval_CANDLE_INTERVAL_2_HOUR,
+	ds.Interval_4_Hour: pb.CandleInterval_CANDLE_INTERVAL_4_HOUR,
+	ds.Interval_Week:   pb.CandleInterval_CANDLE_INTERVAL_WEEK,
+	ds.Interval_Month:  pb.CandleInterval_CANDLE_INTERVAL_MONTH,
 }
 
-func resolveIntoPbInterval(interval strategy.CandleInterval) pb.CandleInterval {
+func resolveIntoPbInterval(interval ds.CandleInterval) pb.CandleInterval {
 	if v, ok := intervalMap[interval]; ok {
 		return v
 	}
@@ -42,11 +44,13 @@ type IStream interface {
 }
 
 type Client struct {
+	sync.RWMutex
 	investgo.Client
 
 	marketDataStream *investgo.MarketDataStream
 	ordersDataStream *investgo.OrderStateStream
-	lastPriceInput   <-chan *pb.LastPrice
+	lastPriceInput   map[string]map[uuid.UUID]chan *pb.LastPrice
+	ordersStateInput map[string]map[string]map[uuid.UUID]chan *pb.OrderStateStreamResponse_OrderState
 	ctx              context.Context
 }
 
@@ -56,29 +60,52 @@ func NewClient(ctx context.Context, conf investgo.Config, l investgo.Logger) (*C
 		return nil, err
 	}
 
-	return &Client{Client: *investClient, ctx: ctx}, nil
+	c := &Client{
+		Client:           *investClient,
+		ctx:              ctx,
+		lastPriceInput:   make(map[string]map[uuid.UUID]chan *pb.LastPrice),
+		ordersStateInput: make(map[string]map[string]map[uuid.UUID]chan *pb.OrderStateStreamResponse_OrderState),
+	}
+
+	return c, nil
 }
 
-func (c *Client) GetAccoountId() string {
-	return c.Config.AccountId
-}
-
-func (c *Client) RecieveLastPrice(instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error) {
+func (c *Client) RegisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) error {
 	if c.marketDataStream == nil {
-
-		if err := c.prepareStreamForInstrument(instrInfo.Uid); err != nil {
-			return nil, err
+		if err := c.prepareStreamForInstrument(instrInfo); err != nil {
+			return err
 		}
-
+	} else {
+		_, err := c.marketDataStream.SubscribeLastPrice([]string{instrInfo.Uid})
+		if err != nil {
+			return err
+		}
 	}
 
-	lastPrice, ok := <-c.lastPriceInput
+	c.Lock()
+	if _, ok := c.lastPriceInput[instrInfo.Uid]; !ok {
+		c.lastPriceInput[instrInfo.Uid] = make(map[uuid.UUID]chan *pb.LastPrice)
+	}
+	if _, ok := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]; !ok {
+		c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId] = make(chan *pb.LastPrice)
+	}
+	c.Unlock()
+
+	return nil
+}
+
+func (c *Client) RecieveLastPrice(instrInfo *ds.InstrumentInfo) (*ds.LastPrice, error) {
+	c.RLock()
+	ch := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]
+	c.RUnlock()
+
+	lastPrice, ok := <-ch
 	if !ok {
-		return nil, errors.New("stream closed")
+		return nil, errors.New("marketDataStream closed")
 	}
 
-	return &datastruct.LastPrice{
-		Price: datastruct.Quotation{
+	return &ds.LastPrice{
+		Price: ds.Quotation{
 			Units: lastPrice.Price.Units,
 			Nano:  lastPrice.Price.Nano,
 		},
@@ -89,23 +116,53 @@ func (c *Client) RecieveLastPrice(instrInfo *datastruct.InstrumentInfo) (*datast
 
 }
 
-func (c *Client) prepareStreamForInstrument(uid string) error {
+func (c *Client) prepareStreamForInstrument(instrInfo *ds.InstrumentInfo) error {
 	stream, err := c.NewMarketDataStreamClient().MarketDataStream()
 	if err != nil {
 		return err
 	}
 	c.marketDataStream = stream
 
-	ch, err := c.marketDataStream.SubscribeLastPrice([]string{uid})
+	ch, err := c.marketDataStream.SubscribeLastPrice([]string{instrInfo.Uid})
 	if err != nil {
 		return err
 	}
 
-	go c.startListeningInstrumentStream(uid, c.marketDataStream)
+	go c.startInstrumenstRouting(ch)
 
-	c.lastPriceInput = ch
+	go c.startListeningInstrumentStream(instrInfo.Uid, c.marketDataStream)
 
 	return nil
+}
+
+func (c *Client) startInstrumenstRouting(ch <-chan *pb.LastPrice) {
+	defer func() {
+		for _, v := range c.lastPriceInput {
+			for _, ch := range v {
+				close(ch)
+			}
+		}
+	}()
+
+	for {
+		select {
+		case <-c.ctx.Done():
+			return
+		case v, ok := <-ch:
+			if !ok {
+				return
+			}
+
+			c.Lock()
+			for _, uniqueListener := range c.lastPriceInput[v.InstrumentUid] {
+				select {
+				case uniqueListener <- v:
+				default:
+				}
+			}
+			c.Unlock()
+		}
+	}
 }
 
 func (c *Client) startListeningInstrumentStream(uid string, s IStream) {
@@ -117,15 +174,15 @@ func (c *Client) startListeningInstrumentStream(uid string, s IStream) {
 			if err := s.Listen(); err != nil {
 				c.Logger.Errorf("failed starting listening stream for '%s': %s", uid, err.Error())
 
-				const sleepToListenRetry = 5
+				const sleepToListenRetry = time.Second * 5
 				c.Logger.Infof("Sleep for '%s' second", sleepToListenRetry)
-				time.Sleep(sleepToListenRetry * time.Second)
+				supports.WaitFor(c.ctx, sleepToListenRetry)
 			}
 		}
 	}
 }
 
-func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, error) {
+func (c *Client) GetInstrumentInfo(uid string) (*ds.InstrumentInfo, error) {
 	respInfo, err := c.NewInstrumentsServiceClient().FindInstrument(uid)
 	if err != nil {
 		return nil, err
@@ -142,7 +199,7 @@ func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, erro
 		return nil, fmt.Errorf("not found instrument '%s'", uid)
 	}
 
-	return &datastruct.InstrumentInfo{
+	return &ds.InstrumentInfo{
 		Isin:         instrumentInfo.Isin,
 		Figi:         instrumentInfo.Figi,
 		Ticker:       instrumentInfo.Ticker,
@@ -155,7 +212,7 @@ func (c *Client) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, erro
 	}, nil
 }
 
-func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, lots int64, requestId string) (*datastruct.PostOrderResult, error) {
+func (c *Client) MakeSellOrder(instrInfo *ds.InstrumentInfo, lots int64, requestId, accountId string) (*ds.PostOrderResult, error) {
 	if lots < 1 {
 		return nil, fmt.Errorf("incorrect lots to make order: %d", lots)
 	}
@@ -164,7 +221,7 @@ func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, lots int64,
 		InstrumentId: instrInfo.Uid,
 		Quantity:     lots,
 		Direction:    pb.OrderDirection_ORDER_DIRECTION_SELL,
-		AccountId:    c.GetAccoountId(),
+		AccountId:    accountId,
 		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
 		OrderId:      requestId,
 	})
@@ -172,12 +229,12 @@ func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, lots int64,
 		return nil, err
 	}
 
-	return &datastruct.PostOrderResult{
-		ExecutedCommission: datastruct.Quotation{
+	return &ds.PostOrderResult{
+		ExecutedCommission: ds.Quotation{
 			Units: orderResp.ExecutedCommission.Units,
 			Nano:  orderResp.ExecutedCommission.Nano,
 		},
-		ExecutedOrderPrice: datastruct.Quotation{
+		ExecutedOrderPrice: ds.Quotation{
 			Units: orderResp.ExecutedOrderPrice.Units,
 			Nano:  orderResp.ExecutedOrderPrice.Nano,
 		},
@@ -187,7 +244,7 @@ func (c *Client) MakeSellOrder(instrInfo *datastruct.InstrumentInfo, lots int64,
 	}, nil
 }
 
-func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, lots int64, requestId string) (*datastruct.PostOrderResult, error) {
+func (c *Client) MakeBuyOrder(instrInfo *ds.InstrumentInfo, lots int64, requestId, accountId string) (*ds.PostOrderResult, error) {
 	if lots < 1 {
 		return nil, fmt.Errorf("incorrect lots to make order: %d", lots)
 	}
@@ -196,7 +253,7 @@ func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, lots int64, 
 		InstrumentId: instrInfo.Uid,
 		Quantity:     lots,
 		Direction:    pb.OrderDirection_ORDER_DIRECTION_BUY,
-		AccountId:    c.GetAccoountId(),
+		AccountId:    accountId,
 		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
 		OrderId:      requestId,
 	})
@@ -204,12 +261,12 @@ func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, lots int64, 
 		return nil, err
 	}
 
-	return &datastruct.PostOrderResult{
-		ExecutedCommission: datastruct.Quotation{
+	return &ds.PostOrderResult{
+		ExecutedCommission: ds.Quotation{
 			Units: buyResp.ExecutedCommission.Units,
 			Nano:  buyResp.ExecutedCommission.Nano,
 		},
-		ExecutedOrderPrice: datastruct.Quotation{
+		ExecutedOrderPrice: ds.Quotation{
 			Units: buyResp.ExecutedOrderPrice.Units,
 			Nano:  buyResp.ExecutedOrderPrice.Nano,
 		},
@@ -219,30 +276,48 @@ func (c *Client) MakeBuyOrder(instrInfo *datastruct.InstrumentInfo, lots int64, 
 	}, nil
 }
 
-func (c *Client) RecieveOrdersUpdate(instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, error) {
+func (c *Client) RegisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accountId string) error {
 	if c.ordersDataStream == nil {
-		stream, err := c.NewOrdersStreamClient().OrderStateStream([]string{c.GetAccoountId()}, 0)
+		err := c.prepareStreamForOrdersState(instrInfo)
 		if err != nil {
-			return nil, err
+			return err
 		}
-		c.ordersDataStream = stream
-		go c.startListeningInstrumentStream(instrInfo.Uid, c.ordersDataStream)
 	}
 
-	order, ok := <-c.ordersDataStream.OrderState()
+	c.Lock()
+	if _, ok := c.ordersStateInput[accountId]; !ok {
+		c.ordersStateInput[accountId] = make(map[string]map[uuid.UUID]chan *pb.OrderStateStreamResponse_OrderState)
+	}
+	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid]; !ok {
+		c.ordersStateInput[accountId][instrInfo.Uid] = make(map[uuid.UUID]chan *pb.OrderStateStreamResponse_OrderState)
+	}
+	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]; !ok {
+		c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId] = make(chan *pb.OrderStateStreamResponse_OrderState)
+	}
+	c.Unlock()
+
+	return nil
+}
+
+func (c *Client) RecieveOrdersUpdate(instrInfo *ds.InstrumentInfo, accountId string) (*ds.Order, error) {
+	c.RLock()
+	ch := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]
+	c.RUnlock()
+
+	order, ok := <-ch
 	if !ok {
 		return nil, fmt.Errorf("ordersDataStream closed")
 	}
 
-	returnable := &datastruct.Order{
+	returnable := &ds.Order{
 		ExecutionReportStatus: order.ExecutionReportStatus.String(),
-		OrderPrice: datastruct.Quotation{
+		OrderPrice: ds.Quotation{
 			Units: order.OrderPrice.Units,
 			Nano:  order.OrderPrice.Nano,
 		},
 		LotsRequested: order.LotsRequested,
 		LotsExecuted:  order.LotsExecuted,
-		InstrumentUid: instrInfo.Uid,
+		InstrumentUid: order.InstrumentUid,
 	}
 
 	if order.CreatedAt != nil {
@@ -262,24 +337,71 @@ func (c *Client) RecieveOrdersUpdate(instrInfo *datastruct.InstrumentInfo) (*dat
 	}
 
 	if order.Direction == pb.OrderDirection_ORDER_DIRECTION_BUY {
-		returnable.Direction = service.Buy.ToString()
+		returnable.Direction = ds.Buy.ToString()
 	} else {
-		returnable.Direction = service.Sell.ToString()
+		returnable.Direction = ds.Sell.ToString()
 	}
 
 	if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_FILL ||
 		order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_PARTIALLYFILL {
 
-		returnable.ExecutionReportStatus = service.Fill.ToString()
+		returnable.ExecutionReportStatus = ds.Fill.ToString()
 
 	} else if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_REJECTED ||
 		order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_CANCELLED {
 
-		returnable.ExecutionReportStatus = service.Cancelled.ToString()
+		returnable.ExecutionReportStatus = ds.Cancelled.ToString()
 
 	} else {
-		returnable.ExecutionReportStatus = service.New.ToString()
+		returnable.ExecutionReportStatus = ds.New.ToString()
 	}
 
 	return returnable, nil
+}
+
+func (c *Client) prepareStreamForOrdersState(instrInfo *ds.InstrumentInfo) error {
+	stream, err := c.NewOrdersStreamClient().OrderStateStream([]string{}, 0)
+	if err != nil {
+		return err
+	}
+
+	c.ordersDataStream = stream
+
+	go c.startOrdersStateRouting(instrInfo, c.ordersDataStream.OrderState())
+
+	go c.startListeningInstrumentStream(instrInfo.Uid, c.ordersDataStream)
+
+	return nil
+}
+
+func (c *Client) startOrdersStateRouting(instrInfo *ds.InstrumentInfo, ch <-chan *pb.OrderStateStreamResponse_OrderState) {
+	defer func() {
+		for _, byAccId := range c.ordersStateInput {
+			for _, byUID := range byAccId {
+				for _, ch := range byUID {
+					close(ch)
+				}
+			}
+		}
+	}()
+
+	for {
+		select {
+		case <-c.ctx.Done():
+			return
+		case v, ok := <-ch:
+			if !ok {
+				return
+			}
+
+			c.Lock()
+			for _, uniqueListener := range c.ordersStateInput[v.AccountId][v.InstrumentUid] {
+				select {
+				case uniqueListener <- v:
+				default:
+				}
+			}
+			c.Unlock()
+		}
+	}
 }

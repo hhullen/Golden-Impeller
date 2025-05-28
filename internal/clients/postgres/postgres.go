@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 	"trading_bot/internal/service/datastruct"
-	"trading_bot/internal/strategy"
+	ds "trading_bot/internal/service/datastruct"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -20,7 +20,7 @@ const (
 type Client struct {
 	db *sqlx.DB
 
-	historyBuffer []*datastruct.Candle
+	// historyBuffer []*ds.Candle
 }
 
 func NewClient(host, port, user, password, dbname string) (*Client, error) {
@@ -40,7 +40,7 @@ func NewClient(host, port, user, password, dbname string) (*Client, error) {
 	}, nil
 }
 
-func (c *Client) AddInstrumentInfo(ctx context.Context, instrInfo *datastruct.InstrumentInfo) (err error) {
+func (c *Client) AddInstrumentInfo(ctx context.Context, instrInfo *ds.InstrumentInfo) (err error) {
 	defer func() {
 		if p := recover(); p != nil {
 			err = fmt.Errorf("panic recovered: %v", p)
@@ -56,13 +56,13 @@ func (c *Client) AddInstrumentInfo(ctx context.Context, instrInfo *datastruct.In
 	return
 }
 
-func (c *Client) GetInstrumentInfo(uid string) (info *datastruct.InstrumentInfo, err error) {
+func (c *Client) GetInstrumentInfo(uid string) (info *ds.InstrumentInfo, err error) {
 	defer func() {
 		if p := recover(); p != nil {
 			err = fmt.Errorf("panic recovered: %v", p)
 		}
 	}()
-	info = &datastruct.InstrumentInfo{}
+	info = &ds.InstrumentInfo{}
 
 	query := `SELECT * FROM instruments WHERE uid = $1`
 
@@ -71,7 +71,7 @@ func (c *Client) GetInstrumentInfo(uid string) (info *datastruct.InstrumentInfo,
 	return
 }
 
-func (c *Client) AddCandles(ctx context.Context, instrInfo *datastruct.InstrumentInfo, candles []*datastruct.Candle, interval strategy.CandleInterval) (err error) {
+func (c *Client) AddCandles(ctx context.Context, instrInfo *ds.InstrumentInfo, candles []*ds.Candle, interval ds.CandleInterval) (err error) {
 	var tx *sql.Tx
 	defer func() {
 		if p := recover(); p != nil {
@@ -119,55 +119,14 @@ func (c *Client) AddCandles(ctx context.Context, instrInfo *datastruct.Instrumen
 	return nil
 }
 
-func getBatch(i int, candles []*datastruct.Candle) []*datastruct.Candle {
+func getBatch(i int, candles []*ds.Candle) []*ds.Candle {
 	if i+insertOneTime > len(candles) {
 		return candles[i:]
 	}
 	return candles[i : i+insertOneTime]
 }
 
-func (c *Client) seekCandleIdx(t time.Time) (int64, bool) {
-	for i := range c.historyBuffer {
-		if c.historyBuffer[i].Timestamp.After(t) || c.historyBuffer[i].Timestamp.Equal(t) {
-			return int64(i), true
-		}
-	}
-	return 0, false
-}
-
-func (c *Client) GetCandleWithOffset(instrInfo *datastruct.InstrumentInfo, interval strategy.CandleInterval, from, to time.Time, offset int64) (*datastruct.Candle, error) {
-	if idx, ok := c.seekCandleIdx(from); ok {
-
-		if idx+offset >= int64(len(c.historyBuffer)) {
-			return nil, fmt.Errorf("no candles anymore")
-		}
-		return c.historyBuffer[idx+offset], nil
-
-	}
-
-	query := `SELECT
-		id, instrument_id, timestamp, interval, open_units AS "open.units", open_nano AS "open.nano",
-		close_units AS "close.units", close_nano AS "close.nano", high_units AS "high.units", high_nano AS "high.nano",
-		low_units AS "low.units", low_nano AS "low.nano", volume
-		FROM candles
-		WHERE instrument_id = $1
-		AND interval = $2
-		order by timestamp`
-
-	err := c.db.Select(&c.historyBuffer, query, instrInfo.Id, interval.ToString())
-	if err != nil {
-		return nil, err
-	}
-
-	if len(c.historyBuffer) == 0 || offset >= int64(len(c.historyBuffer)) {
-		return nil, fmt.Errorf("no candles anymore")
-	}
-
-	return c.historyBuffer[0], nil
-
-}
-
-func (c *Client) GetCandles(instrInfo *datastruct.InstrumentInfo, interval strategy.CandleInterval, from, to time.Time) ([]*datastruct.Candle, error) {
+func (c *Client) GetCandles(instrInfo *ds.InstrumentInfo, interval ds.CandleInterval, from, to time.Time) ([]*ds.Candle, error) {
 	query := `SELECT
 		id, instrument_id, timestamp, interval, open_units AS "open.units", open_nano AS "open.nano",
 		close_units AS "close.units", close_nano AS "close.nano", high_units AS "high.units", high_nano AS "high.nano",
@@ -179,7 +138,7 @@ func (c *Client) GetCandles(instrInfo *datastruct.InstrumentInfo, interval strat
 		AND timestamp <= $4
 		order by timestamp`
 
-	var candles []*datastruct.Candle
+	var candles []*ds.Candle
 	err := c.db.Select(&candles, query, instrInfo.Id, interval.ToString(), from, to)
 	if err != nil {
 		return nil, err
@@ -192,7 +151,7 @@ func (c *Client) GetCandles(instrInfo *datastruct.InstrumentInfo, interval strat
 	return candles, nil
 }
 
-func (c *Client) PutOrder(trId string, instrInfo *datastruct.InstrumentInfo, order *datastruct.Order) (err error) {
+func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) (err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
@@ -230,7 +189,7 @@ func (c *Client) PutOrder(trId string, instrInfo *datastruct.InstrumentInfo, ord
 	return
 }
 
-func (c *Client) GetLastLowestExcecutedOrder(trId string, instrInfo *datastruct.InstrumentInfo) (*datastruct.Order, bool, error) {
+func (c *Client) GetLastLowestExcecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
 	query := `SELECT id, created_at, completed_at, order_id, direction, exec_report_status,
 		price_units AS "price.units", price_nano AS "price.nano", lots_requested, 
 		lots_executed, additional_info
@@ -242,7 +201,41 @@ func (c *Client) GetLastLowestExcecutedOrder(trId string, instrInfo *datastruct.
 		ORDER BY price_units, price_nano
 		LIMIT 1;`
 
-	var orders []*datastruct.Order
+	return c.selectOrders(query, trId, instrInfo)
+}
+
+func (c *Client) GetHighestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*datastruct.Order, bool, error) {
+	query := `SELECT id, created_at, completed_at, order_id, direction, exec_report_status,
+		price_units AS "price.units", price_nano AS "price.nano", lots_requested, 
+		lots_executed, additional_info
+		FROM orders
+		WHERE instrument_id = $1
+		AND direction = 'BUY'
+		AND exec_report_status = 'FILL'
+		AND trader_id = $2
+		ORDER BY price_units, price_nano DESC
+		LIMIT 1;`
+
+	return c.selectOrders(query, trId, instrInfo)
+}
+
+func (c *Client) GetLatestExecutedSellOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
+	query := `SELECT id, created_at, completed_at, order_id, direction, exec_report_status,
+		price_units AS "price.units", price_nano AS "price.nano", lots_requested, 
+		lots_executed, additional_info
+		FROM orders
+		WHERE instrument_id = $1
+		AND direction = 'SELL'
+		AND exec_report_status = 'FILL'
+		AND trader_id = $2
+		ORDER BY completed_at DESC
+		LIMIT 1;`
+
+	return c.selectOrders(query, trId, instrInfo)
+}
+
+func (c *Client) selectOrders(query string, trId string, instrInfo *ds.InstrumentInfo) (*datastruct.Order, bool, error) {
+	var orders []*ds.Order
 	err := c.db.Select(&orders, query, instrInfo.Id, trId)
 	if err != nil {
 		return nil, false, err
@@ -257,7 +250,7 @@ func (c *Client) GetLastLowestExcecutedOrder(trId string, instrInfo *datastruct.
 	return orders[0], true, err
 }
 
-func (c *Client) GetUnsoldOrdersAmount(trId string, instrInfo *datastruct.InstrumentInfo) (int64, error) {
+func (c *Client) GetUnsoldOrdersAmount(trId string, instrInfo *ds.InstrumentInfo) (int64, error) {
 	query := `SELECT COUNT(*) FROM orders
 		WHERE instrument_id = $1
 		AND direction = 'BUY'

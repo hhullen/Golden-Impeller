@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"trading_bot/internal/supports"
+	"trading_bot/internal/config"
 
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
@@ -24,7 +24,7 @@ func main() {
 	}
 	command := os.Args[1]
 
-	envCfg, err := supports.GetEnvCfg()
+	envCfg, err := config.GetEnvCfg()
 	if err != nil {
 		log.Fatalln(err)
 	}
