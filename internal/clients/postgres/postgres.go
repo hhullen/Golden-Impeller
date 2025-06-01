@@ -40,7 +40,7 @@ func NewClient(host, port, user, password, dbname string) (*Client, error) {
 	}, nil
 }
 
-func (c *Client) AddInstrumentInfo(ctx context.Context, instrInfo *ds.InstrumentInfo) (err error) {
+func (c *Client) AddInstrumentInfo(instrInfo *ds.InstrumentInfo) (dbId int64, err error) {
 	defer func() {
 		if p := recover(); p != nil {
 			err = fmt.Errorf("panic recovered: %v", p)
@@ -48,9 +48,15 @@ func (c *Client) AddInstrumentInfo(ctx context.Context, instrInfo *ds.Instrument
 	}()
 
 	query := `INSERT INTO instruments (uid, isin, figi, ticker, class_code, name, lot, available_api, for_quals)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (uid, isin, figi, ticker) DO NOTHING`
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (uid, isin, figi, ticker)
+		DO UPDATE SET 
+			lot = EXCLUDED.lot,
+			name = EXCLUDED.name,
+			available_api = EXCLUDED.available_api,
+			for_quals = EXCLUDED.for_quals
+		RETURNING id;`
 
-	_, err = c.db.Exec(query, instrInfo.Uid, instrInfo.Isin, instrInfo.Figi, instrInfo.Ticker,
+	err = c.db.Get(&dbId, query, instrInfo.Uid, instrInfo.Isin, instrInfo.Figi, instrInfo.Ticker,
 		instrInfo.ClassCode, instrInfo.Name, instrInfo.Lot, instrInfo.AvailableApi, instrInfo.ForQuals)
 
 	return
@@ -164,7 +170,7 @@ func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.O
 		}
 	}()
 
-	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
+	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
 		return
 	}
@@ -189,7 +195,7 @@ func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.O
 	return
 }
 
-func (c *Client) GetLastLowestExcecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
+func (c *Client) GetLowestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
 	query := `SELECT id, created_at, completed_at, order_id, direction, exec_report_status,
 		price_units AS "price.units", price_nano AS "price.nano", lots_requested, 
 		lots_executed, additional_info

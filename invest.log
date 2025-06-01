@@ -1,0 +1,1249 @@
+INVEST-API 2025/05/30 20:03:13 info from MD stream subscribe_last_price_response:{tracking_id:"603b6e8d28d7879975e9a3c19d66620e"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"c43fb38e-fd7d-4529-aa93-1d7093a31299"  subscription_id:"29ff382a-f176-4f03-bca0-7231885c05b9"  6:1}}
+INVEST-API 2025/05/30 20:03:13 info from order state stream subscription:{tracking_id:"c190bb374f4feb5aa12ec78010c01a8b"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"b7632b3e-e751-4da1-9f29-5942ffc4799d"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/05/30 20:03:13 info from MD stream subscribe_last_price_response:{tracking_id:"603b6e8d28d7879975e9a3c19d66620e"  last_price_subscriptions:{figi:"BBG004730N88"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13"  stream_id:"c43fb38e-fd7d-4529-aa93-1d7093a31299"  subscription_id:"0482caf7-b02e-4bb5-a75a-0477209b8f30"  6:1}}
+INVEST-API 2025/05/30 20:07:13 info from order state stream ping:{time:{seconds:1748621234  nanos:556084504}  stream_id:"b7632b3e-e751-4da1-9f29-5942ffc4799d"}
+INVEST-API 2025/05/30 20:07:36 stop listening order state stream
+INVEST-API 2025/05/30 20:07:36 close order state stream
+INVEST-API 2025/05/30 20:07:36 stop listening market data stream
+INVEST-API 2025/05/30 20:07:36 close market data stream
+INVEST-API 2025/05/30 21:06:04 info from order state stream subscription:{tracking_id:"20af3abde960ed2783a3b495a8a6edfd"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"490c080a-73cc-4783-9e9c-68ec714e349d"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/05/30 21:06:04 info from MD stream subscribe_last_price_response:{tracking_id:"16d4b1866117a54d45d40608dc4b9404"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"deda8ad3-06d1-4f1d-adf6-f5edf13c5624"  subscription_id:"01f6a631-b29f-4a48-b8ab-2c8e87e20e68"  6:1}}
+INVEST-API 2025/05/30 21:06:04 info from MD stream subscribe_last_price_response:{tracking_id:"16d4b1866117a54d45d40608dc4b9404"  last_price_subscriptions:{figi:"BBG004730N88"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13"  stream_id:"deda8ad3-06d1-4f1d-adf6-f5edf13c5624"  subscription_id:"b937d363-42f8-4747-973d-3960c774199a"  6:1}}
+INVEST-API 2025/05/30 21:06:16 stop listening order state stream
+INVEST-API 2025/05/30 21:06:16 close order state stream
+INVEST-API 2025/05/30 21:06:16 stop listening market data stream
+INVEST-API 2025/05/30 21:06:16 close market data stream
+INVEST-API 2025/05/30 21:06:20 info from MD stream subscribe_last_price_response:{tracking_id:"986ba4c9a196461bc33992ed26c6810f"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"625d06ba-437c-4200-9c9a-7698e8cdac12"  subscription_id:"dee2f59a-cdbb-43b5-b8b7-fd8d48e386f5"  6:1}}
+INVEST-API 2025/05/30 21:06:20 info from order state stream subscription:{tracking_id:"b99b8e7fdae41d120666ac13547c9da6"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"e62b968e-797a-4b0b-a226-f8f73a39856d"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/05/30 21:06:20 info from MD stream subscribe_last_price_response:{tracking_id:"986ba4c9a196461bc33992ed26c6810f"  last_price_subscriptions:{figi:"BBG004730N88"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13"  stream_id:"625d06ba-437c-4200-9c9a-7698e8cdac12"  subscription_id:"c3c21ad8-2b72-4f45-871a-09b827f9517f"  6:1}}
+INVEST-API 2025/05/30 21:07:24 stop listening order state stream
+INVEST-API 2025/05/30 21:07:24 close order state stream
+INVEST-API 2025/05/30 21:07:24 stop listening market data stream
+INVEST-API 2025/05/30 21:07:24 close market data stream
+INVEST-API 2025/05/30 21:08:25 info from MD stream subscribe_last_price_response:{tracking_id:"1bf4f60622af66ec9c25613394cdd1a8" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"87486013-c085-4ec8-b0d0-a09cebc7a564" subscription_id:"3fa05276-ca5c-4ad4-91f2-82fc3c0866aa" 6:1}}
+INVEST-API 2025/05/30 21:08:25 info from order state stream subscription:{tracking_id:"591df2be6e47ab05fea6da9c976723d2" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"851b7157-4ed9-460c-8563-ca44606a329a" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/05/30 21:08:25 info from MD stream subscribe_last_price_response:{tracking_id:"1bf4f60622af66ec9c25613394cdd1a8" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"87486013-c085-4ec8-b0d0-a09cebc7a564" subscription_id:"b60121a0-5086-462f-a8de-faeb54917a3f" 6:1}}
+INVEST-API 2025/05/30 21:10:17 stop listening order state stream
+INVEST-API 2025/05/30 21:10:17 close order state stream
+INVEST-API 2025/05/30 21:10:17 stop listening market data stream
+INVEST-API 2025/05/30 21:10:17 close market data stream
+INVEST-API 2025/05/30 21:10:54 info from MD stream subscribe_last_price_response:{tracking_id:"b5afdc3b4085bed45cf1c99f1d283d72" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"6698d28f-5f5f-4068-87a2-eadea45f2ebe" subscription_id:"e287e85c-eeb8-4d98-bd1b-940a75841b24" 6:1}}
+INVEST-API 2025/05/30 21:10:54 info from order state stream subscription:{tracking_id:"b2be91e7bb4cd26ff95ab8e0ccbdc381" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"549eca56-d779-419b-a67a-0d6e0ab8ded3" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/05/30 21:10:54 info from MD stream subscribe_last_price_response:{tracking_id:"b5afdc3b4085bed45cf1c99f1d283d72" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"6698d28f-5f5f-4068-87a2-eadea45f2ebe" subscription_id:"e2f1c899-9472-4c1a-8b40-18cbafe0c1d4" 6:1}}
+INVEST-API 2025/05/30 21:12:08 stop listening market data stream
+INVEST-API 2025/05/30 21:12:08 close market data stream
+INVEST-API 2025/05/30 21:12:08 stop listening order state stream
+INVEST-API 2025/05/30 21:12:08 close order state stream
+INVEST-API 2025/05/30 21:12:14 info from MD stream subscribe_last_price_response:{tracking_id:"6f6e60b3bee86ec9fd01bafbaa8680b5" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406" subscription_id:"84b8d9ab-7a03-4090-8481-bae975e3f67e" 6:1}}
+INVEST-API 2025/05/30 21:12:14 info from order state stream subscription:{tracking_id:"4ae2fbf16d1844fd8339d9e05c8827ff" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/05/30 21:12:14 info from MD stream subscribe_last_price_response:{tracking_id:"6f6e60b3bee86ec9fd01bafbaa8680b5" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406" subscription_id:"b08099b9-973f-4b79-919d-bf9e3a6c4ed3" 6:1}}
+INVEST-API 2025/05/30 21:16:14 info from order state stream ping:{time:{seconds:1748625375 nanos:66883816} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 21:20:14 info from order state stream ping:{time:{seconds:1748625615 nanos:166894126} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 21:24:14 info from order state stream ping:{time:{seconds:1748625855 nanos:266897758} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 21:28:14 info from order state stream ping:{time:{seconds:1748626095 nanos:374637616} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 21:32:14 info from order state stream ping:{time:{seconds:1748626335 nanos:466852405} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 21:36:14 info from order state stream ping:{time:{seconds:1748626575 nanos:498762291} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 21:40:14 info from order state stream ping:{time:{seconds:1748626815 nanos:566851578} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 21:44:14 info from order state stream ping:{time:{seconds:1748627055 nanos:666870104} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 21:48:14 info from order state stream ping:{time:{seconds:1748627295 nanos:766826038} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 21:52:15 info from order state stream ping:{time:{seconds:1748627535 nanos:866865645} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 21:56:15 info from order state stream ping:{time:{seconds:1748627775 nanos:966863369} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:00:15 info from order state stream ping:{time:{seconds:1748628016 nanos:66903465} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:04:15 info from order state stream ping:{time:{seconds:1748628256 nanos:166854463} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:08:15 info from order state stream ping:{time:{seconds:1748628496 nanos:266839277} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:12:15 info from order state stream ping:{time:{seconds:1748628736 nanos:366838014} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:16:15 info from order state stream ping:{time:{seconds:1748628976 nanos:466873366} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:20:15 info from order state stream ping:{time:{seconds:1748629216 nanos:566877443} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:24:15 info from order state stream ping:{time:{seconds:1748629456 nanos:666839248} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:28:15 info from order state stream ping:{time:{seconds:1748629696 nanos:766843012} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:32:16 info from order state stream ping:{time:{seconds:1748629936 nanos:866888247} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:36:16 info from order state stream ping:{time:{seconds:1748630176 nanos:966867531} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:40:16 info from order state stream ping:{time:{seconds:1748630417 nanos:66939834} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:44:16 info from order state stream ping:{time:{seconds:1748630657 nanos:166861337} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:48:16 info from order state stream ping:{time:{seconds:1748630897 nanos:266885487} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:52:16 info from order state stream ping:{time:{seconds:1748631137 nanos:366858654} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 22:56:16 info from order state stream ping:{time:{seconds:1748631377 nanos:466894814} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:00:16 info from order state stream ping:{time:{seconds:1748631617 nanos:566850958} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:04:16 info from order state stream ping:{time:{seconds:1748631857 nanos:666855615} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:08:17 info from order state stream ping:{time:{seconds:1748632097 nanos:766882196} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:12:17 info from order state stream ping:{time:{seconds:1748632337 nanos:866889441} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:16:17 info from order state stream ping:{time:{seconds:1748632577 nanos:966847067} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:20:17 info from order state stream ping:{time:{seconds:1748632818 nanos:66829732} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:24:17 info from order state stream ping:{time:{seconds:1748633058 nanos:166898476} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:28:17 info from order state stream ping:{time:{seconds:1748633298 nanos:266854894} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:32:17 info from order state stream ping:{time:{seconds:1748633538 nanos:366885489} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:36:17 info from order state stream ping:{time:{seconds:1748633778 nanos:466851518} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:40:17 info from order state stream ping:{time:{seconds:1748634018 nanos:566857789} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:44:17 info from order state stream ping:{time:{seconds:1748634258 nanos:666851204} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:48:18 info from order state stream ping:{time:{seconds:1748634498 nanos:766850058} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:52:18 info from order state stream ping:{time:{seconds:1748634738 nanos:866860525} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/30 23:56:18 info from order state stream ping:{time:{seconds:1748634978 nanos:966915871} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:00:18 info from order state stream ping:{time:{seconds:1748635219 nanos:66883425} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:04:18 info from order state stream ping:{time:{seconds:1748635459 nanos:166900907} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:08:18 info from order state stream ping:{time:{seconds:1748635699 nanos:266873865} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:12:18 info from order state stream ping:{time:{seconds:1748635939 nanos:366972155} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:16:18 info from order state stream ping:{time:{seconds:1748636179 nanos:466878247} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:20:18 info from order state stream ping:{time:{seconds:1748636419 nanos:566901632} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:24:18 info from order state stream ping:{time:{seconds:1748636659 nanos:666872244} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:28:19 info from order state stream ping:{time:{seconds:1748636899 nanos:766857607} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:32:19 info from order state stream ping:{time:{seconds:1748637139 nanos:866858162} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:36:19 info from order state stream ping:{time:{seconds:1748637379 nanos:966884309} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:40:19 info from order state stream ping:{time:{seconds:1748637620 nanos:66902386} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:44:19 info from order state stream ping:{time:{seconds:1748637860 nanos:166843578} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:48:19 info from order state stream ping:{time:{seconds:1748638100 nanos:266832677} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:51:50 info from MD stream ping:{time:{seconds:1748638310 nanos:931547606} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 00:52:19 info from order state stream ping:{time:{seconds:1748638340 nanos:372917089} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:53:51 info from MD stream ping:{time:{seconds:1748638431 nanos:931179450} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 00:55:52 info from MD stream ping:{time:{seconds:1748638552 nanos:931209575} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 00:56:19 info from order state stream ping:{time:{seconds:1748638580 nanos:466854088} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 00:57:53 info from MD stream ping:{time:{seconds:1748638673 nanos:931251606} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 00:59:54 info from MD stream ping:{time:{seconds:1748638794 nanos:931300449} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:00:19 info from order state stream ping:{time:{seconds:1748638820 nanos:566834780} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:01:55 info from MD stream ping:{time:{seconds:1748638915 nanos:931338320} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:03:56 info from MD stream ping:{time:{seconds:1748639036 nanos:931250594} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:04:20 info from order state stream ping:{time:{seconds:1748639060 nanos:666829607} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:05:57 info from MD stream ping:{time:{seconds:1748639157 nanos:931263359} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:07:58 info from MD stream ping:{time:{seconds:1748639278 nanos:931288417} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:08:20 info from order state stream ping:{time:{seconds:1748639300 nanos:766840883} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:09:59 info from MD stream ping:{time:{seconds:1748639399 nanos:931275004} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:12:00 info from MD stream ping:{time:{seconds:1748639520 nanos:931259895} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:12:20 info from order state stream ping:{time:{seconds:1748639540 nanos:866829731} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:14:01 info from MD stream ping:{time:{seconds:1748639641 nanos:931360359} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:16:02 info from MD stream ping:{time:{seconds:1748639762 nanos:931345400} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:16:20 info from order state stream ping:{time:{seconds:1748639780 nanos:966823970} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:18:03 info from MD stream ping:{time:{seconds:1748639883 nanos:931383096} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:20:04 info from MD stream ping:{time:{seconds:1748640004 nanos:931300824} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:20:20 info from order state stream ping:{time:{seconds:1748640021 nanos:66841698} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:22:05 info from MD stream ping:{time:{seconds:1748640125 nanos:931287920} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:24:06 info from MD stream ping:{time:{seconds:1748640246 nanos:931280159} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:24:20 info from order state stream ping:{time:{seconds:1748640261 nanos:166824773} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:26:07 info from MD stream ping:{time:{seconds:1748640367 nanos:931249980} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:28:08 info from MD stream ping:{time:{seconds:1748640488 nanos:931256347} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:28:20 info from order state stream ping:{time:{seconds:1748640501 nanos:266837055} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:30:09 info from MD stream ping:{time:{seconds:1748640609 nanos:931407324} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:32:10 info from MD stream ping:{time:{seconds:1748640730 nanos:931317372} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:32:20 info from order state stream ping:{time:{seconds:1748640741 nanos:366819037} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:34:11 info from MD stream ping:{time:{seconds:1748640851 nanos:931259825} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:36:12 info from MD stream ping:{time:{seconds:1748640972 nanos:931238289} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:36:20 info from order state stream ping:{time:{seconds:1748640981 nanos:466853265} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:38:13 info from MD stream ping:{time:{seconds:1748641093 nanos:931335336} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:40:14 info from MD stream ping:{time:{seconds:1748641214 nanos:931295823} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:40:20 info from order state stream ping:{time:{seconds:1748641221 nanos:566817837} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:42:15 info from MD stream ping:{time:{seconds:1748641335 nanos:931391958} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:44:16 info from MD stream ping:{time:{seconds:1748641456 nanos:931282383} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:44:21 info from order state stream ping:{time:{seconds:1748641461 nanos:666832495} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:46:17 info from MD stream ping:{time:{seconds:1748641577 nanos:931263258} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:48:18 info from MD stream ping:{time:{seconds:1748641698 nanos:931270804} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:48:21 info from order state stream ping:{time:{seconds:1748641701 nanos:766853132} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:50:19 info from MD stream ping:{time:{seconds:1748641819 nanos:931267241} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:52:20 info from MD stream ping:{time:{seconds:1748641940 nanos:931276329} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:52:21 info from order state stream ping:{time:{seconds:1748641941 nanos:866834475} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:54:21 info from MD stream ping:{time:{seconds:1748642061 nanos:931344369} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:56:21 info from order state stream ping:{time:{seconds:1748642181 nanos:966838118} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 01:56:22 info from MD stream ping:{time:{seconds:1748642182 nanos:931305974} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 01:58:23 info from MD stream ping:{time:{seconds:1748642303 nanos:931304785} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:00:21 info from order state stream ping:{time:{seconds:1748642422 nanos:66839221} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:00:24 info from MD stream ping:{time:{seconds:1748642424 nanos:931296427} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:02:25 info from MD stream ping:{time:{seconds:1748642545 nanos:931350350} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:04:21 info from order state stream ping:{time:{seconds:1748642662 nanos:166841616} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:04:26 info from MD stream ping:{time:{seconds:1748642666 nanos:931304127} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:06:27 info from MD stream ping:{time:{seconds:1748642787 nanos:931409287} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:08:21 info from order state stream ping:{time:{seconds:1748642902 nanos:266882244} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:08:28 info from MD stream ping:{time:{seconds:1748642908 nanos:931283616} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:10:29 info from MD stream ping:{time:{seconds:1748643029 nanos:931308926} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:12:21 info from order state stream ping:{time:{seconds:1748643142 nanos:366836718} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:12:30 info from MD stream ping:{time:{seconds:1748643150 nanos:931265739} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:14:31 info from MD stream ping:{time:{seconds:1748643271 nanos:931370885} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:16:21 info from order state stream ping:{time:{seconds:1748643382 nanos:466900229} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:16:32 info from MD stream ping:{time:{seconds:1748643392 nanos:931301365} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:18:33 info from MD stream ping:{time:{seconds:1748643513 nanos:931410606} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:20:21 info from order state stream ping:{time:{seconds:1748643622 nanos:566818867} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:20:34 info from MD stream ping:{time:{seconds:1748643634 nanos:931293744} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:22:35 info from MD stream ping:{time:{seconds:1748643755 nanos:931332220} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:24:22 info from order state stream ping:{time:{seconds:1748643862 nanos:666858863} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:24:36 info from MD stream ping:{time:{seconds:1748643876 nanos:931312305} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:26:37 info from MD stream ping:{time:{seconds:1748643997 nanos:931271160} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:28:22 info from order state stream ping:{time:{seconds:1748644102 nanos:766848071} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:28:38 info from MD stream ping:{time:{seconds:1748644118 nanos:931367811} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:30:39 info from MD stream ping:{time:{seconds:1748644239 nanos:931305136} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:32:22 info from order state stream ping:{time:{seconds:1748644342 nanos:866837585} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:32:40 info from MD stream ping:{time:{seconds:1748644360 nanos:931277719} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:34:41 info from MD stream ping:{time:{seconds:1748644481 nanos:931269021} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:36:22 info from order state stream ping:{time:{seconds:1748644582 nanos:966861635} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:36:42 info from MD stream ping:{time:{seconds:1748644602 nanos:931254168} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:38:43 info from MD stream ping:{time:{seconds:1748644723 nanos:931312548} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:40:22 info from order state stream ping:{time:{seconds:1748644823 nanos:66839422} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:40:44 info from MD stream ping:{time:{seconds:1748644844 nanos:931317901} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:42:45 info from MD stream ping:{time:{seconds:1748644965 nanos:931318301} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:44:22 info from order state stream ping:{time:{seconds:1748645063 nanos:166832886} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:44:46 info from MD stream ping:{time:{seconds:1748645086 nanos:931329761} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:46:47 info from MD stream ping:{time:{seconds:1748645207 nanos:931279001} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:48:22 info from order state stream ping:{time:{seconds:1748645303 nanos:266823010} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:48:48 info from MD stream ping:{time:{seconds:1748645328 nanos:931273256} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:50:49 info from MD stream ping:{time:{seconds:1748645449 nanos:931302294} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:52:22 info from order state stream ping:{time:{seconds:1748645543 nanos:366854265} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:52:50 info from MD stream ping:{time:{seconds:1748645570 nanos:931263944} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:54:51 info from MD stream ping:{time:{seconds:1748645691 nanos:931280761} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:56:22 info from order state stream ping:{time:{seconds:1748645783 nanos:466838381} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 02:56:52 info from MD stream ping:{time:{seconds:1748645812 nanos:931278086} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 02:58:53 info from MD stream ping:{time:{seconds:1748645933 nanos:931259731} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:00:23 info from order state stream ping:{time:{seconds:1748646023 nanos:566855672} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:04:23 info from order state stream ping:{time:{seconds:1748646263 nanos:666839516} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:08:23 info from order state stream ping:{time:{seconds:1748646503 nanos:766841209} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:12:23 info from order state stream ping:{time:{seconds:1748646743 nanos:866831890} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:12:57 info from MD stream ping:{time:{seconds:1748646777 nanos:931278266} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:15:23 info from MD stream ping:{time:{seconds:1748646923 nanos:931505696} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:16:23 info from order state stream ping:{time:{seconds:1748646983 nanos:966837521} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:17:24 info from MD stream ping:{time:{seconds:1748647044 nanos:931220291} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:19:25 info from MD stream ping:{time:{seconds:1748647165 nanos:931175653} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:20:23 info from order state stream ping:{time:{seconds:1748647224 nanos:66821699} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:22:29 info from MD stream ping:{time:{seconds:1748647349 nanos:931345139} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:24:23 info from order state stream ping:{time:{seconds:1748647464 nanos:166814507} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:25:04 info from MD stream ping:{time:{seconds:1748647504 nanos:931326839} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:27:05 info from MD stream ping:{time:{seconds:1748647625 nanos:931327896} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:28:23 info from order state stream ping:{time:{seconds:1748647704 nanos:266856406} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:29:06 info from MD stream ping:{time:{seconds:1748647746 nanos:931252742} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:32:23 info from order state stream ping:{time:{seconds:1748647944 nanos:366838187} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:35:04 info from MD stream ping:{time:{seconds:1748648104 nanos:931323090} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:36:23 info from order state stream ping:{time:{seconds:1748648184 nanos:466846953} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:39:31 info from MD stream ping:{time:{seconds:1748648371 nanos:931235308} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:40:24 info from order state stream ping:{time:{seconds:1748648424 nanos:566839689} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:44:24 info from order state stream ping:{time:{seconds:1748648664 nanos:666833273} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:44:48 info from MD stream ping:{time:{seconds:1748648688 nanos:931220159} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:46:49 info from MD stream ping:{time:{seconds:1748648809 nanos:931300154} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:48:24 info from order state stream ping:{time:{seconds:1748648904 nanos:766855854} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:48:50 info from MD stream ping:{time:{seconds:1748648930 nanos:931322914} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:50:51 info from MD stream ping:{time:{seconds:1748649051 nanos:931300111} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:52:24 info from order state stream ping:{time:{seconds:1748649144 nanos:866843943} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:54:34 info from MD stream ping:{time:{seconds:1748649274 nanos:931252123} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:56:24 info from order state stream ping:{time:{seconds:1748649384 nanos:966838852} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 03:56:35 info from MD stream ping:{time:{seconds:1748649395 nanos:931265817} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 03:58:36 info from MD stream ping:{time:{seconds:1748649516 nanos:931220251} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:00:24 info from order state stream ping:{time:{seconds:1748649625 nanos:66852730} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:01:26 info from MD stream ping:{time:{seconds:1748649686 nanos:931261021} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:04:24 info from order state stream ping:{time:{seconds:1748649865 nanos:166858364} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:06:48 info from MD stream ping:{time:{seconds:1748650008 nanos:931306204} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:08:24 info from order state stream ping:{time:{seconds:1748650105 nanos:266849710} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:08:49 info from MD stream ping:{time:{seconds:1748650129 nanos:931325871} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:12:24 info from order state stream ping:{time:{seconds:1748650345 nanos:372385111} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:13:35 info from MD stream ping:{time:{seconds:1748650415 nanos:931243972} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:16:25 info from order state stream ping:{time:{seconds:1748650585 nanos:466857913} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:16:46 info from MD stream ping:{time:{seconds:1748650606 nanos:931329190} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:20:25 info from order state stream ping:{time:{seconds:1748650825 nanos:566841449} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:21:31 info from MD stream ping:{time:{seconds:1748650891 nanos:931256359} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:24:15 info from MD stream ping:{time:{seconds:1748651055 nanos:931284824} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:24:25 info from order state stream ping:{time:{seconds:1748651065 nanos:666834506} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:28:01 info from MD stream ping:{time:{seconds:1748651281 nanos:931496985} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:28:25 info from order state stream ping:{time:{seconds:1748651305 nanos:766830618} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:30:56 info from MD stream ping:{time:{seconds:1748651456 nanos:931259763} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:32:25 info from order state stream ping:{time:{seconds:1748651545 nanos:866846132} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:32:57 info from MD stream ping:{time:{seconds:1748651577 nanos:931234007} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:34:58 info from MD stream ping:{time:{seconds:1748651698 nanos:931233167} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:36:25 info from order state stream ping:{time:{seconds:1748651785 nanos:966836818} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:36:59 info from MD stream ping:{time:{seconds:1748651819 nanos:931338083} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:39:00 info from MD stream ping:{time:{seconds:1748651940 nanos:931242343} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:40:25 info from order state stream ping:{time:{seconds:1748652026 nanos:66833766} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:42:25 info from MD stream ping:{time:{seconds:1748652145 nanos:931286654} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:44:25 info from order state stream ping:{time:{seconds:1748652266 nanos:166837731} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:44:26 info from MD stream ping:{time:{seconds:1748652266 nanos:931284230} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:46:27 info from MD stream ping:{time:{seconds:1748652387 nanos:931291112} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:48:25 info from order state stream ping:{time:{seconds:1748652506 nanos:266831208} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:48:28 info from MD stream ping:{time:{seconds:1748652508 nanos:931267520} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:50:29 info from MD stream ping:{time:{seconds:1748652629 nanos:931341222} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:52:25 info from order state stream ping:{time:{seconds:1748652746 nanos:366839517} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:52:30 info from MD stream ping:{time:{seconds:1748652750 nanos:931245141} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:54:31 info from MD stream ping:{time:{seconds:1748652871 nanos:931248645} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:56:26 info from order state stream ping:{time:{seconds:1748652986 nanos:466871587} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 04:56:32 info from MD stream ping:{time:{seconds:1748652992 nanos:931240690} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 04:58:33 info from MD stream ping:{time:{seconds:1748653113 nanos:931270859} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:00:26 info from order state stream ping:{time:{seconds:1748653226 nanos:566833007} stream_id:"86e132ce-327a-49eb-8a97-4f4f995d5a8e"}
+INVEST-API 2025/05/31 05:00:34 info from MD stream ping:{time:{seconds:1748653234 nanos:931245296} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:02:51 try to restart order state stream err = rpc error: code = Internal desc = server closed the stream without sending trailers, attempt = 1
+INVEST-API 2025/05/31 05:02:51 info from order state stream subscription:{tracking_id:"0c417a4ef12deae657c2313f9634782c" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"66da1615-fb36-446d-a199-e4a4e4f9fda1" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/05/31 05:03:35 try to restart order state stream err = rpc error: code = Internal desc = server closed the stream without sending trailers, attempt = 1
+INVEST-API 2025/05/31 05:03:35 info from order state stream subscription:{tracking_id:"f90574932a3d8210ad867a5c4c23353c" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/05/31 05:04:20 info from MD stream ping:{time:{seconds:1748653460 nanos:931264651} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:06:21 info from MD stream ping:{time:{seconds:1748653581 nanos:931309759} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:07:35 info from order state stream ping:{time:{seconds:1748653655 nanos:555886593} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:09:52 info from MD stream ping:{time:{seconds:1748653792 nanos:931296727} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:11:35 info from order state stream ping:{time:{seconds:1748653895 nanos:659176289} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:11:53 info from MD stream ping:{time:{seconds:1748653913 nanos:931261685} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:14:43 info from MD stream ping:{time:{seconds:1748654083 nanos:931278164} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:15:35 info from order state stream ping:{time:{seconds:1748654135 nanos:755909633} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:16:44 info from MD stream ping:{time:{seconds:1748654204 nanos:931265058} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:19:35 info from order state stream ping:{time:{seconds:1748654375 nanos:855925194} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:21:04 info from MD stream ping:{time:{seconds:1748654464 nanos:931295745} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:23:05 info from MD stream ping:{time:{seconds:1748654585 nanos:931228296} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:23:35 info from order state stream ping:{time:{seconds:1748654615 nanos:955954997} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:27:35 info from order state stream ping:{time:{seconds:1748654856 nanos:55921123} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:27:42 info from MD stream ping:{time:{seconds:1748654862 nanos:931246834} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:31:22 info from MD stream ping:{time:{seconds:1748655082 nanos:931233498} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:31:35 info from order state stream ping:{time:{seconds:1748655096 nanos:155862949} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:34:52 info from MD stream ping:{time:{seconds:1748655292 nanos:931308194} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:35:35 info from order state stream ping:{time:{seconds:1748655336 nanos:255906745} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:39:05 info from MD stream ping:{time:{seconds:1748655545 nanos:931238168} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:39:35 info from order state stream ping:{time:{seconds:1748655576 nanos:355921047} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:41:06 info from MD stream ping:{time:{seconds:1748655666 nanos:931236054} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:43:07 info from MD stream ping:{time:{seconds:1748655787 nanos:931303378} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:43:36 info from order state stream ping:{time:{seconds:1748655816 nanos:455898719} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:45:08 info from MD stream ping:{time:{seconds:1748655908 nanos:931275284} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:47:36 info from order state stream ping:{time:{seconds:1748656056 nanos:555921775} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:50:10 info from MD stream ping:{time:{seconds:1748656210 nanos:931211282} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:51:36 info from order state stream ping:{time:{seconds:1748656296 nanos:655904693} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:52:11 info from MD stream ping:{time:{seconds:1748656331 nanos:931238026} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:55:31 info from MD stream ping:{time:{seconds:1748656531 nanos:931269000} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:55:36 info from order state stream ping:{time:{seconds:1748656536 nanos:755916928} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 05:57:32 info from MD stream ping:{time:{seconds:1748656652 nanos:931273626} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 05:59:36 info from order state stream ping:{time:{seconds:1748656776 nanos:855937019} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:03:05 info from MD stream ping:{time:{seconds:1748656985 nanos:931287508} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:03:36 info from order state stream ping:{time:{seconds:1748657016 nanos:955923024} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:07:36 info from order state stream ping:{time:{seconds:1748657257 nanos:55962384} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:07:38 info from MD stream ping:{time:{seconds:1748657258 nanos:931293796} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:10:25 info from MD stream ping:{time:{seconds:1748657425 nanos:931423278} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:11:36 info from order state stream ping:{time:{seconds:1748657497 nanos:155939242} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:12:26 info from MD stream ping:{time:{seconds:1748657546 nanos:931367627} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:15:07 info from MD stream ping:{time:{seconds:1748657707 nanos:931212872} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:15:36 info from order state stream ping:{time:{seconds:1748657737 nanos:255889628} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:17:08 info from MD stream ping:{time:{seconds:1748657828 nanos:931291284} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:19:09 info from MD stream ping:{time:{seconds:1748657949 nanos:931293219} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:19:37 info from order state stream ping:{time:{seconds:1748657977 nanos:356021409} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:23:37 info from order state stream ping:{time:{seconds:1748658217 nanos:455911383} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:24:28 info from MD stream ping:{time:{seconds:1748658268 nanos:931276370} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:26:29 info from MD stream ping:{time:{seconds:1748658389 nanos:931310082} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:27:37 info from order state stream ping:{time:{seconds:1748658457 nanos:555936977} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:28:35 info from MD stream ping:{time:{seconds:1748658515 nanos:931260525} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:30:36 info from MD stream ping:{time:{seconds:1748658636 nanos:931241836} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:31:37 info from order state stream ping:{time:{seconds:1748658697 nanos:655928640} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:32:37 info from MD stream ping:{time:{seconds:1748658757 nanos:931351589} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:34:38 info from MD stream ping:{time:{seconds:1748658878 nanos:931222964} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:35:37 info from order state stream ping:{time:{seconds:1748658937 nanos:755895076} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:37:37 info from MD stream ping:{time:{seconds:1748659057 nanos:931278832} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:39:37 info from order state stream ping:{time:{seconds:1748659177 nanos:855911841} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:39:38 info from MD stream ping:{time:{seconds:1748659178 nanos:931285144} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:43:37 info from order state stream ping:{time:{seconds:1748659417 nanos:955913682} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:43:55 info from MD stream ping:{time:{seconds:1748659435 nanos:931301621} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:47:37 info from order state stream ping:{time:{seconds:1748659658 nanos:55910786} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:51:37 info from order state stream ping:{time:{seconds:1748659898 nanos:155928111} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:51:54 info from MD stream ping:{time:{seconds:1748659914 nanos:931266721} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:53:55 info from MD stream ping:{time:{seconds:1748660035 nanos:931169426} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:55:37 info from order state stream ping:{time:{seconds:1748660138 nanos:255920309} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 06:56:53 info from MD stream ping:{time:{seconds:1748660213 nanos:931271739} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:58:54 info from MD stream ping:{time:{seconds:1748660334 nanos:931196593} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 06:59:38 info from order state stream ping:{time:{seconds:1748660378 nanos:355905079} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:03:38 info from order state stream ping:{time:{seconds:1748660618 nanos:455947039} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:05:17 info from MD stream ping:{time:{seconds:1748660717 nanos:931329551} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:07:38 info from order state stream ping:{time:{seconds:1748660858 nanos:555938894} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:11:02 info from MD stream ping:{time:{seconds:1748661062 nanos:931215364} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:11:38 info from order state stream ping:{time:{seconds:1748661098 nanos:655927067} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:15:38 info from order state stream ping:{time:{seconds:1748661338 nanos:755953117} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:19:10 info from MD stream ping:{time:{seconds:1748661550 nanos:931316925} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:19:38 info from order state stream ping:{time:{seconds:1748661578 nanos:855902708} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:21:11 info from MD stream ping:{time:{seconds:1748661671 nanos:931304476} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:23:12 info from MD stream ping:{time:{seconds:1748661792 nanos:931233217} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:23:38 info from order state stream ping:{time:{seconds:1748661818 nanos:955983635} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:27:38 info from order state stream ping:{time:{seconds:1748662059 nanos:55928411} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:28:38 info from MD stream ping:{time:{seconds:1748662118 nanos:931263893} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:30:39 info from MD stream ping:{time:{seconds:1748662239 nanos:931239068} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:31:38 info from order state stream ping:{time:{seconds:1748662299 nanos:155925824} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:35:38 info from order state stream ping:{time:{seconds:1748662539 nanos:255905204} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:36:59 info from MD stream ping:{time:{seconds:1748662619 nanos:931244604} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:39:39 info from order state stream ping:{time:{seconds:1748662779 nanos:355908892} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:39:42 info from MD stream ping:{time:{seconds:1748662782 nanos:931274453} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:41:43 info from MD stream ping:{time:{seconds:1748662903 nanos:931414798} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:43:39 info from order state stream ping:{time:{seconds:1748663019 nanos:455913393} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:47:13 info from MD stream ping:{time:{seconds:1748663233 nanos:931249079} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:47:39 info from order state stream ping:{time:{seconds:1748663259 nanos:555917001} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:50:46 info from MD stream ping:{time:{seconds:1748663446 nanos:931504156} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:51:39 info from order state stream ping:{time:{seconds:1748663499 nanos:655930998} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:53:15 info from MD stream ping:{time:{seconds:1748663595 nanos:931252574} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:55:39 info from order state stream ping:{time:{seconds:1748663739 nanos:755911502} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 07:58:51 info from MD stream ping:{time:{seconds:1748663931 nanos:931287450} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 07:59:39 info from order state stream ping:{time:{seconds:1748663979 nanos:855910042} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:03:39 info from order state stream ping:{time:{seconds:1748664219 nanos:955899174} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:07:39 info from order state stream ping:{time:{seconds:1748664460 nanos:55965327} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:11:39 info from order state stream ping:{time:{seconds:1748664700 nanos:155925235} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:15:15 info from MD stream ping:{time:{seconds:1748664915 nanos:931254282} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 08:15:40 info from order state stream ping:{time:{seconds:1748664940 nanos:255917991} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:19:40 info from order state stream ping:{time:{seconds:1748665180 nanos:355962488} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:23:40 info from order state stream ping:{time:{seconds:1748665420 nanos:455927276} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:27:40 info from order state stream ping:{time:{seconds:1748665660 nanos:456085191} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:29:53 info from MD stream ping:{time:{seconds:1748665793 nanos:931315153} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 08:31:40 info from order state stream ping:{time:{seconds:1748665900 nanos:555954363} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:35:40 info from order state stream ping:{time:{seconds:1748666140 nanos:658880449} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:39:40 info from order state stream ping:{time:{seconds:1748666380 nanos:661367663} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:43:40 info from order state stream ping:{time:{seconds:1748666620 nanos:755922146} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:47:40 info from order state stream ping:{time:{seconds:1748666860 nanos:855920212} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:51:40 info from order state stream ping:{time:{seconds:1748667100 nanos:955910612} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:55:40 info from order state stream ping:{time:{seconds:1748667340 nanos:956012281} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 08:59:27 info from MD stream ping:{time:{seconds:1748667567 nanos:931188701} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 08:59:40 info from order state stream ping:{time:{seconds:1748667581 nanos:55924036} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:01:40 info from MD stream ping:{time:{seconds:1748667700 nanos:931307087} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:03:40 info from order state stream ping:{time:{seconds:1748667821 nanos:155922103} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:04:37 info from MD stream ping:{time:{seconds:1748667877 nanos:931271944} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:07:40 info from MD stream ping:{time:{seconds:1748668060 nanos:931287759} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:07:41 info from order state stream ping:{time:{seconds:1748668061 nanos:255960684} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:11:41 info from order state stream ping:{time:{seconds:1748668301 nanos:256112346} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:13:37 info from MD stream ping:{time:{seconds:1748668417 nanos:931320891} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:15:41 info from order state stream ping:{time:{seconds:1748668541 nanos:355918662} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:16:02 info from MD stream ping:{time:{seconds:1748668562 nanos:931240031} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:18:03 info from MD stream ping:{time:{seconds:1748668683 nanos:931212067} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:19:41 info from order state stream ping:{time:{seconds:1748668781 nanos:455931097} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:23:41 info from order state stream ping:{time:{seconds:1748669021 nanos:555913260} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:26:47 info from MD stream ping:{time:{seconds:1748669207 nanos:931341262} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:27:41 info from order state stream ping:{time:{seconds:1748669261 nanos:655921589} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:29:32 info from MD stream ping:{time:{seconds:1748669372 nanos:931405623} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:31:41 info from order state stream ping:{time:{seconds:1748669501 nanos:755920000} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:32:36 info from MD stream ping:{time:{seconds:1748669556 nanos:931367961} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:34:37 info from MD stream ping:{time:{seconds:1748669677 nanos:931351023} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:35:41 info from order state stream ping:{time:{seconds:1748669741 nanos:756543159} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:39:41 info from order state stream ping:{time:{seconds:1748669981 nanos:855939633} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:43:41 info from order state stream ping:{time:{seconds:1748670221 nanos:955931192} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:47:41 info from order state stream ping:{time:{seconds:1748670462 nanos:55952198} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:51:42 info from order state stream ping:{time:{seconds:1748670702 nanos:155871311} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:55:23 info from MD stream ping:{time:{seconds:1748670923 nanos:931257041} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 09:55:42 info from order state stream ping:{time:{seconds:1748670942 nanos:255913718} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 09:59:42 info from order state stream ping:{time:{seconds:1748671182 nanos:355921761} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:01:00 info from MD stream ping:{time:{seconds:1748671260 nanos:931289508} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:03:32 info from MD stream ping:{time:{seconds:1748671412 nanos:931186666} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:03:42 info from order state stream ping:{time:{seconds:1748671422 nanos:455942876} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:07:42 info from order state stream ping:{time:{seconds:1748671662 nanos:556063548} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:09:28 info from MD stream ping:{time:{seconds:1748671768 nanos:931171511} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:11:42 info from order state stream ping:{time:{seconds:1748671902 nanos:557706047} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:15:42 info from order state stream ping:{time:{seconds:1748672142 nanos:655972281} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:19:42 info from order state stream ping:{time:{seconds:1748672382 nanos:755970335} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:23:35 info from MD stream ping:{time:{seconds:1748672615 nanos:931372481} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:23:42 info from order state stream ping:{time:{seconds:1748672622 nanos:855977871} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:26:47 info from MD stream ping:{time:{seconds:1748672807 nanos:931185754} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:27:42 info from order state stream ping:{time:{seconds:1748672862 nanos:955952858} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:31:42 info from order state stream ping:{time:{seconds:1748673103 nanos:55937547} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:33:39 info from MD stream ping:{time:{seconds:1748673219 nanos:931518028} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:35:43 info from order state stream ping:{time:{seconds:1748673343 nanos:155936313} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:39:43 info from order state stream ping:{time:{seconds:1748673583 nanos:255936348} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:41:30 info from MD stream ping:{time:{seconds:1748673690 nanos:931243299} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:43:31 info from MD stream ping:{time:{seconds:1748673811 nanos:931286503} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:43:43 info from order state stream ping:{time:{seconds:1748673823 nanos:256065336} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:45:32 info from MD stream ping:{time:{seconds:1748673932 nanos:931391552} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:47:33 info from MD stream ping:{time:{seconds:1748674053 nanos:931243678} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:47:43 info from order state stream ping:{time:{seconds:1748674063 nanos:355928478} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:49:34 info from MD stream ping:{time:{seconds:1748674174 nanos:931342080} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:51:35 info from MD stream ping:{time:{seconds:1748674295 nanos:931265762} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:51:43 info from order state stream ping:{time:{seconds:1748674303 nanos:356028706} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:53:36 info from MD stream ping:{time:{seconds:1748674416 nanos:931243989} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:55:37 info from MD stream ping:{time:{seconds:1748674537 nanos:931236540} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:55:43 info from order state stream ping:{time:{seconds:1748674543 nanos:455965591} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 10:57:38 info from MD stream ping:{time:{seconds:1748674658 nanos:931297364} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:59:39 info from MD stream ping:{time:{seconds:1748674779 nanos:931269690} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 10:59:43 info from order state stream ping:{time:{seconds:1748674783 nanos:556168495} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:03:43 info from order state stream ping:{time:{seconds:1748675023 nanos:656045778} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:07:43 info from order state stream ping:{time:{seconds:1748675263 nanos:756022715} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:11:43 info from order state stream ping:{time:{seconds:1748675503 nanos:855946513} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:15:43 info from order state stream ping:{time:{seconds:1748675743 nanos:956003427} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:19:44 info from order state stream ping:{time:{seconds:1748675984 nanos:55932233} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:23:44 info from order state stream ping:{time:{seconds:1748676224 nanos:156004115} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:27:44 info from order state stream ping:{time:{seconds:1748676464 nanos:255951145} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:31:44 info from order state stream ping:{time:{seconds:1748676704 nanos:355954050} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:35:44 info from order state stream ping:{time:{seconds:1748676944 nanos:455924053} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:39:44 info from order state stream ping:{time:{seconds:1748677184 nanos:556008608} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:43:44 info from order state stream ping:{time:{seconds:1748677424 nanos:655971160} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:47:44 info from order state stream ping:{time:{seconds:1748677664 nanos:755907530} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:51:44 info from order state stream ping:{time:{seconds:1748677904 nanos:761276709} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:55:44 info from order state stream ping:{time:{seconds:1748678144 nanos:855977114} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 11:59:44 info from order state stream ping:{time:{seconds:1748678384 nanos:956016877} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:03:45 info from order state stream ping:{time:{seconds:1748678625 nanos:55923459} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:07:45 info from order state stream ping:{time:{seconds:1748678865 nanos:155969999} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:11:45 info from order state stream ping:{time:{seconds:1748679105 nanos:255942526} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:15:45 info from order state stream ping:{time:{seconds:1748679345 nanos:356008731} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:19:45 info from order state stream ping:{time:{seconds:1748679585 nanos:455899771} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:23:45 info from order state stream ping:{time:{seconds:1748679825 nanos:556022871} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:27:45 info from order state stream ping:{time:{seconds:1748680065 nanos:659457265} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:31:45 info from order state stream ping:{time:{seconds:1748680305 nanos:661999532} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:35:45 info from order state stream ping:{time:{seconds:1748680545 nanos:755944809} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:39:45 info from order state stream ping:{time:{seconds:1748680785 nanos:756009288} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:43:45 info from order state stream ping:{time:{seconds:1748681025 nanos:855951761} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:47:45 info from order state stream ping:{time:{seconds:1748681265 nanos:955968814} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:51:46 info from order state stream ping:{time:{seconds:1748681506 nanos:55929022} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:55:46 info from order state stream ping:{time:{seconds:1748681746 nanos:155995638} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 12:59:46 info from order state stream ping:{time:{seconds:1748681986 nanos:255932133} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:03:46 info from order state stream ping:{time:{seconds:1748682226 nanos:356080855} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:07:46 info from order state stream ping:{time:{seconds:1748682466 nanos:455992716} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:11:46 info from order state stream ping:{time:{seconds:1748682706 nanos:556009744} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:15:46 info from order state stream ping:{time:{seconds:1748682946 nanos:655978415} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:19:46 info from order state stream ping:{time:{seconds:1748683186 nanos:755907787} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:23:46 info from order state stream ping:{time:{seconds:1748683426 nanos:855952848} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:27:47 info from order state stream ping:{time:{seconds:1748683666 nanos:955974909} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:31:47 info from order state stream ping:{time:{seconds:1748683907 nanos:55962188} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:35:47 info from order state stream ping:{time:{seconds:1748684147 nanos:155984101} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:39:47 info from order state stream ping:{time:{seconds:1748684387 nanos:156145583} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:43:47 info from order state stream ping:{time:{seconds:1748684627 nanos:255956656} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:47:47 info from order state stream ping:{time:{seconds:1748684867 nanos:355930493} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:51:47 info from order state stream ping:{time:{seconds:1748685107 nanos:455954085} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:55:47 info from order state stream ping:{time:{seconds:1748685347 nanos:555977302} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 13:59:47 info from order state stream ping:{time:{seconds:1748685587 nanos:556006812} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:03:47 info from order state stream ping:{time:{seconds:1748685827 nanos:655908997} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:07:47 info from order state stream ping:{time:{seconds:1748686067 nanos:755955190} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:11:47 info from order state stream ping:{time:{seconds:1748686307 nanos:855925019} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:15:48 info from order state stream ping:{time:{seconds:1748686547 nanos:955920856} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:19:48 info from order state stream ping:{time:{seconds:1748686788 nanos:55948967} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:23:48 info from order state stream ping:{time:{seconds:1748687028 nanos:155931231} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:27:48 info from order state stream ping:{time:{seconds:1748687268 nanos:156023030} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:31:48 info from order state stream ping:{time:{seconds:1748687508 nanos:256005616} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:35:48 info from order state stream ping:{time:{seconds:1748687748 nanos:356054136} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:39:48 info from order state stream ping:{time:{seconds:1748687988 nanos:455954632} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:43:48 info from order state stream ping:{time:{seconds:1748688228 nanos:555937644} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:47:48 info from order state stream ping:{time:{seconds:1748688468 nanos:655983990} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:51:48 info from order state stream ping:{time:{seconds:1748688708 nanos:756001800} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:55:49 info from order state stream ping:{time:{seconds:1748688948 nanos:855913897} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 14:59:49 info from order state stream ping:{time:{seconds:1748689188 nanos:856000078} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:03:49 info from order state stream ping:{time:{seconds:1748689428 nanos:955967464} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:07:49 info from order state stream ping:{time:{seconds:1748689669 nanos:56009900} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:11:49 info from order state stream ping:{time:{seconds:1748689909 nanos:155928345} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:15:49 info from order state stream ping:{time:{seconds:1748690149 nanos:156048233} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:19:49 info from order state stream ping:{time:{seconds:1748690389 nanos:255960280} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:23:49 info from order state stream ping:{time:{seconds:1748690629 nanos:355977771} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:27:49 info from order state stream ping:{time:{seconds:1748690869 nanos:456064379} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:31:49 info from order state stream ping:{time:{seconds:1748691109 nanos:555948685} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:35:49 info from order state stream ping:{time:{seconds:1748691349 nanos:655941467} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:39:49 info from order state stream ping:{time:{seconds:1748691589 nanos:755931494} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:43:50 info from order state stream ping:{time:{seconds:1748691829 nanos:855913942} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:47:50 info from order state stream ping:{time:{seconds:1748692069 nanos:955914692} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:51:50 info from order state stream ping:{time:{seconds:1748692310 nanos:56060755} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:55:50 info from order state stream ping:{time:{seconds:1748692550 nanos:155980201} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 15:59:50 info from order state stream ping:{time:{seconds:1748692790 nanos:255972343} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:03:50 info from order state stream ping:{time:{seconds:1748693030 nanos:356012943} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:07:50 info from order state stream ping:{time:{seconds:1748693270 nanos:455921315} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:11:50 info from order state stream ping:{time:{seconds:1748693510 nanos:555912263} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:15:50 info from order state stream ping:{time:{seconds:1748693750 nanos:660291136} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:19:50 info from order state stream ping:{time:{seconds:1748693990 nanos:755958942} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:23:51 info from order state stream ping:{time:{seconds:1748694230 nanos:856044706} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:27:51 info from order state stream ping:{time:{seconds:1748694470 nanos:955929655} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:31:51 info from order state stream ping:{time:{seconds:1748694711 nanos:55953705} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:35:51 info from order state stream ping:{time:{seconds:1748694951 nanos:56000371} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:39:51 info from order state stream ping:{time:{seconds:1748695191 nanos:155958939} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:43:51 info from order state stream ping:{time:{seconds:1748695431 nanos:255967625} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:47:51 info from order state stream ping:{time:{seconds:1748695671 nanos:355970167} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:51:51 info from order state stream ping:{time:{seconds:1748695911 nanos:455918620} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:55:51 info from order state stream ping:{time:{seconds:1748696151 nanos:555934326} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 16:59:51 info from order state stream ping:{time:{seconds:1748696391 nanos:655981905} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:03:52 info from order state stream ping:{time:{seconds:1748696631 nanos:755947934} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:07:52 info from order state stream ping:{time:{seconds:1748696871 nanos:855918752} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:11:52 info from order state stream ping:{time:{seconds:1748697111 nanos:955911429} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:12:07 info from MD stream ping:{time:{seconds:1748697126 nanos:931355571} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 17:15:52 info from order state stream ping:{time:{seconds:1748697352 nanos:55920598} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:19:52 info from order state stream ping:{time:{seconds:1748697592 nanos:56008928} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:23:52 info from order state stream ping:{time:{seconds:1748697832 nanos:155972971} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:27:52 info from order state stream ping:{time:{seconds:1748698072 nanos:255982513} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:31:52 info from order state stream ping:{time:{seconds:1748698312 nanos:256004224} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:35:52 info from order state stream ping:{time:{seconds:1748698552 nanos:355933627} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:39:52 info from order state stream ping:{time:{seconds:1748698792 nanos:455975263} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:43:52 info from order state stream ping:{time:{seconds:1748699032 nanos:456000612} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:47:52 info from order state stream ping:{time:{seconds:1748699272 nanos:556002540} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:51:52 info from order state stream ping:{time:{seconds:1748699512 nanos:655933155} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:55:53 info from order state stream ping:{time:{seconds:1748699752 nanos:755930565} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 17:59:53 info from order state stream ping:{time:{seconds:1748699992 nanos:855939762} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:03:53 info from order state stream ping:{time:{seconds:1748700232 nanos:955942461} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:07:03 info from MD stream ping:{time:{seconds:1748700422 nanos:931254705} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 18:07:53 info from order state stream ping:{time:{seconds:1748700473 nanos:55959547} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:11:53 info from order state stream ping:{time:{seconds:1748700713 nanos:156005351} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:15:53 info from order state stream ping:{time:{seconds:1748700953 nanos:255992836} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:19:53 info from order state stream ping:{time:{seconds:1748701193 nanos:355948184} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:23:53 info from order state stream ping:{time:{seconds:1748701433 nanos:455974894} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:27:53 info from order state stream ping:{time:{seconds:1748701673 nanos:555967364} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:31:54 info from order state stream ping:{time:{seconds:1748701913 nanos:655999160} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:35:54 info from order state stream ping:{time:{seconds:1748702153 nanos:755957165} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:39:54 info from order state stream ping:{time:{seconds:1748702393 nanos:855932224} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:43:54 info from order state stream ping:{time:{seconds:1748702633 nanos:955968909} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:47:54 info from order state stream ping:{time:{seconds:1748702874 nanos:55950876} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:51:54 info from order state stream ping:{time:{seconds:1748703114 nanos:155938827} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:55:54 info from order state stream ping:{time:{seconds:1748703354 nanos:255927261} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 18:57:16 info from MD stream ping:{time:{seconds:1748703435 nanos:931358345} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 18:59:54 info from order state stream ping:{time:{seconds:1748703594 nanos:355934506} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:03:54 info from order state stream ping:{time:{seconds:1748703834 nanos:455938622} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:07:54 info from order state stream ping:{time:{seconds:1748704074 nanos:456030375} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:11:54 info from order state stream ping:{time:{seconds:1748704314 nanos:555944496} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:15:55 info from order state stream ping:{time:{seconds:1748704554 nanos:656070975} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:19:55 info from order state stream ping:{time:{seconds:1748704794 nanos:755927516} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:23:55 info from order state stream ping:{time:{seconds:1748705034 nanos:855997252} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:27:55 info from order state stream ping:{time:{seconds:1748705274 nanos:955888952} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:31:55 info from order state stream ping:{time:{seconds:1748705515 nanos:55941727} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:35:55 info from order state stream ping:{time:{seconds:1748705755 nanos:155949364} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:39:55 info from order state stream ping:{time:{seconds:1748705995 nanos:255953848} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:43:55 info from order state stream ping:{time:{seconds:1748706235 nanos:355925963} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:47:55 info from order state stream ping:{time:{seconds:1748706475 nanos:356013777} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:51:55 info from order state stream ping:{time:{seconds:1748706715 nanos:455915277} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:55:56 info from order state stream ping:{time:{seconds:1748706955 nanos:555894899} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 19:59:56 info from order state stream ping:{time:{seconds:1748707195 nanos:660734792} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:01:32 info from MD stream ping:{time:{seconds:1748707291 nanos:931275491} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 20:03:33 info from MD stream ping:{time:{seconds:1748707412 nanos:931356434} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 20:03:56 info from order state stream ping:{time:{seconds:1748707435 nanos:755949987} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:05:34 info from MD stream ping:{time:{seconds:1748707533 nanos:931320845} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 20:07:56 info from order state stream ping:{time:{seconds:1748707675 nanos:855897050} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:11:56 info from order state stream ping:{time:{seconds:1748707915 nanos:955870462} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:15:56 info from order state stream ping:{time:{seconds:1748708156 nanos:55937717} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:16:18 info from MD stream ping:{time:{seconds:1748708177 nanos:931365264} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 20:19:56 info from order state stream ping:{time:{seconds:1748708396 nanos:155932688} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:23:56 info from order state stream ping:{time:{seconds:1748708636 nanos:255931470} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:27:56 info from order state stream ping:{time:{seconds:1748708876 nanos:355901613} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:28:45 info from MD stream ping:{time:{seconds:1748708924 nanos:931179041} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 20:31:56 info from order state stream ping:{time:{seconds:1748709116 nanos:455983007} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:35:57 info from order state stream ping:{time:{seconds:1748709356 nanos:555933218} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:39:57 info from order state stream ping:{time:{seconds:1748709596 nanos:655930734} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:43:57 info from order state stream ping:{time:{seconds:1748709836 nanos:755898183} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:45:27 info from MD stream ping:{time:{seconds:1748709926 nanos:931302779} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 20:47:57 info from order state stream ping:{time:{seconds:1748710076 nanos:855923735} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:48:28 info from MD stream ping:{time:{seconds:1748710107 nanos:931341024} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 20:51:57 info from order state stream ping:{time:{seconds:1748710316 nanos:955911024} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:55:57 info from order state stream ping:{time:{seconds:1748710557 nanos:55957361} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 20:57:49 info from MD stream ping:{time:{seconds:1748710668 nanos:931306572} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 20:59:57 info from order state stream ping:{time:{seconds:1748710797 nanos:155890526} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:01:47 info from MD stream subscribe_last_price_response:{tracking_id:"4d081efbdd60f5c77837028be4ca7285" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"a48429cf-1f03-41c3-8fd4-6529c89f6d36" subscription_id:"5af4e995-26a6-4b15-bad0-03c9bab31c2b" 6:1}}
+INVEST-API 2025/05/31 21:01:47 info from order state stream subscription:{tracking_id:"b72984a8ffcc01d31071edd088c8ab13" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"be420853-f2bb-423f-a30b-8f9e0e11eb50" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/05/31 21:01:47 info from MD stream subscribe_last_price_response:{tracking_id:"4d081efbdd60f5c77837028be4ca7285" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"a48429cf-1f03-41c3-8fd4-6529c89f6d36" subscription_id:"17d1ddfb-d2c7-41b3-8d30-72fa41fd1c08" 6:1}}
+INVEST-API 2025/05/31 21:01:52 stop listening order state stream
+INVEST-API 2025/05/31 21:01:52 close order state stream
+INVEST-API 2025/05/31 21:01:52 stop listening market data stream
+INVEST-API 2025/05/31 21:01:52 close market data stream
+INVEST-API 2025/05/31 21:03:57 info from order state stream ping:{time:{seconds:1748711037 nanos:255917059} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:07:57 info from order state stream ping:{time:{seconds:1748711277 nanos:355952487} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:11:57 info from order state stream ping:{time:{seconds:1748711517 nanos:455927565} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:12:13 info from MD stream ping:{time:{seconds:1748711532 nanos:931312451} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:14:14 info from MD stream ping:{time:{seconds:1748711653 nanos:931236830} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:15:58 info from order state stream ping:{time:{seconds:1748711757 nanos:556019668} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:16:15 info from MD stream ping:{time:{seconds:1748711774 nanos:931222654} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:19:40 info from MD stream ping:{time:{seconds:1748711979 nanos:931233440} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:19:58 info from order state stream ping:{time:{seconds:1748711997 nanos:655896399} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:23:58 info from order state stream ping:{time:{seconds:1748712237 nanos:755928099} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:26:31 info from MD stream ping:{time:{seconds:1748712390 nanos:931315584} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:27:58 info from order state stream ping:{time:{seconds:1748712477 nanos:756016500} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:30:31 info from MD stream ping:{time:{seconds:1748712630 nanos:931305925} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:31:58 info from order state stream ping:{time:{seconds:1748712717 nanos:855925490} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:33:18 info from MD stream ping:{time:{seconds:1748712797 nanos:931200739} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:35:58 info from order state stream ping:{time:{seconds:1748712957 nanos:955966906} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:37:41 info from MD stream ping:{time:{seconds:1748713060 nanos:931251507} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:39:58 info from order state stream ping:{time:{seconds:1748713198 nanos:55934390} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:43:58 info from order state stream ping:{time:{seconds:1748713438 nanos:155930451} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:46:10 info from MD stream ping:{time:{seconds:1748713569 nanos:931269734} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:47:58 info from order state stream ping:{time:{seconds:1748713678 nanos:255932045} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:50:32 info from MD stream ping:{time:{seconds:1748713831 nanos:931331291} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:51:58 info from order state stream ping:{time:{seconds:1748713918 nanos:355913899} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:54:42 info from MD stream ping:{time:{seconds:1748714081 nanos:931171376} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:55:59 info from order state stream ping:{time:{seconds:1748714158 nanos:455909634} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 21:56:52 info from MD stream ping:{time:{seconds:1748714211 nanos:931262188} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 21:59:59 info from order state stream ping:{time:{seconds:1748714398 nanos:555906902} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:03:59 info from order state stream ping:{time:{seconds:1748714638 nanos:655957875} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:05:30 info from MD stream ping:{time:{seconds:1748714729 nanos:931201463} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 22:07:59 info from order state stream ping:{time:{seconds:1748714878 nanos:755935567} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:11:13 info from MD stream ping:{time:{seconds:1748715072 nanos:931193725} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 22:11:59 info from order state stream ping:{time:{seconds:1748715118 nanos:856012241} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:13:42 info from MD stream ping:{time:{seconds:1748715221 nanos:931240833} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 22:15:59 info from order state stream ping:{time:{seconds:1748715358 nanos:955971652} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:17:59 info from MD stream ping:{time:{seconds:1748715478 nanos:931336269} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 22:19:59 info from order state stream ping:{time:{seconds:1748715599 nanos:55911126} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:22:28 info from MD stream ping:{time:{seconds:1748715747 nanos:931284715} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 22:23:59 info from order state stream ping:{time:{seconds:1748715839 nanos:156020883} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:27:59 info from order state stream ping:{time:{seconds:1748716079 nanos:255990023} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:31:09 info from MD stream ping:{time:{seconds:1748716268 nanos:931375778} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 22:32:00 info from order state stream ping:{time:{seconds:1748716319 nanos:355913360} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:36:00 info from order state stream ping:{time:{seconds:1748716559 nanos:455923520} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:40:00 info from order state stream ping:{time:{seconds:1748716799 nanos:556002991} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:44:00 info from order state stream ping:{time:{seconds:1748717039 nanos:655935313} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:48:00 info from order state stream ping:{time:{seconds:1748717279 nanos:755940799} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:52:00 info from order state stream ping:{time:{seconds:1748717519 nanos:855940495} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:53:05 info from MD stream ping:{time:{seconds:1748717584 nanos:931235017} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 22:56:00 info from order state stream ping:{time:{seconds:1748717759 nanos:856034221} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 22:58:01 info from MD stream ping:{time:{seconds:1748717880 nanos:931242276} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:00:00 info from order state stream ping:{time:{seconds:1748717999 nanos:956027279} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:04:00 info from order state stream ping:{time:{seconds:1748718240 nanos:55942585} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:08:00 info from order state stream ping:{time:{seconds:1748718480 nanos:155959816} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:12:00 info from order state stream ping:{time:{seconds:1748718720 nanos:255942302} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:12:30 info from MD stream ping:{time:{seconds:1748718749 nanos:931315479} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:16:01 info from order state stream ping:{time:{seconds:1748718960 nanos:355909284} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:20:01 info from order state stream ping:{time:{seconds:1748719200 nanos:456195941} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:20:38 info from MD stream ping:{time:{seconds:1748719237 nanos:931307109} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:24:01 info from order state stream ping:{time:{seconds:1748719440 nanos:556036911} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:26:17 info from MD stream ping:{time:{seconds:1748719576 nanos:931268145} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:28:01 info from order state stream ping:{time:{seconds:1748719680 nanos:658556103} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:28:18 info from MD stream ping:{time:{seconds:1748719697 nanos:931142021} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:30:19 info from MD stream ping:{time:{seconds:1748719818 nanos:931143703} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:32:01 info from order state stream ping:{time:{seconds:1748719920 nanos:755938295} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:36:01 info from order state stream ping:{time:{seconds:1748720160 nanos:855975574} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:39:51 info from MD stream ping:{time:{seconds:1748720390 nanos:931283434} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:40:01 info from order state stream ping:{time:{seconds:1748720400 nanos:955892384} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:42:27 info from MD stream ping:{time:{seconds:1748720546 nanos:931269858} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:44:01 info from order state stream ping:{time:{seconds:1748720641 nanos:55919818} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:44:28 info from MD stream ping:{time:{seconds:1748720667 nanos:931216727} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:48:01 info from order state stream ping:{time:{seconds:1748720881 nanos:56021591} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:49:47 info from MD stream ping:{time:{seconds:1748720986 nanos:931321489} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:52:01 info from order state stream ping:{time:{seconds:1748721121 nanos:155938522} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:52:16 info from MD stream ping:{time:{seconds:1748721135 nanos:931325620} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/05/31 23:56:01 info from order state stream ping:{time:{seconds:1748721361 nanos:255938287} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/05/31 23:57:28 info from MD stream ping:{time:{seconds:1748721447 nanos:931262498} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:00:02 info from order state stream ping:{time:{seconds:1748721601 nanos:355946894} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:02:12 info from MD stream ping:{time:{seconds:1748721731 nanos:931154352} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:04:04 info from order state stream ping:{time:{seconds:1748721841 nanos:455959323} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:08:02 info from order state stream ping:{time:{seconds:1748722081 nanos:555961438} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:10:34 info from MD stream ping:{time:{seconds:1748722233 nanos:931258249} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:12:02 info from order state stream ping:{time:{seconds:1748722321 nanos:655927628} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:14:19 info from MD stream ping:{time:{seconds:1748722458 nanos:931266823} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:16:02 info from order state stream ping:{time:{seconds:1748722561 nanos:755962151} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:17:32 info from MD stream ping:{time:{seconds:1748722651 nanos:931278633} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:20:02 info from order state stream ping:{time:{seconds:1748722801 nanos:855940076} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:21:50 info from MD stream ping:{time:{seconds:1748722909 nanos:931291251} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:23:58 info from MD stream ping:{time:{seconds:1748723037 nanos:931239658} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:24:02 info from order state stream ping:{time:{seconds:1748723041 nanos:955934739} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:25:59 info from MD stream ping:{time:{seconds:1748723158 nanos:931198796} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:28:01 info from MD stream ping:{time:{seconds:1748723279 nanos:931186680} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:28:02 info from order state stream ping:{time:{seconds:1748723282 nanos:55928431} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:32:02 info from order state stream ping:{time:{seconds:1748723522 nanos:155936406} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:34:15 info from MD stream ping:{time:{seconds:1748723654 nanos:931319936} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:36:02 info from order state stream ping:{time:{seconds:1748723762 nanos:156002215} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:40:03 info from order state stream ping:{time:{seconds:1748724002 nanos:255930389} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:44:03 info from order state stream ping:{time:{seconds:1748724242 nanos:355910826} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:47:52 info from MD stream ping:{time:{seconds:1748724471 nanos:931267839} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:48:03 info from order state stream ping:{time:{seconds:1748724482 nanos:455981878} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:51:57 info from MD stream ping:{time:{seconds:1748724716 nanos:931516070} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:52:03 info from order state stream ping:{time:{seconds:1748724722 nanos:555926575} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:53:58 info from MD stream ping:{time:{seconds:1748724837 nanos:931248762} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:55:59 info from MD stream ping:{time:{seconds:1748724958 nanos:931274839} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 00:56:03 info from order state stream ping:{time:{seconds:1748724962 nanos:655909807} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 00:58:00 info from MD stream ping:{time:{seconds:1748725079 nanos:931264017} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:00:01 info from MD stream ping:{time:{seconds:1748725200 nanos:931266528} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:00:03 info from order state stream ping:{time:{seconds:1748725202 nanos:755910581} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:02:02 info from MD stream ping:{time:{seconds:1748725321 nanos:931315197} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:04:03 info from order state stream ping:{time:{seconds:1748725442 nanos:855914340} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:04:03 info from MD stream ping:{time:{seconds:1748725442 nanos:931256576} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:06:04 info from MD stream ping:{time:{seconds:1748725563 nanos:931488514} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:08:03 info from order state stream ping:{time:{seconds:1748725682 nanos:955966979} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:08:05 info from MD stream ping:{time:{seconds:1748725684 nanos:931254845} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:10:06 info from MD stream ping:{time:{seconds:1748725805 nanos:931384195} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:12:03 info from order state stream ping:{time:{seconds:1748725923 nanos:56042777} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:12:07 info from MD stream ping:{time:{seconds:1748725926 nanos:931388933} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:14:08 info from MD stream ping:{time:{seconds:1748726047 nanos:931389259} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:16:03 info from order state stream ping:{time:{seconds:1748726163 nanos:155932251} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:16:09 info from MD stream ping:{time:{seconds:1748726168 nanos:931235767} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:18:10 info from MD stream ping:{time:{seconds:1748726289 nanos:931243319} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:20:04 info from order state stream ping:{time:{seconds:1748726403 nanos:255913361} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:20:11 info from MD stream ping:{time:{seconds:1748726410 nanos:931252976} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:22:12 info from MD stream ping:{time:{seconds:1748726531 nanos:931243945} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:24:04 info from order state stream ping:{time:{seconds:1748726643 nanos:355898917} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:24:13 info from MD stream ping:{time:{seconds:1748726652 nanos:931232342} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:26:14 info from MD stream ping:{time:{seconds:1748726773 nanos:931324313} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:28:04 info from order state stream ping:{time:{seconds:1748726883 nanos:455983049} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:28:15 info from MD stream ping:{time:{seconds:1748726894 nanos:931247549} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:30:16 info from MD stream ping:{time:{seconds:1748727015 nanos:931247800} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:32:04 info from order state stream ping:{time:{seconds:1748727123 nanos:555916392} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:32:17 info from MD stream ping:{time:{seconds:1748727136 nanos:931307902} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:34:18 info from MD stream ping:{time:{seconds:1748727257 nanos:931248761} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:36:04 info from order state stream ping:{time:{seconds:1748727363 nanos:655927930} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:36:19 info from MD stream ping:{time:{seconds:1748727378 nanos:931353604} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:38:20 info from MD stream ping:{time:{seconds:1748727499 nanos:931339203} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:40:04 info from order state stream ping:{time:{seconds:1748727603 nanos:755928855} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:40:21 info from MD stream ping:{time:{seconds:1748727620 nanos:931316768} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:42:23 info from MD stream ping:{time:{seconds:1748727741 nanos:931304992} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:44:04 info from order state stream ping:{time:{seconds:1748727843 nanos:855898471} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:44:23 info from MD stream ping:{time:{seconds:1748727862 nanos:931236689} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:46:24 info from MD stream ping:{time:{seconds:1748727983 nanos:931310148} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:48:01 info from order state stream ping:{time:{seconds:1748728083 nanos:955962306} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:48:22 info from MD stream ping:{time:{seconds:1748728104 nanos:931327459} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:50:23 info from MD stream ping:{time:{seconds:1748728225 nanos:931289947} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:52:01 info from order state stream ping:{time:{seconds:1748728324 nanos:55902611} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:52:24 info from MD stream ping:{time:{seconds:1748728346 nanos:931276419} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:54:25 info from MD stream ping:{time:{seconds:1748728467 nanos:931274672} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:56:01 info from order state stream ping:{time:{seconds:1748728564 nanos:155979779} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 01:56:26 info from MD stream ping:{time:{seconds:1748728588 nanos:931243125} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 01:58:27 info from MD stream ping:{time:{seconds:1748728709 nanos:931268609} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:00:01 info from order state stream ping:{time:{seconds:1748728804 nanos:255976855} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:00:28 info from MD stream ping:{time:{seconds:1748728830 nanos:931242612} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:02:29 info from MD stream ping:{time:{seconds:1748728951 nanos:931302655} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:04:01 info from order state stream ping:{time:{seconds:1748729044 nanos:355956182} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:04:30 info from MD stream ping:{time:{seconds:1748729072 nanos:931264742} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:06:31 info from MD stream ping:{time:{seconds:1748729193 nanos:931292373} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:08:01 info from order state stream ping:{time:{seconds:1748729284 nanos:455900057} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:08:32 info from MD stream ping:{time:{seconds:1748729314 nanos:931238400} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:10:33 info from MD stream ping:{time:{seconds:1748729435 nanos:931274421} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:12:01 info from order state stream ping:{time:{seconds:1748729524 nanos:456020241} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:12:34 info from MD stream ping:{time:{seconds:1748729556 nanos:931283508} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:14:35 info from MD stream ping:{time:{seconds:1748729677 nanos:931293011} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:16:01 info from order state stream ping:{time:{seconds:1748729764 nanos:555917203} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:16:36 info from MD stream ping:{time:{seconds:1748729798 nanos:931401921} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:18:37 info from MD stream ping:{time:{seconds:1748729919 nanos:931274966} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:20:02 info from order state stream ping:{time:{seconds:1748730004 nanos:655964238} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:20:38 info from MD stream ping:{time:{seconds:1748730040 nanos:931326343} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:22:39 info from MD stream ping:{time:{seconds:1748730161 nanos:931225286} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:24:02 info from order state stream ping:{time:{seconds:1748730244 nanos:755968111} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:24:40 info from MD stream ping:{time:{seconds:1748730282 nanos:931308105} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:26:41 info from MD stream ping:{time:{seconds:1748730403 nanos:931370926} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:28:02 info from order state stream ping:{time:{seconds:1748730484 nanos:756006133} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:28:42 info from MD stream ping:{time:{seconds:1748730524 nanos:931294712} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:30:43 info from MD stream ping:{time:{seconds:1748730645 nanos:931269525} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:32:02 info from order state stream ping:{time:{seconds:1748730724 nanos:855917449} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:32:44 info from MD stream ping:{time:{seconds:1748730766 nanos:931282618} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:34:47 info from MD stream ping:{time:{seconds:1748730887 nanos:931451934} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:36:04 info from order state stream ping:{time:{seconds:1748730964 nanos:955925714} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:36:48 info from MD stream ping:{time:{seconds:1748731008 nanos:931256790} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:38:49 info from MD stream ping:{time:{seconds:1748731129 nanos:931334303} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:40:05 info from order state stream ping:{time:{seconds:1748731205 nanos:55944839} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:40:50 info from MD stream ping:{time:{seconds:1748731250 nanos:931268402} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:42:51 info from MD stream ping:{time:{seconds:1748731371 nanos:931286819} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:44:05 info from order state stream ping:{time:{seconds:1748731445 nanos:161178466} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:44:52 info from MD stream ping:{time:{seconds:1748731492 nanos:931262082} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:46:53 info from MD stream ping:{time:{seconds:1748731613 nanos:931285434} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:48:05 info from order state stream ping:{time:{seconds:1748731685 nanos:255917412} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:48:54 info from MD stream ping:{time:{seconds:1748731734 nanos:931275938} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:50:55 info from MD stream ping:{time:{seconds:1748731855 nanos:931291603} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:52:05 info from order state stream ping:{time:{seconds:1748731925 nanos:355914890} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:52:56 info from MD stream ping:{time:{seconds:1748731976 nanos:931280091} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:54:57 info from MD stream ping:{time:{seconds:1748732097 nanos:931338751} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:56:05 info from order state stream ping:{time:{seconds:1748732165 nanos:455914371} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 02:56:58 info from MD stream ping:{time:{seconds:1748732218 nanos:931283500} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 02:58:59 info from MD stream ping:{time:{seconds:1748732339 nanos:931280604} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:00:05 info from order state stream ping:{time:{seconds:1748732405 nanos:555886180} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:04:05 info from order state stream ping:{time:{seconds:1748732645 nanos:659070747} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:08:05 info from order state stream ping:{time:{seconds:1748732885 nanos:755904602} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:08:05 info from MD stream ping:{time:{seconds:1748732885 nanos:931342712} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:10:44 info from MD stream ping:{time:{seconds:1748733044 nanos:931309834} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:12:05 info from order state stream ping:{time:{seconds:1748733125 nanos:855931390} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:12:45 info from MD stream ping:{time:{seconds:1748733165 nanos:931268467} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:14:46 info from MD stream ping:{time:{seconds:1748733286 nanos:931251159} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:16:05 info from order state stream ping:{time:{seconds:1748733365 nanos:955899673} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:16:47 info from MD stream ping:{time:{seconds:1748733407 nanos:931293522} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:18:48 info from MD stream ping:{time:{seconds:1748733528 nanos:931259626} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:20:06 info from order state stream ping:{time:{seconds:1748733606 nanos:55895116} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:20:49 info from MD stream ping:{time:{seconds:1748733649 nanos:931297327} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:22:50 info from MD stream ping:{time:{seconds:1748733770 nanos:931289117} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:24:06 info from order state stream ping:{time:{seconds:1748733846 nanos:155909029} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:26:30 info from MD stream ping:{time:{seconds:1748733990 nanos:931312705} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:28:06 info from order state stream ping:{time:{seconds:1748734086 nanos:255901113} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:30:20 info from MD stream ping:{time:{seconds:1748734220 nanos:931283982} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:32:06 info from order state stream ping:{time:{seconds:1748734326 nanos:355954525} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:36:06 info from order state stream ping:{time:{seconds:1748734566 nanos:455914203} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:37:35 info from MD stream ping:{time:{seconds:1748734655 nanos:931259609} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:40:06 info from order state stream ping:{time:{seconds:1748734806 nanos:555899687} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:40:36 info from MD stream ping:{time:{seconds:1748734836 nanos:931258416} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:43:10 info from MD stream ping:{time:{seconds:1748734990 nanos:931259795} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:44:06 info from order state stream ping:{time:{seconds:1748735046 nanos:655903220} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:46:17 info from MD stream ping:{time:{seconds:1748735177 nanos:931221640} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:48:06 info from order state stream ping:{time:{seconds:1748735286 nanos:755895830} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:48:18 info from MD stream ping:{time:{seconds:1748735298 nanos:931219232} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:50:19 info from MD stream ping:{time:{seconds:1748735419 nanos:931252557} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:52:06 info from order state stream ping:{time:{seconds:1748735526 nanos:855908368} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:52:20 info from MD stream ping:{time:{seconds:1748735540 nanos:931362304} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:54:22 info from MD stream ping:{time:{seconds:1748735661 nanos:931371824} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:56:07 info from order state stream ping:{time:{seconds:1748735766 nanos:955905082} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 03:57:19 info from MD stream ping:{time:{seconds:1748735838 nanos:931285743} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 03:59:20 info from MD stream ping:{time:{seconds:1748735959 nanos:931284774} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:00:07 info from order state stream ping:{time:{seconds:1748736007 nanos:55948367} stream_id:"76ad8aef-784b-4a00-bfff-eb16bcbb3d25"}
+INVEST-API 2025/06/01 04:01:21 info from MD stream ping:{time:{seconds:1748736080 nanos:931262125} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:02:04 try to restart order state stream err = rpc error: code = Internal desc = server closed the stream without sending trailers, attempt = 1
+INVEST-API 2025/06/01 04:02:04 info from order state stream subscription:{tracking_id:"b962bd43266932c3f2d8b4c998b5f921" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/06/01 04:03:22 info from MD stream ping:{time:{seconds:1748736201 nanos:931352660} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:05:31 info from MD stream ping:{time:{seconds:1748736330 nanos:931244924} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:06:04 info from order state stream ping:{time:{seconds:1748736364 nanos:399371422} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:07:32 info from MD stream ping:{time:{seconds:1748736451 nanos:931252148} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:09:33 info from MD stream ping:{time:{seconds:1748736572 nanos:931226163} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:10:04 info from order state stream ping:{time:{seconds:1748736604 nanos:499381507} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:11:34 info from MD stream ping:{time:{seconds:1748736693 nanos:931164427} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:13:59 info from MD stream ping:{time:{seconds:1748736838 nanos:931313381} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:14:04 info from order state stream ping:{time:{seconds:1748736844 nanos:599381331} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:16:29 info from MD stream ping:{time:{seconds:1748736988 nanos:931290796} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:18:04 info from order state stream ping:{time:{seconds:1748737084 nanos:699417948} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:18:30 info from MD stream ping:{time:{seconds:1748737109 nanos:931322913} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:22:04 info from order state stream ping:{time:{seconds:1748737324 nanos:799360626} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:22:06 info from MD stream ping:{time:{seconds:1748737325 nanos:931281162} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:24:07 info from MD stream ping:{time:{seconds:1748737446 nanos:931336446} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:26:04 info from order state stream ping:{time:{seconds:1748737564 nanos:899402562} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:26:08 info from MD stream ping:{time:{seconds:1748737567 nanos:931303775} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:28:09 info from MD stream ping:{time:{seconds:1748737688 nanos:931240375} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:30:05 info from order state stream ping:{time:{seconds:1748737804 nanos:999367850} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:30:40 info from MD stream ping:{time:{seconds:1748737839 nanos:931284731} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:32:41 info from MD stream ping:{time:{seconds:1748737960 nanos:931283216} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:34:05 info from order state stream ping:{time:{seconds:1748738045 nanos:99371015} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:36:02 info from MD stream ping:{time:{seconds:1748738161 nanos:931264769} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:38:03 info from MD stream ping:{time:{seconds:1748738282 nanos:931331420} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:38:05 info from order state stream ping:{time:{seconds:1748738285 nanos:199375639} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:40:04 info from MD stream ping:{time:{seconds:1748738403 nanos:931249400} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:42:05 info from MD stream ping:{time:{seconds:1748738524 nanos:931286608} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:42:05 info from order state stream ping:{time:{seconds:1748738525 nanos:299390973} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:44:06 info from MD stream ping:{time:{seconds:1748738645 nanos:931300681} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:46:05 info from order state stream ping:{time:{seconds:1748738765 nanos:399384350} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:46:07 info from MD stream ping:{time:{seconds:1748738766 nanos:931283904} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:48:08 info from MD stream ping:{time:{seconds:1748738887 nanos:931263975} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:50:05 info from order state stream ping:{time:{seconds:1748739005 nanos:499371003} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:51:21 info from MD stream ping:{time:{seconds:1748739080 nanos:931242261} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:53:22 info from MD stream ping:{time:{seconds:1748739201 nanos:931222141} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:54:05 info from order state stream ping:{time:{seconds:1748739245 nanos:599409372} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:55:23 info from MD stream ping:{time:{seconds:1748739322 nanos:931231108} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:57:24 info from MD stream ping:{time:{seconds:1748739443 nanos:931241655} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 04:58:05 info from order state stream ping:{time:{seconds:1748739485 nanos:699427642} stream_id:"c0d246ae-e73a-44a4-9495-f3e08213cb64"}
+INVEST-API 2025/06/01 04:59:25 info from MD stream ping:{time:{seconds:1748739564 nanos:931270877} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:02:03 try to restart order state stream err = rpc error: code = Internal desc = server closed the stream without sending trailers, attempt = 1
+INVEST-API 2025/06/01 05:02:03 info from order state stream subscription:{tracking_id:"4da3cc87d755d50ff6504e15caf2d675" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/06/01 05:02:58 info from MD stream ping:{time:{seconds:1748739777 nanos:931288905} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:06:03 info from order state stream ping:{time:{seconds:1748739963 nanos:827069857} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:06:17 info from MD stream ping:{time:{seconds:1748739976 nanos:931261093} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:08:18 info from MD stream ping:{time:{seconds:1748740097 nanos:931300018} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:10:03 info from order state stream ping:{time:{seconds:1748740203 nanos:838661017} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:10:19 info from MD stream ping:{time:{seconds:1748740218 nanos:931313945} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:12:20 info from MD stream ping:{time:{seconds:1748740339 nanos:931282817} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:14:04 info from order state stream ping:{time:{seconds:1748740443 nanos:927050531} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:14:21 info from MD stream ping:{time:{seconds:1748740460 nanos:931284187} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:16:22 info from MD stream ping:{time:{seconds:1748740581 nanos:931326194} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:18:04 info from order state stream ping:{time:{seconds:1748740684 nanos:27017436} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:18:23 info from MD stream ping:{time:{seconds:1748740702 nanos:931225429} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:22:04 info from order state stream ping:{time:{seconds:1748740924 nanos:127023823} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:22:15 info from MD stream ping:{time:{seconds:1748740934 nanos:931288576} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:24:16 info from MD stream ping:{time:{seconds:1748741055 nanos:931261508} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:26:04 info from order state stream ping:{time:{seconds:1748741164 nanos:227042220} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:26:17 info from MD stream ping:{time:{seconds:1748741176 nanos:931282944} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:28:18 info from MD stream ping:{time:{seconds:1748741297 nanos:931276952} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:30:04 info from order state stream ping:{time:{seconds:1748741404 nanos:327011527} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:31:11 info from MD stream ping:{time:{seconds:1748741470 nanos:931294677} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:34:04 info from order state stream ping:{time:{seconds:1748741644 nanos:427018420} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:34:56 info from MD stream ping:{time:{seconds:1748741695 nanos:931216788} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:36:57 info from MD stream ping:{time:{seconds:1748741816 nanos:931253224} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:38:04 info from order state stream ping:{time:{seconds:1748741884 nanos:527007193} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:38:58 info from MD stream ping:{time:{seconds:1748741937 nanos:931248972} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:40:59 info from MD stream ping:{time:{seconds:1748742058 nanos:931223864} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:42:04 info from order state stream ping:{time:{seconds:1748742124 nanos:627024354} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:43:00 info from MD stream ping:{time:{seconds:1748742179 nanos:931167486} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:45:01 info from MD stream ping:{time:{seconds:1748742300 nanos:931272373} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:46:04 info from order state stream ping:{time:{seconds:1748742364 nanos:727008185} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:47:48 info from MD stream ping:{time:{seconds:1748742467 nanos:931254548} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:49:49 info from MD stream ping:{time:{seconds:1748742588 nanos:931251986} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:50:05 info from order state stream ping:{time:{seconds:1748742604 nanos:827033680} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:51:50 info from MD stream ping:{time:{seconds:1748742709 nanos:931370605} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:53:51 info from MD stream ping:{time:{seconds:1748742830 nanos:931278850} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:54:05 info from order state stream ping:{time:{seconds:1748742844 nanos:927012985} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:55:52 info from MD stream ping:{time:{seconds:1748742951 nanos:931185605} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 05:58:05 info from order state stream ping:{time:{seconds:1748743085 nanos:27062180} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 05:59:09 info from MD stream ping:{time:{seconds:1748743148 nanos:931240957} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:01:10 info from MD stream ping:{time:{seconds:1748743269 nanos:931592953} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:02:05 info from order state stream ping:{time:{seconds:1748743325 nanos:127041820} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:03:58 info from MD stream ping:{time:{seconds:1748743437 nanos:931673396} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:05:59 info from MD stream ping:{time:{seconds:1748743558 nanos:931233540} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:06:05 info from order state stream ping:{time:{seconds:1748743565 nanos:227042476} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:08:00 info from MD stream ping:{time:{seconds:1748743679 nanos:931248030} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:10:01 info from MD stream ping:{time:{seconds:1748743800 nanos:931263662} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:10:05 info from order state stream ping:{time:{seconds:1748743805 nanos:327027767} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:12:02 info from MD stream ping:{time:{seconds:1748743921 nanos:931238889} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:14:03 info from MD stream ping:{time:{seconds:1748744042 nanos:931263238} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:14:05 info from order state stream ping:{time:{seconds:1748744045 nanos:427018393} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:17:29 info from MD stream ping:{time:{seconds:1748744248 nanos:931216334} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:18:05 info from order state stream ping:{time:{seconds:1748744285 nanos:527027037} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:21:29 info from MD stream ping:{time:{seconds:1748744488 nanos:931302540} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:22:05 info from order state stream ping:{time:{seconds:1748744525 nanos:627027129} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:26:05 info from order state stream ping:{time:{seconds:1748744765 nanos:727028633} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:28:33 info from MD stream ping:{time:{seconds:1748744912 nanos:931273002} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:30:06 info from order state stream ping:{time:{seconds:1748745005 nanos:827035913} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:32:04 info from MD stream ping:{time:{seconds:1748745123 nanos:931394825} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:34:06 info from order state stream ping:{time:{seconds:1748745245 nanos:927070696} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:36:00 info from MD stream ping:{time:{seconds:1748745359 nanos:931231541} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:38:01 info from MD stream ping:{time:{seconds:1748745480 nanos:931299796} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:38:06 info from order state stream ping:{time:{seconds:1748745486 nanos:27010746} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:40:02 info from MD stream ping:{time:{seconds:1748745601 nanos:931293397} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:42:03 info from MD stream ping:{time:{seconds:1748745722 nanos:931242310} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:42:06 info from order state stream ping:{time:{seconds:1748745726 nanos:127013943} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:44:04 info from MD stream ping:{time:{seconds:1748745843 nanos:931309438} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:46:05 info from MD stream ping:{time:{seconds:1748745964 nanos:931299825} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:46:06 info from order state stream ping:{time:{seconds:1748745966 nanos:227032323} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:48:23 info from MD stream ping:{time:{seconds:1748746102 nanos:931232975} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:50:06 info from order state stream ping:{time:{seconds:1748746206 nanos:327028384} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:50:48 info from MD stream ping:{time:{seconds:1748746247 nanos:931210601} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:52:49 info from MD stream ping:{time:{seconds:1748746368 nanos:931284515} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:54:06 info from order state stream ping:{time:{seconds:1748746446 nanos:427080684} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:54:50 info from MD stream ping:{time:{seconds:1748746489 nanos:931277040} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:56:51 info from MD stream ping:{time:{seconds:1748746610 nanos:931328589} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 06:58:06 info from order state stream ping:{time:{seconds:1748746686 nanos:527033441} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 06:58:55 info from MD stream ping:{time:{seconds:1748746734 nanos:931268666} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:01:54 info from MD stream ping:{time:{seconds:1748746913 nanos:931158772} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:02:06 info from order state stream ping:{time:{seconds:1748746926 nanos:627030142} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:06:06 info from order state stream ping:{time:{seconds:1748747166 nanos:727033518} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:09:46 info from MD stream ping:{time:{seconds:1748747385 nanos:931268468} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:10:07 info from order state stream ping:{time:{seconds:1748747406 nanos:827070257} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:11:47 info from MD stream ping:{time:{seconds:1748747506 nanos:931216229} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:13:48 info from MD stream ping:{time:{seconds:1748747627 nanos:931231729} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:14:07 info from order state stream ping:{time:{seconds:1748747646 nanos:927080006} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:15:49 info from MD stream ping:{time:{seconds:1748747748 nanos:931295701} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:18:07 info from order state stream ping:{time:{seconds:1748747887 nanos:27016998} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:19:07 info from MD stream ping:{time:{seconds:1748747946 nanos:931233184} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:21:08 info from MD stream ping:{time:{seconds:1748748067 nanos:931250831} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:22:07 info from order state stream ping:{time:{seconds:1748748127 nanos:127021136} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:23:09 info from MD stream ping:{time:{seconds:1748748188 nanos:931192926} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:26:07 info from order state stream ping:{time:{seconds:1748748367 nanos:227123518} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:29:06 info from MD stream ping:{time:{seconds:1748748545 nanos:931294619} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:30:07 info from order state stream ping:{time:{seconds:1748748607 nanos:327010332} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:31:07 info from MD stream ping:{time:{seconds:1748748666 nanos:931322756} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:33:08 info from MD stream ping:{time:{seconds:1748748787 nanos:931417268} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:34:07 info from order state stream ping:{time:{seconds:1748748847 nanos:427026543} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:35:09 info from MD stream ping:{time:{seconds:1748748908 nanos:931229327} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:37:17 info from MD stream ping:{time:{seconds:1748749036 nanos:931232624} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:38:07 info from order state stream ping:{time:{seconds:1748749087 nanos:527037705} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:41:43 info from MD stream ping:{time:{seconds:1748749302 nanos:931273562} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:42:07 info from order state stream ping:{time:{seconds:1748749327 nanos:627026403} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:44:27 info from MD stream ping:{time:{seconds:1748749466 nanos:931239234} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:46:08 info from order state stream ping:{time:{seconds:1748749567 nanos:727013662} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:50:08 info from order state stream ping:{time:{seconds:1748749807 nanos:827034913} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:50:13 info from MD stream ping:{time:{seconds:1748749812 nanos:931287363} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:53:03 info from MD stream ping:{time:{seconds:1748749982 nanos:931232821} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:54:08 info from order state stream ping:{time:{seconds:1748750047 nanos:927067538} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:55:04 info from MD stream ping:{time:{seconds:1748750103 nanos:931218351} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 07:58:08 info from order state stream ping:{time:{seconds:1748750288 nanos:27123488} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 07:58:46 info from MD stream ping:{time:{seconds:1748750325 nanos:931298858} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:00:47 info from MD stream ping:{time:{seconds:1748750446 nanos:931274458} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:02:08 info from order state stream ping:{time:{seconds:1748750528 nanos:127020058} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:02:48 info from MD stream ping:{time:{seconds:1748750567 nanos:931251045} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:06:08 info from order state stream ping:{time:{seconds:1748750768 nanos:227031339} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:06:19 info from MD stream ping:{time:{seconds:1748750778 nanos:931227838} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:08:28 info from MD stream ping:{time:{seconds:1748750907 nanos:931220376} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:10:08 info from order state stream ping:{time:{seconds:1748751008 nanos:327074735} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:13:38 info from MD stream ping:{time:{seconds:1748751217 nanos:931279278} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:14:08 info from order state stream ping:{time:{seconds:1748751248 nanos:427129970} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:18:08 info from order state stream ping:{time:{seconds:1748751488 nanos:527082931} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:22:08 info from order state stream ping:{time:{seconds:1748751728 nanos:627026702} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:24:08 info from MD stream ping:{time:{seconds:1748751847 nanos:931317950} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:26:09 info from order state stream ping:{time:{seconds:1748751968 nanos:727070196} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:26:09 info from MD stream ping:{time:{seconds:1748751968 nanos:931228368} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:28:10 info from MD stream ping:{time:{seconds:1748752089 nanos:931179361} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:30:09 info from order state stream ping:{time:{seconds:1748752208 nanos:827033796} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:31:35 info from MD stream ping:{time:{seconds:1748752294 nanos:931168717} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:33:36 info from MD stream ping:{time:{seconds:1748752415 nanos:931178427} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:34:09 info from order state stream ping:{time:{seconds:1748752448 nanos:927048672} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:38:09 info from order state stream ping:{time:{seconds:1748752689 nanos:27289789} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:38:19 info from MD stream ping:{time:{seconds:1748752698 nanos:931208740} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:42:09 info from order state stream ping:{time:{seconds:1748752929 nanos:127043921} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:42:37 info from MD stream ping:{time:{seconds:1748752956 nanos:931281743} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:44:46 info from MD stream ping:{time:{seconds:1748753085 nanos:931171418} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:46:09 info from order state stream ping:{time:{seconds:1748753169 nanos:227050957} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:48:05 info from MD stream ping:{time:{seconds:1748753284 nanos:931271936} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 08:50:09 info from order state stream ping:{time:{seconds:1748753409 nanos:327039601} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:54:09 info from order state stream ping:{time:{seconds:1748753649 nanos:427019483} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 08:58:09 info from order state stream ping:{time:{seconds:1748753889 nanos:527033882} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:02:10 info from order state stream ping:{time:{seconds:1748754129 nanos:627089714} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:03:28 info from MD stream ping:{time:{seconds:1748754207 nanos:931261981} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 09:06:03 info from MD stream ping:{time:{seconds:1748754362 nanos:931254743} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 09:06:10 info from order state stream ping:{time:{seconds:1748754369 nanos:727085244} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:09:29 info from MD stream ping:{time:{seconds:1748754568 nanos:931258473} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 09:10:10 info from order state stream ping:{time:{seconds:1748754609 nanos:827111453} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:11:30 info from MD stream ping:{time:{seconds:1748754689 nanos:931259665} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 09:13:31 info from MD stream ping:{time:{seconds:1748754810 nanos:931366590} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 09:14:10 info from order state stream ping:{time:{seconds:1748754849 nanos:927057694} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:18:10 info from order state stream ping:{time:{seconds:1748755090 nanos:27041491} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:18:43 info from MD stream ping:{time:{seconds:1748755122 nanos:931363072} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 09:22:10 info from order state stream ping:{time:{seconds:1748755330 nanos:127135131} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:25:38 info from MD stream ping:{time:{seconds:1748755537 nanos:931276432} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 09:26:10 info from order state stream ping:{time:{seconds:1748755570 nanos:227083818} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:30:10 info from order state stream ping:{time:{seconds:1748755810 nanos:327075556} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:34:10 info from order state stream ping:{time:{seconds:1748756050 nanos:427037604} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:38:10 info from order state stream ping:{time:{seconds:1748756290 nanos:527068194} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:42:11 info from order state stream ping:{time:{seconds:1748756530 nanos:627024029} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:46:11 info from order state stream ping:{time:{seconds:1748756770 nanos:727065318} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:50:11 info from order state stream ping:{time:{seconds:1748757010 nanos:827053640} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:50:16 info from MD stream ping:{time:{seconds:1748757015 nanos:931251931} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 09:53:06 info from MD stream ping:{time:{seconds:1748757185 nanos:931285179} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 09:54:11 info from order state stream ping:{time:{seconds:1748757250 nanos:927036786} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 09:55:24 info from MD stream ping:{time:{seconds:1748757323 nanos:931289947} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 09:58:11 info from order state stream ping:{time:{seconds:1748757491 nanos:27071213} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:02:11 info from order state stream ping:{time:{seconds:1748757731 nanos:127119669} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:04:09 info from MD stream ping:{time:{seconds:1748757848 nanos:931164222} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:06:11 info from order state stream ping:{time:{seconds:1748757971 nanos:227072549} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:06:35 info from MD stream ping:{time:{seconds:1748757994 nanos:931279306} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:10:11 info from order state stream ping:{time:{seconds:1748758211 nanos:327039610} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:13:24 info from MD stream ping:{time:{seconds:1748758403 nanos:931281138} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:14:11 info from order state stream ping:{time:{seconds:1748758451 nanos:431142496} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:18:11 info from order state stream ping:{time:{seconds:1748758691 nanos:527202431} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:22:12 info from order state stream ping:{time:{seconds:1748758931 nanos:627099777} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:22:25 info from MD stream ping:{time:{seconds:1748758944 nanos:931178575} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:25:46 info from MD stream ping:{time:{seconds:1748759145 nanos:931172876} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:26:12 info from order state stream ping:{time:{seconds:1748759171 nanos:727052721} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:30:12 info from order state stream ping:{time:{seconds:1748759411 nanos:827100004} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:32:33 info from MD stream ping:{time:{seconds:1748759552 nanos:931242349} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:34:12 info from order state stream ping:{time:{seconds:1748759651 nanos:927022669} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:38:12 info from order state stream ping:{time:{seconds:1748759892 nanos:27084764} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:40:57 info from MD stream ping:{time:{seconds:1748760056 nanos:931281209} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:42:12 info from order state stream ping:{time:{seconds:1748760132 nanos:127080626} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:42:58 info from MD stream ping:{time:{seconds:1748760177 nanos:931263566} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:44:59 info from MD stream ping:{time:{seconds:1748760298 nanos:931254706} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:46:12 info from order state stream ping:{time:{seconds:1748760372 nanos:227056861} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:47:00 info from MD stream ping:{time:{seconds:1748760419 nanos:931389496} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:49:01 info from MD stream ping:{time:{seconds:1748760540 nanos:931240653} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:50:12 info from order state stream ping:{time:{seconds:1748760612 nanos:327048783} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:51:02 info from MD stream ping:{time:{seconds:1748760661 nanos:931389185} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:53:03 info from MD stream ping:{time:{seconds:1748760782 nanos:931359851} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:54:12 info from order state stream ping:{time:{seconds:1748760852 nanos:427138028} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:55:04 info from MD stream ping:{time:{seconds:1748760903 nanos:931313737} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:57:05 info from MD stream ping:{time:{seconds:1748761024 nanos:931322544} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 10:58:13 info from order state stream ping:{time:{seconds:1748761092 nanos:527120349} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 10:59:06 info from MD stream ping:{time:{seconds:1748761145 nanos:931303257} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 11:02:13 info from order state stream ping:{time:{seconds:1748761332 nanos:627055321} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:06:13 info from order state stream ping:{time:{seconds:1748761572 nanos:727049363} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:10:13 info from order state stream ping:{time:{seconds:1748761812 nanos:827075962} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:14:13 info from order state stream ping:{time:{seconds:1748762052 nanos:927078156} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:18:13 info from order state stream ping:{time:{seconds:1748762293 nanos:27082611} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:22:13 info from order state stream ping:{time:{seconds:1748762533 nanos:127056827} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:26:13 info from order state stream ping:{time:{seconds:1748762773 nanos:227053569} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:30:13 info from order state stream ping:{time:{seconds:1748763013 nanos:327075949} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:34:13 info from order state stream ping:{time:{seconds:1748763253 nanos:427037472} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:38:14 info from order state stream ping:{time:{seconds:1748763493 nanos:527033565} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:42:14 info from order state stream ping:{time:{seconds:1748763733 nanos:627060303} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:46:14 info from order state stream ping:{time:{seconds:1748763973 nanos:727101570} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:50:14 info from order state stream ping:{time:{seconds:1748764213 nanos:827072353} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:54:14 info from order state stream ping:{time:{seconds:1748764453 nanos:927096259} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 11:58:14 info from order state stream ping:{time:{seconds:1748764694 nanos:27068227} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:02:14 info from order state stream ping:{time:{seconds:1748764934 nanos:127047684} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:06:14 info from order state stream ping:{time:{seconds:1748765174 nanos:227028680} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:10:14 info from order state stream ping:{time:{seconds:1748765414 nanos:327088144} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:14:14 info from order state stream ping:{time:{seconds:1748765654 nanos:427011178} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:18:15 info from order state stream ping:{time:{seconds:1748765894 nanos:527034613} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:22:15 info from order state stream ping:{time:{seconds:1748766134 nanos:627064811} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:26:15 info from order state stream ping:{time:{seconds:1748766374 nanos:727031176} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:30:15 info from order state stream ping:{time:{seconds:1748766614 nanos:827212377} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:34:15 info from order state stream ping:{time:{seconds:1748766854 nanos:927091715} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:38:15 info from order state stream ping:{time:{seconds:1748767095 nanos:27021786} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:42:15 info from order state stream ping:{time:{seconds:1748767335 nanos:127040819} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:46:15 info from order state stream ping:{time:{seconds:1748767575 nanos:227180076} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:50:15 info from order state stream ping:{time:{seconds:1748767815 nanos:327036495} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:54:16 info from order state stream ping:{time:{seconds:1748768055 nanos:427034637} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 12:58:16 info from order state stream ping:{time:{seconds:1748768295 nanos:527054261} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:02:16 info from order state stream ping:{time:{seconds:1748768535 nanos:627041185} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:05:23 info from MD stream subscribe_last_price_response:{tracking_id:"fea07741a47605a7b4dac15234eec6e3" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"ef4e3602-4789-4ae9-87cc-beca025dc672" subscription_id:"7d574220-d135-4fdb-a58c-ff0ca20d51c2" 6:1}}
+INVEST-API 2025/06/01 13:05:23 info from order state stream subscription:{tracking_id:"96fbad6d4d1f1219ef6f8fec948d9c76" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"a3775039-e269-4885-927d-dc30d8e3a1b0" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/06/01 13:05:28 stop listening market data stream
+INVEST-API 2025/06/01 13:05:28 close market data stream
+INVEST-API 2025/06/01 13:05:28 stop listening order state stream
+INVEST-API 2025/06/01 13:05:28 close order state stream
+INVEST-API 2025/06/01 13:06:16 info from order state stream ping:{time:{seconds:1748768775 nanos:727037638} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:07:06 INFOinfo from MD stream subscribe_last_price_response:{tracking_id:"9d1a744ef2825c1a92462ea2526cff00" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"0b9ff3e4-4414-46cc-956e-aaeaa69e5859" subscription_id:"2a3a0c3d-c981-482a-8a64-3a829db5b8bb" 6:1}}
+INVEST-API 2025/06/01 13:07:06 INFOinfo from order state stream subscription:{tracking_id:"b9cc7cccf8ff905ff18d293c844373a0" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"0e81e3fb-9b63-40e1-9b00-cc991c7d9116" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/06/01 13:07:10 INFOstop listening market data stream
+INVEST-API 2025/06/01 13:07:10 INFOclose market data stream
+INVEST-API 2025/06/01 13:07:10 INFOstop listening order state stream
+INVEST-API 2025/06/01 13:07:10 INFOclose order state stream
+INVEST-API 2025/06/01 13:07:22 INFO info from MD stream subscribe_last_price_response:{tracking_id:"ce2b93baa7a31812678726e19d8d1974" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"65dc7850-4423-4659-85a8-ad8688baa271" subscription_id:"9a80c856-7bcc-46b5-b5a2-08e1aaf8766d" 6:1}}
+INVEST-API 2025/06/01 13:07:22 INFO info from order state stream subscription:{tracking_id:"21589c1db848107e237a9ffde12a0846" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"d4b60fd8-b132-4dcd-a656-d5ce51bbc397" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/06/01 13:07:28 INFO stop listening market data stream
+INVEST-API 2025/06/01 13:07:28 INFO stop listening order state stream
+INVEST-API 2025/06/01 13:07:28 INFO close order state stream
+INVEST-API 2025/06/01 13:07:28 INFO close market data stream
+INVEST-API 2025/06/01 13:10:16 info from order state stream ping:{time:{seconds:1748769015 nanos:827045141} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:11:56 INFO info from MD stream subscribe_last_price_response:{tracking_id:"d4111e4803569d8ff8e0fa605032b09b"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"4de96910-ea90-4259-a347-74594691fdea"  subscription_id:"1e91fa6e-bb24-4199-8925-ae502e177451"  6:1}}
+INVEST-API 2025/06/01 13:11:56 INFO info from order state stream subscription:{tracking_id:"cdc915c74140316d7753b1783c45925f"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"2607eea1-1807-47b9-a497-e2353e0575ca"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/06/01 13:13:57 INFO info from MD stream ping:{time:{seconds:1748769236  nanos:591461247}  stream_id:"4de96910-ea90-4259-a347-74594691fdea"}
+INVEST-API 2025/06/01 13:14:16 info from order state stream ping:{time:{seconds:1748769255 nanos:927058066} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:15:56 INFO info from order state stream ping:{time:{seconds:1748769355  nanos:919675425}  stream_id:"2607eea1-1807-47b9-a497-e2353e0575ca"}
+INVEST-API 2025/06/01 13:15:58 INFO info from MD stream ping:{time:{seconds:1748769357  nanos:591419077}  stream_id:"4de96910-ea90-4259-a347-74594691fdea"}
+INVEST-API 2025/06/01 13:17:59 INFO info from MD stream ping:{time:{seconds:1748769478  nanos:591408609}  stream_id:"4de96910-ea90-4259-a347-74594691fdea"}
+INVEST-API 2025/06/01 13:18:16 info from order state stream ping:{time:{seconds:1748769496 nanos:27072700} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:19:56 INFO info from order state stream ping:{time:{seconds:1748769596  nanos:19647335}  stream_id:"2607eea1-1807-47b9-a497-e2353e0575ca"}
+INVEST-API 2025/06/01 13:20:00 INFO info from MD stream ping:{time:{seconds:1748769599  nanos:591388454}  stream_id:"4de96910-ea90-4259-a347-74594691fdea"}
+INVEST-API 2025/06/01 13:22:01 INFO info from MD stream ping:{time:{seconds:1748769720  nanos:591470096}  stream_id:"4de96910-ea90-4259-a347-74594691fdea"}
+INVEST-API 2025/06/01 13:22:16 info from order state stream ping:{time:{seconds:1748769736 nanos:127072111} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:23:56 INFO info from order state stream ping:{time:{seconds:1748769836  nanos:119649082}  stream_id:"2607eea1-1807-47b9-a497-e2353e0575ca"}
+INVEST-API 2025/06/01 13:24:02 INFO info from MD stream ping:{time:{seconds:1748769841  nanos:591346790}  stream_id:"4de96910-ea90-4259-a347-74594691fdea"}
+INVEST-API 2025/06/01 13:26:03 INFO info from MD stream ping:{time:{seconds:1748769962  nanos:591392390}  stream_id:"4de96910-ea90-4259-a347-74594691fdea"}
+INVEST-API 2025/06/01 13:26:16 info from order state stream ping:{time:{seconds:1748769976 nanos:227078262} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:27:56 INFO info from order state stream ping:{time:{seconds:1748770076  nanos:219714952}  stream_id:"2607eea1-1807-47b9-a497-e2353e0575ca"}
+INVEST-API 2025/06/01 13:28:04 INFO info from MD stream ping:{time:{seconds:1748770083  nanos:591376266}  stream_id:"4de96910-ea90-4259-a347-74594691fdea"}
+INVEST-API 2025/06/01 13:29:04 INFO stop listening market data stream
+INVEST-API 2025/06/01 13:29:04 INFO stop listening order state stream
+INVEST-API 2025/06/01 13:29:04 INFO close order state stream
+INVEST-API 2025/06/01 13:29:04 INFO close market data stream
+INVEST-API 2025/06/01 13:30:16 info from order state stream ping:{time:{seconds:1748770216 nanos:327019072} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:34:17 info from order state stream ping:{time:{seconds:1748770456 nanos:429402173} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:38:17 info from order state stream ping:{time:{seconds:1748770696 nanos:527042850} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:42:17 info from order state stream ping:{time:{seconds:1748770936 nanos:627072018} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:46:17 info from order state stream ping:{time:{seconds:1748771176 nanos:727094950} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:50:17 info from order state stream ping:{time:{seconds:1748771416 nanos:827083200} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:54:17 info from order state stream ping:{time:{seconds:1748771656 nanos:927185275} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 13:58:17 info from order state stream ping:{time:{seconds:1748771897 nanos:27091408} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:02:17 info from order state stream ping:{time:{seconds:1748772137 nanos:127093807} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:06:17 info from order state stream ping:{time:{seconds:1748772377 nanos:227089173} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:10:17 info from order state stream ping:{time:{seconds:1748772617 nanos:327079646} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:14:18 info from order state stream ping:{time:{seconds:1748772857 nanos:427075683} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:18:18 info from order state stream ping:{time:{seconds:1748773097 nanos:527049633} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:22:18 info from order state stream ping:{time:{seconds:1748773337 nanos:627019729} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:26:18 info from order state stream ping:{time:{seconds:1748773577 nanos:727091678} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:30:18 info from order state stream ping:{time:{seconds:1748773817 nanos:827018560} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:34:18 info from order state stream ping:{time:{seconds:1748774057 nanos:927249606} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:38:18 info from order state stream ping:{time:{seconds:1748774298 nanos:27024583} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:42:18 info from order state stream ping:{time:{seconds:1748774538 nanos:127088801} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:46:18 info from order state stream ping:{time:{seconds:1748774778 nanos:227042636} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:50:19 info from order state stream ping:{time:{seconds:1748775018 nanos:327033662} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:54:19 info from order state stream ping:{time:{seconds:1748775258 nanos:427040114} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 14:58:19 info from order state stream ping:{time:{seconds:1748775498 nanos:527034344} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:02:19 info from order state stream ping:{time:{seconds:1748775738 nanos:627038593} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:06:19 info from order state stream ping:{time:{seconds:1748775978 nanos:727003523} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:10:19 info from order state stream ping:{time:{seconds:1748776218 nanos:827042805} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:14:19 info from order state stream ping:{time:{seconds:1748776458 nanos:927038123} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:18:19 info from order state stream ping:{time:{seconds:1748776699 nanos:27027709} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:22:19 info from order state stream ping:{time:{seconds:1748776939 nanos:127057770} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:26:19 info from order state stream ping:{time:{seconds:1748777179 nanos:227020313} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:30:20 info from order state stream ping:{time:{seconds:1748777419 nanos:327044624} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:34:20 info from order state stream ping:{time:{seconds:1748777659 nanos:427030641} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:38:20 info from order state stream ping:{time:{seconds:1748777899 nanos:527028250} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:42:20 info from order state stream ping:{time:{seconds:1748778139 nanos:627025679} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:46:20 info from order state stream ping:{time:{seconds:1748778379 nanos:727096436} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:50:20 info from order state stream ping:{time:{seconds:1748778619 nanos:827102181} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:54:20 info from order state stream ping:{time:{seconds:1748778859 nanos:927550879} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 15:58:20 info from order state stream ping:{time:{seconds:1748779100 nanos:27047259} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:02:20 info from order state stream ping:{time:{seconds:1748779340 nanos:127061741} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:06:21 info from order state stream ping:{time:{seconds:1748779580 nanos:227076906} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:10:21 info from order state stream ping:{time:{seconds:1748779820 nanos:327051620} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:14:21 info from order state stream ping:{time:{seconds:1748780060 nanos:427137390} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:18:21 info from order state stream ping:{time:{seconds:1748780300 nanos:527056101} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:22:21 info from order state stream ping:{time:{seconds:1748780540 nanos:627064141} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:26:21 info from order state stream ping:{time:{seconds:1748780780 nanos:727045613} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:30:21 info from order state stream ping:{time:{seconds:1748781020 nanos:827753615} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:34:21 info from order state stream ping:{time:{seconds:1748781260 nanos:927066590} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:38:21 info from order state stream ping:{time:{seconds:1748781501 nanos:27092351} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:42:21 info from order state stream ping:{time:{seconds:1748781741 nanos:127426544} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:46:22 info from order state stream ping:{time:{seconds:1748781981 nanos:227102819} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:50:22 info from order state stream ping:{time:{seconds:1748782221 nanos:327065959} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:54:22 info from order state stream ping:{time:{seconds:1748782461 nanos:428840495} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 16:58:22 info from order state stream ping:{time:{seconds:1748782701 nanos:527051615} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:02:22 info from order state stream ping:{time:{seconds:1748782941 nanos:627128171} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:06:22 info from order state stream ping:{time:{seconds:1748783181 nanos:714496755} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:10:22 info from order state stream ping:{time:{seconds:1748783421 nanos:727122574} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:14:22 info from order state stream ping:{time:{seconds:1748783661 nanos:827039796} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:18:22 info from order state stream ping:{time:{seconds:1748783901 nanos:927137707} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:22:22 info from order state stream ping:{time:{seconds:1748784142 nanos:27098770} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:26:22 info from order state stream ping:{time:{seconds:1748784382 nanos:127056044} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:30:23 info from order state stream ping:{time:{seconds:1748784622 nanos:227056567} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:34:23 info from order state stream ping:{time:{seconds:1748784862 nanos:327116917} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:38:23 info from order state stream ping:{time:{seconds:1748785102 nanos:427076963} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:42:23 info from order state stream ping:{time:{seconds:1748785342 nanos:527077873} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:46:23 info from order state stream ping:{time:{seconds:1748785582 nanos:627125748} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:50:23 info from order state stream ping:{time:{seconds:1748785822 nanos:727035900} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:54:23 info from order state stream ping:{time:{seconds:1748786062 nanos:827065756} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 17:58:23 info from order state stream ping:{time:{seconds:1748786302 nanos:927085922} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:02:23 info from order state stream ping:{time:{seconds:1748786543 nanos:27120486} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:06:24 info from order state stream ping:{time:{seconds:1748786783 nanos:127041671} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:10:24 info from order state stream ping:{time:{seconds:1748787023 nanos:227105698} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:14:24 info from order state stream ping:{time:{seconds:1748787263 nanos:327049194} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:18:24 info from order state stream ping:{time:{seconds:1748787503 nanos:427056949} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:22:24 info from order state stream ping:{time:{seconds:1748787743 nanos:527045911} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:26:24 info from order state stream ping:{time:{seconds:1748787983 nanos:627146026} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:30:24 info from order state stream ping:{time:{seconds:1748788223 nanos:727046442} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:34:24 info from order state stream ping:{time:{seconds:1748788463 nanos:827097856} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:38:24 info from order state stream ping:{time:{seconds:1748788703 nanos:927101419} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:42:24 info from order state stream ping:{time:{seconds:1748788944 nanos:27108108} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:46:25 info from order state stream ping:{time:{seconds:1748789184 nanos:127067528} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:50:25 info from order state stream ping:{time:{seconds:1748789424 nanos:227046472} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 18:54:25 info from order state stream ping:{time:{seconds:1748789664 nanos:327051760} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST_API 2025/06/01 18:56:11 INFO info from MD stream subscribe_last_price_response:{tracking_id:"78f2f2f64c07da64a7878ffbcae7b876" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"5d2867c5-9fe0-450e-b629-f6a5b8e01cac" subscription_id:"a9685cc8-0802-4f77-b48f-2629b786175d" 6:1}}
+INVEST_API 2025/06/01 18:56:11 INFO info from order state stream subscription:{tracking_id:"52bd18c2350af55ef7c0f5ea90633220" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"66e99b91-a616-4d7d-8d62-de8fc4eb5eab" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/01 18:58:12 INFO info from MD stream ping:{time:{seconds:1748789891 nanos:629658327} stream_id:"5d2867c5-9fe0-450e-b629-f6a5b8e01cac"}
+INVEST-API 2025/06/01 18:58:25 info from order state stream ping:{time:{seconds:1748789904 nanos:427120089} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST_API 2025/06/01 18:58:52 INFO stop listening order state stream
+INVEST_API 2025/06/01 18:58:52 INFO close order state stream
+INVEST_API 2025/06/01 18:58:52 INFO stop listening market data stream
+INVEST_API 2025/06/01 18:58:52 INFO close market data stream
+INVEST-API 2025/06/01 19:02:25 info from order state stream ping:{time:{seconds:1748790144 nanos:527058857} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:06:25 info from order state stream ping:{time:{seconds:1748790384 nanos:627063426} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:10:25 info from order state stream ping:{time:{seconds:1748790624 nanos:727162101} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:14:25 info from order state stream ping:{time:{seconds:1748790864 nanos:827109460} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:18:25 info from order state stream ping:{time:{seconds:1748791104 nanos:927089619} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:22:25 info from order state stream ping:{time:{seconds:1748791345 nanos:27121071} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:26:26 info from order state stream ping:{time:{seconds:1748791585 nanos:127082789} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:30:26 info from order state stream ping:{time:{seconds:1748791825 nanos:227042048} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:34:26 info from order state stream ping:{time:{seconds:1748792065 nanos:327110596} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:38:26 info from order state stream ping:{time:{seconds:1748792305 nanos:427065812} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:42:26 info from order state stream ping:{time:{seconds:1748792545 nanos:527071752} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}

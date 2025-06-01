@@ -44,3 +44,25 @@ func WaitFor(ctx context.Context, waitOnPanic time.Duration) {
 	case <-time.After(waitOnPanic):
 	}
 }
+
+func CastToFloat64(n any) float64 {
+	if f, ok := n.(float64); ok {
+		return f
+	}
+
+	if i, ok := n.(int); ok {
+		return float64(i)
+	}
+	panic(fmt.Sprintf("impossible cast to number: %v", n))
+}
+
+func CastToInt64(n any) int64 {
+	if i, ok := n.(int); ok {
+		return int64(i)
+	}
+
+	if f, ok := n.(float64); ok {
+		return int64(f)
+	}
+	panic(fmt.Sprintf("impossible cast to number: %v", n))
+}

@@ -14,7 +14,6 @@ import (
 	"trading_bot/internal/logger"
 	"trading_bot/internal/service/datastruct"
 	"trading_bot/internal/supports"
-	mainsupports "trading_bot/internal/supports/main"
 
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 	investapi "github.com/russianinvestments/invest-api-go-sdk/proto"
@@ -70,10 +69,16 @@ func main() {
 		go func() {
 			defer wg.Done()
 
-			instrInfo, err := mainsupports.GetInstrument(ctx, investClient, dbClient, instr.UID)
+			instrInfo, err := investClient.FindInstrument(instr.UID)
 			if err != nil {
 				panic(err)
 			}
+
+			dbId, err := dbClient.AddInstrumentInfo(instrInfo)
+			if err != nil {
+				panic(err)
+			}
+			instrInfo.Id = dbId
 
 			from, err := supports.ParseDate(instr.From)
 			if err != nil {

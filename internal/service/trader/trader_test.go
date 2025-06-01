@@ -1,4 +1,4 @@
-package service
+package trader
 
 import (
 	"context"
@@ -40,7 +40,7 @@ func newTestService(ctx context.Context, t *testing.T) *TestTradingService {
 		ForQuals:     false,
 	}
 
-	trCfg := TraderCfg{
+	trCfg := &TraderCfg{
 		InstrInfo:                   instrInfo,
 		TraderId:                    uuid.NewString(),
 		TradingDelay:                0,

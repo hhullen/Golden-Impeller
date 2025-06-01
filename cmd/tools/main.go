@@ -16,19 +16,14 @@ import (
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
 )
 
-type Load struct {
-}
-
 func main() {
+	// fmt.Println(uuid.NewString())
+	// return
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
 	envCfg, err := config.GetEnvCfg()
 	if err != nil {
 		panic(err)
-	}
-
-	if len(envCfg.Trader) == 0 {
-		panic("no traders specified in config")
 	}
 
 	investCfg := investgo.Config{
@@ -37,7 +32,7 @@ func main() {
 		Token:     envCfg.TInvestToken,
 		AccountId: envCfg.TInvestAccountID,
 	}
-	logger := logger.NewLogger(os.Stdout, "TEST_MAIN")
+	logger := logger.NewLogger(os.Stdout, "TOOLS")
 
 	investClient, err := t_api.NewClient(ctx, investCfg, logger)
 	if err != nil {
@@ -48,12 +43,11 @@ func main() {
 	getEtfs(investClient, "etfs.txt")
 	getBonds(investClient, "bonds.txt")
 	getCurrencies(investClient, "currencies.txt")
-	// return
 
 	sres, err := investClient.NewSandboxServiceClient().SandboxPayIn(&investgo.SandboxPayInRequest{
 		AccountId: investCfg.AccountId,
 		Currency:  "rub",
-		Unit:      200000,
+		Unit:      0,
 	})
 	if err != nil {
 		panic(err)
@@ -88,11 +82,11 @@ func main() {
 	// defer investClient.Conn.Close()
 
 	// рабочие костыли
-	// printSchedule(investClient, "MOEX")
+	// printSchedule(investClient, "TQBR")
 	// printAccounts(investClient)
 	// fundAndPrintInstrument(investClient, "GLDRUB_TOM")
 	// listenAndPrintLastPrice(investClient, GLDRUB_TOM)
-	// order(investClient, investCfg.AccountId, TGLD, 1, pb.OrderDirection_ORDER_DIRECTION_SELL)
+	// order(investClient, investCfg.AccountId, "e6123145-9665-43e0-8413-cd61b8aa9b13", 5, pb.OrderDirection_ORDER_DIRECTION_SELL)
 	// printOperations(investClient, time.Now().Add(-time.Hour*24), time.Now())
 
 	// fmt.Println(vv.Date.AsTime().Format(time.DateTime))
@@ -130,7 +124,6 @@ func order(c *t_api.Client, accountId, instrumentUID string, quantity int64, dir
 		Direction:    dir,
 		AccountId:    accountId,
 		OrderType:    pb.OrderType_ORDER_TYPE_BESTPRICE,
-		OrderId:      "f626c2df-3746-45d6-954c-88ebfee5b137",
 	})
 
 	if err != nil {
@@ -146,7 +139,7 @@ func order(c *t_api.Client, accountId, instrumentUID string, quantity int64, dir
 	}
 	fmt.Println("ORDER ID: ", orderResp.OrderId)
 
-	fmt.Println("BUY: ", orderResp.ExecutedCommission.Units, orderResp.ExecutedOrderPrice, orderResp.Message)
+	fmt.Println("ORDER: ", orderResp.ExecutedCommission.Units, orderResp.ExecutedOrderPrice, orderResp.Message)
 }
 
 func fundAndPrintInstrument(c *t_api.Client, name string) {
@@ -164,7 +157,12 @@ func fundAndPrintInstrument(c *t_api.Client, name string) {
 }
 
 func printSchedule(c *t_api.Client, excange string) {
-	schedule, _ := c.NewInstrumentsServiceClient().TradingSchedules(excange, time.Now(), time.Now().Add(1*time.Hour))
+	schedule, err := c.NewInstrumentsServiceClient().TradingSchedules(excange, time.Now(), time.Now().Add(1*time.Hour))
+	if err != nil {
+		c.Logger.Fatalf("%v", err)
+	}
+	fmt.Println(len(schedule.GetExchanges()))
+	fmt.Println(schedule.Header)
 
 	for _, exs := range schedule.GetExchanges() {
 		for _, day := range exs.Days {

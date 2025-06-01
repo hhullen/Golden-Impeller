@@ -2,7 +2,9 @@ package config
 
 import (
 	"os"
+	"time"
 
+	"github.com/google/uuid"
 	"gopkg.in/yaml.v3"
 )
 
@@ -38,8 +40,8 @@ type EnvCfg struct {
 	TestDBName       string `yaml:"TEST_DB_NAME"`
 	Account2         string `yaml:"ACCOUNT_2"`
 
+	Trader               *TraderCfg          `yaml:"TRADER"`
 	Backtester           []*BacktesterCfg    `yaml:"BACKTESTER"`
-	Trader               []*TraderCfg        `yaml:"TRADER"`
 	HistoryCandlesLoader []*CandlesLoaderCfg `yaml:"HISTORY_CANDLES_LOADER"`
 }
 
@@ -63,10 +65,16 @@ type BacktesterCfg struct {
 }
 
 type TraderCfg struct {
-	UniqueTraderId string         `yaml:"unique_trader_id"`
-	Uid            string         `yaml:"uid"`
-	AccountId      string         `yaml:"account_id"`
-	StrategyCfg    map[string]any `yaml:"strategy_cfg"`
+	TradingDelay                time.Duration `yaml:"trading_delay"`
+	OnTradingErrorDelay         time.Duration `yaml:"on_trading_error_delay"`
+	OnOrdersOperatingErrorDelay time.Duration `yaml:"on_orders_operating_error_delay"`
+
+	Traders []*struct {
+		UniqueTraderId string         `yaml:"unique_trader_id"`
+		Uid            string         `yaml:"uid"`
+		AccountId      string         `yaml:"account_id"`
+		StrategyCfg    map[string]any `yaml:"strategy_cfg"`
+	} `yaml:"traders"`
 }
 
 func GetEnvCfg() (*EnvCfg, error) {
@@ -78,6 +86,22 @@ func GetEnvCfg() (*EnvCfg, error) {
 	envCfg := &EnvCfg{}
 	if yaml.NewDecoder(file).Decode(envCfg) != nil {
 		return nil, err
+	}
+
+	for _, v := range envCfg.Backtester {
+		if v.UniqueTraderId == "" {
+			v.UniqueTraderId = uuid.NewString()
+		}
+	}
+
+	for _, v := range envCfg.Trader.Traders {
+		if v.AccountId == "" {
+			v.AccountId = envCfg.TInvestAccountID
+		}
+
+		if v.UniqueTraderId == "" {
+			v.UniqueTraderId = uuid.NewString()
+		}
 	}
 
 	return envCfg, nil

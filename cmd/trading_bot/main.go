@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"runtime/debug"
 	"time"
 
 	"os"
@@ -11,45 +12,51 @@ import (
 	"trading_bot/internal/clients/postgres"
 	"trading_bot/internal/clients/t_api"
 	"trading_bot/internal/config"
-	"trading_bot/internal/logger"
-	"trading_bot/internal/service"
-	"trading_bot/internal/strategy"
-	mainsupports "trading_bot/internal/supports/main"
+	lg "trading_bot/internal/logger"
+	tradermanager "trading_bot/internal/service/trader_manager"
 
-	"github.com/google/uuid"
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 )
 
 const (
 	waitOnPanic = time.Second * 10
+
+	brokerLogFilePath = "invest.log"
+	brokerLogPrefix   = "INVEST_API"
+
+	managerLogFilePath = "trading_manager.log"
+	managerLogPrefix   = "TRADING_MANAGER"
+
+	traderLogPrefix = "TRADER"
 )
 
 func main() {
 	ctx, cancelCtx := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	defer cancelCtx()
-	logger := logger.NewLogger(os.Stdout, "TRADER")
-	defer logger.Stop()
+
+	f := openFile(brokerLogFilePath)
+	investLogger := lg.NewLogger(f, brokerLogPrefix)
+	defer investLogger.Stop()
+
+	f = openFile(managerLogFilePath)
+	tradingManagerLogger := lg.NewLogger(f, managerLogPrefix)
+	defer tradingManagerLogger.Stop()
+
+	traderLogger := lg.NewLogger(os.Stdout, traderLogPrefix)
+	defer traderLogger.Stop()
 
 	defer func() {
 		if p := recover(); p != nil {
-			logger.Errorf("Panic recovered in main: %v.\n", p)
+			traderLogger.Fatalf("Panic recovered in main: %v, %s.\n", p, (debug.Stack()))
 		}
 	}()
 
-	traderManager := service.NewTraderManager(waitOnPanic)
-
-	start(ctx, logger, traderManager)
-
-	traderManager.Wait()
-}
-
-func start(ctx context.Context, logger *logger.Logger, traderManager *service.TraderManager) {
 	envCfg, err := config.GetEnvCfg()
 	if err != nil {
 		panic(err)
 	}
 
-	if len(envCfg.Trader) == 0 {
+	if len(envCfg.Trader.Traders) == 0 {
 		panic("no traders specified in config")
 	}
 
@@ -66,49 +73,39 @@ func start(ctx context.Context, logger *logger.Logger, traderManager *service.Tr
 		AccountId: envCfg.TInvestAccountID,
 	}
 
-	investClient, err := t_api.NewClient(ctx, investCfg, logger)
+	investClient, err := t_api.NewClient(ctx, investCfg, investLogger)
 	if err != nil {
 		panic(err)
 	}
 
-	for _, traderCfg := range envCfg.Trader {
+	traderManager := tradermanager.NewTraderManager(ctx, waitOnPanic, investClient, dbClient, tradingManagerLogger, traderLogger)
 
-		instrInfo, err := mainsupports.GetInstrument(ctx, investClient, dbClient, traderCfg.Uid)
+	traderManager.UpdateTradersWithConfig(envCfg.Trader)
 
-		if err != nil {
-			logger.Errorf("Failed getting instrument info for uid: %s", traderCfg.Uid)
-			continue
+	sighup := make(chan os.Signal, 1)
+	signal.Notify(sighup, syscall.SIGHUP)
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-sighup:
+				envCfg, err := config.GetEnvCfg()
+				if err != nil {
+					tradingManagerLogger.Errorf("failed getting env config: %s", err.Error())
+				}
+				traderManager.UpdateTradersWithConfig(envCfg.Trader)
+			}
 		}
+	}()
 
-		if traderCfg.UniqueTraderId == "" {
-			traderCfg.UniqueTraderId = uuid.NewString()
-		}
+	traderManager.Wait()
+}
 
-		strategyInstance, err := strategy.ResolveStrategy(traderCfg.StrategyCfg, dbClient)
-		if err != nil {
-			logger.Errorf("Failed resolving strategy: %s", err.Error())
-			continue
-		}
-
-		trCfg := service.TraderCfg{
-			InstrInfo:                   instrInfo,
-			TraderId:                    traderCfg.UniqueTraderId,
-			TradingDelay:                time.Millisecond * 500,
-			OnTradingErrorDelay:         time.Second * 10,
-			OnOrdersOperatingErrorDelay: time.Second * 10,
-			AccountId:                   investCfg.AccountId,
-		}
-
-		trader, err := service.NewTraderService(ctx, investClient, logger, strategyInstance, dbClient, trCfg)
-		if err != nil {
-			logger.Errorf("Failed creating trader '%s': %s", traderCfg.UniqueTraderId, err.Error())
-			continue
-		}
-
-		err = traderManager.GoNewOneTrader(ctx, trader)
-		if err != nil {
-			logger.Errorf("Failed starting trader '%s': %s", traderCfg.UniqueTraderId, err.Error())
-			continue
-		}
+func openFile(path string) *os.File {
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		panic(err)
 	}
+	return f
 }

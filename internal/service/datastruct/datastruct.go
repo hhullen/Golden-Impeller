@@ -8,6 +8,15 @@ import (
 	"github.com/google/uuid"
 )
 
+type TradingAvailability int8
+
+const (
+	Undefined TradingAvailability = iota
+	NotAvailableViaAPI
+	NotAvailableNow
+	Available
+)
+
 type CandleInterval int32
 
 const (
@@ -179,16 +188,6 @@ func (q *Quotation) ToInt32() int32 {
 func (q *Quotation) ToInt64() int64 {
 	return int64(q.ToFloat64())
 }
-
-// type OrderState struct {
-// 	InstrumentUid string
-// 	OrderId       string
-// }
-
-// type Position struct {
-// 	AveragePositionPrice Quotation
-// 	Quantity             Quotation
-// }
 
 type PostOrderResult struct {
 	ExecutedCommission    Quotation

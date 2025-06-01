@@ -3,8 +3,8 @@ package backtest
 import (
 	"fmt"
 	"time"
-	"trading_bot/internal/service"
 	ds "trading_bot/internal/service/datastruct"
+	"trading_bot/internal/service/trader"
 )
 
 type IStorage interface {
@@ -27,11 +27,11 @@ type BacktestBroker struct {
 	interval            ds.CandleInterval
 
 	storage IStorage
-	logger  service.ILogger
+	logger  trader.ILogger
 	timer   time.Time
 }
 
-func NewBacktestBroker(account, commision float64, from, to time.Time, interval ds.CandleInterval, terminator chan string, storage IStorage, l service.ILogger, trId string) *BacktestBroker {
+func NewBacktestBroker(account, commision float64, from, to time.Time, interval ds.CandleInterval, terminator chan string, storage IStorage, l trader.ILogger, trId string) *BacktestBroker {
 	return &BacktestBroker{
 		account:           account,
 		minAccount:        account,
@@ -46,6 +46,18 @@ func NewBacktestBroker(account, commision float64, from, to time.Time, interval 
 		logger:            l,
 		ordersCh:          make(chan ds.Order),
 	}
+}
+
+func (c *BacktestBroker) FindInstrument(identifier string) (*ds.InstrumentInfo, error) {
+	return nil, nil
+}
+
+func (c *BacktestBroker) UnregisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accountId string) error {
+	return nil
+}
+
+func (c *BacktestBroker) UnregisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) error {
+	return nil
 }
 
 func (c *BacktestBroker) GetAccoountId() string {
@@ -206,4 +218,8 @@ func (c *BacktestBroker) RegisterOrderStateRecipient(instrInfo *ds.InstrumentInf
 
 func (c *BacktestBroker) RegisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) error {
 	return nil
+}
+
+func (c *BacktestBroker) GetTradingAvailability(instrInfo *ds.InstrumentInfo) (ds.TradingAvailability, error) {
+	return ds.Available, nil
 }

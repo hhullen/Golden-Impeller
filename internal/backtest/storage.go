@@ -36,9 +36,9 @@ func (bs *BacktestStorage) AddCandles(ctx context.Context, instrInfo *ds.Instrum
 	return nil
 }
 
-func (bs *BacktestStorage) AddInstrumentInfo(ctx context.Context, instrInfo *ds.InstrumentInfo) (err error) {
+func (bs *BacktestStorage) AddInstrumentInfo(instrInfo *ds.InstrumentInfo) (id int64, err error) {
 	bs.instrument = *instrInfo
-	return nil
+	return 0, nil
 }
 
 func (bs *BacktestStorage) GetCandleWithOffset(instrInfo *ds.InstrumentInfo, interval ds.CandleInterval, from time.Time, to time.Time, offset int64) (*ds.Candle, error) {
@@ -52,7 +52,7 @@ func (bs *BacktestStorage) GetInstrumentInfo(uid string) (info *ds.InstrumentInf
 	return &bs.instrument, nil
 }
 
-func (bs *BacktestStorage) GetLastLowestExcecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
+func (bs *BacktestStorage) GetLowestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
 	if len(bs.orders) == 0 {
 		return nil, false, nil
 	}

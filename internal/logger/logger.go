@@ -6,6 +6,12 @@ import (
 	"sync"
 )
 
+const (
+	infoTag  = "INFO "
+	errorTag = "ERROR "
+	fatalTag = "FATAL "
+)
+
 type message struct {
 	template string
 	args     []any
@@ -33,7 +39,7 @@ func NewLogger(out io.Writer, prefix string) *Logger {
 
 	go l.listenCh(l.infoCh, l.Printf)
 	go l.listenCh(l.errCh, l.Printf)
-	go l.listenCh(l.fatalCh, l.Panicf)
+	go l.listenCh(l.fatalCh, l.Printf)
 
 	return l
 }
@@ -47,17 +53,17 @@ func (l *Logger) Stop() {
 
 func (l *Logger) Infof(template string, args ...any) {
 	l.wg.Add(1)
-	l.infoCh <- message{template: template, args: args}
+	l.infoCh <- message{template: infoTag + template, args: args}
 }
 
 func (l *Logger) Errorf(template string, args ...any) {
 	l.wg.Add(1)
-	l.errCh <- message{template: template, args: args}
+	l.errCh <- message{template: errorTag + template, args: args}
 }
 
 func (l *Logger) Fatalf(template string, args ...any) {
 	l.wg.Add(1)
-	l.fatalCh <- message{template: template, args: args}
+	l.fatalCh <- message{template: fatalTag + template, args: args}
 }
 
 func (l *Logger) listenCh(ch chan message, fn func(string, ...any)) {

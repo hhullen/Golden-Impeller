@@ -15,11 +15,10 @@ import (
 	"trading_bot/internal/clients/t_api"
 	"trading_bot/internal/config"
 	"trading_bot/internal/logger"
-	"trading_bot/internal/service"
 	"trading_bot/internal/service/datastruct"
+	"trading_bot/internal/service/trader"
 	"trading_bot/internal/strategy"
 	"trading_bot/internal/supports"
-	mainsupports "trading_bot/internal/supports/main"
 
 	"github.com/google/uuid"
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
@@ -74,10 +73,17 @@ func main() {
 		}
 
 		ctx, cancel := context.WithCancel(ctx)
-		instrInfo, err := mainsupports.GetInstrument(ctx, investClient, dbClient, test.Uid)
+
+		instrInfo, err := investClient.FindInstrument(test.Uid)
 		if err != nil {
 			panic(err)
 		}
+
+		dbId, err := dbClient.AddInstrumentInfo(instrInfo)
+		if err != nil {
+			panic(err)
+		}
+		instrInfo.Id = dbId
 
 		if test.UniqueTraderId == "" {
 			test.UniqueTraderId = uuid.NewString()
@@ -117,18 +123,20 @@ func main() {
 
 		}(ctx, i, doneCh, backtestBroker, backtestStorage, test)
 
-		strategyInstance, err := strategy.ResolveStrategy(test.StrategyCfg, backtestStorage)
+		strategyInstance, err := strategy.ResolveStrategy(test.StrategyCfg, backtestStorage, investClient)
 		if err != nil {
 			panic(err)
 		}
-		trCfg := service.TraderCfg{
+
+		trCfg := &trader.TraderCfg{
 			InstrInfo:                   instrInfo,
 			TraderId:                    test.UniqueTraderId,
 			TradingDelay:                0,
 			OnTradingErrorDelay:         time.Second * 1,
 			OnOrdersOperatingErrorDelay: time.Second * 1,
 		}
-		trader, _ := service.NewTraderService(ctx, backtestBroker, logger, strategyInstance, backtestStorage, trCfg)
+
+		trader, _ := trader.NewTraderService(ctx, backtestBroker, logger, strategyInstance, backtestStorage, trCfg)
 
 		fmt.Printf("Start backtest on %s for %s - %s with interval '%s'\n",
 			test.UniqueTraderId, from.Format(time.DateOnly), to.Format(time.DateOnly), test.Interval)

@@ -1,20 +1,20 @@
-package service
+package trader
 
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 	ds "trading_bot/internal/service/datastruct"
 	"trading_bot/internal/supports"
-
-	"github.com/google/uuid"
 )
 
-//go:generate mockgen -source=trader.go -destination=trader_mock.go -package=service IStrategy,ILogger,IBroker,IStorage
+//go:generate mockgen -source=trader.go -destination=trader_mock.go -package=trader IStrategy,ILogger,IBroker,IStorage
 
 type IStrategy interface {
 	GetActionDecision(ctx context.Context, trId string, instrInfo *ds.InstrumentInfo, lp *ds.LastPrice) ([]*ds.StrategyAction, error)
 	GetName() string
+	UpdateConfig(params map[string]any) error
 }
 
 type ILogger interface {
@@ -30,11 +30,15 @@ type IBroker interface {
 	RecieveOrdersUpdate(instrInfo *ds.InstrumentInfo, accountId string) (*ds.Order, error)
 	RegisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accountId string) error
 	RegisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) error
+	UnregisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accountId string) error
+	UnregisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) error
+	GetTradingAvailability(instrInfo *ds.InstrumentInfo) (ds.TradingAvailability, error)
+	FindInstrument(identifier string) (*ds.InstrumentInfo, error)
 }
 
 type IStorage interface {
 	PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) error
-	GetInstrumentInfo(uid string) (info *ds.InstrumentInfo, err error)
+	AddInstrumentInfo(instrInfo *ds.InstrumentInfo) (dbId int64, err error)
 }
 
 type TraderCfg struct {
@@ -47,9 +51,11 @@ type TraderCfg struct {
 }
 
 type TraderService struct {
+	sync.RWMutex
+
 	ctx       context.Context
 	cancelCtx func()
-	cfg       TraderCfg
+	cfg       *TraderCfg
 
 	broker   IBroker
 	logger   ILogger
@@ -58,14 +64,15 @@ type TraderService struct {
 }
 
 func NewTraderService(ctx context.Context, broker IBroker, logger ILogger,
-	strategy IStrategy, storage IStorage, cfg TraderCfg) (*TraderService, error) {
+	strategy IStrategy, storage IStorage, cfg *TraderCfg) (*TraderService, error) {
 	if cfg.TraderId == "" {
-		cfg.TraderId = uuid.NewString()
+		return nil, fmt.Errorf("empty unique trader id")
 	}
 
 	ctx, cancelCtx := context.WithCancel(ctx)
 
 	s := buildTraderService(ctx, cancelCtx, broker, logger, strategy, storage, cfg)
+
 	err := s.broker.RegisterOrderStateRecipient(s.cfg.InstrInfo, s.cfg.AccountId)
 	if err != nil {
 		return nil, err
@@ -76,40 +83,13 @@ func NewTraderService(ctx context.Context, broker IBroker, logger ILogger,
 		return nil, err
 	}
 
-	go func() {
-		for {
-			select {
-			case <-ctx.Done():
-				logger.Infof("Orders listener: context is done")
-				return
-			default:
-				operateError := func(err error) {
-					logger.Errorf("error operating orders update: %v. Delay for %v",
-						err, cfg.OnOrdersOperatingErrorDelay)
-					supports.WaitFor(ctx, cfg.OnOrdersOperatingErrorDelay)
-				}
-
-				order, err := broker.RecieveOrdersUpdate(cfg.InstrInfo, cfg.AccountId)
-				if err != nil {
-					operateError(err)
-					continue
-				}
-
-				if order.CreatedAt != nil {
-					err := storage.PutOrder(cfg.TraderId, cfg.InstrInfo, order)
-					if err != nil {
-						operateError(err)
-					}
-				}
-			}
-		}
-	}()
+	go s.runOrdersOperating()
 
 	return s, nil
 }
 
 func buildTraderService(ctx context.Context, cancelCtx func(), b IBroker, l ILogger,
-	s IStrategy, store IStorage, cfg TraderCfg) *TraderService {
+	s IStrategy, store IStorage, cfg *TraderCfg) *TraderService {
 	return &TraderService{
 		ctx:       ctx,
 		cancelCtx: cancelCtx,
@@ -121,30 +101,74 @@ func buildTraderService(ctx context.Context, cancelCtx func(), b IBroker, l ILog
 	}
 }
 
+func (s *TraderService) runOrdersOperating() {
+	for {
+		select {
+		case <-s.ctx.Done():
+			s.logger.Infof("orders listener: context is done")
+			return
+		default:
+			config := s.GetConfig()
+
+			operateError := func(err error) {
+				s.logger.Errorf("operating orders update: %v. Delay for %v",
+					err, config.OnOrdersOperatingErrorDelay)
+				supports.WaitFor(s.ctx, config.OnOrdersOperatingErrorDelay)
+			}
+
+			order, err := s.broker.RecieveOrdersUpdate(config.InstrInfo, config.AccountId)
+			if err != nil {
+				operateError(err)
+				continue
+			}
+
+			if order.CreatedAt != nil {
+				err := s.storage.PutOrder(config.TraderId, config.InstrInfo, order)
+				if err != nil {
+					operateError(err)
+				}
+			}
+		}
+	}
+}
+
 func (s *TraderService) RunTrading() {
 	var err error
 	for {
+		config := s.GetConfig()
+
 		if err != nil {
-			supports.WaitFor(s.ctx, s.cfg.OnTradingErrorDelay)
+			supports.WaitFor(s.ctx, config.OnTradingErrorDelay)
 			err = nil
 		}
 
 		select {
 		case <-s.ctx.Done():
-			s.logger.Infof("context is done on '%s'", s.cfg.TraderId)
+			s.logger.Infof("context is done on '%s'", config.TraderId)
 			return
 		default:
 			var lastPrice *ds.LastPrice
-			lastPrice, err = s.broker.RecieveLastPrice(s.cfg.InstrInfo)
+			lastPrice, err = s.broker.RecieveLastPrice(config.InstrInfo)
 			if err != nil {
-				s.logger.Errorf("error recieving last price for '%s': %s", s.cfg.InstrInfo.Uid, err.Error())
+				s.logger.Errorf("failed recieving last price for '%s': %s", config.InstrInfo.Uid, err.Error())
 				continue
 			}
 
 			var actions []*ds.StrategyAction
-			actions, err = s.strategy.GetActionDecision(s.ctx, s.cfg.TraderId, s.cfg.InstrInfo, lastPrice)
+			actions, err = s.GetStrategy().GetActionDecision(s.ctx, config.TraderId, config.InstrInfo, lastPrice)
 			if err != nil {
-				s.logger.Errorf("error getting action decision '%s': %s", s.cfg.InstrInfo.Uid, err.Error())
+				s.logger.Errorf("failed getting action decision '%s': %s", config.InstrInfo.Uid, err.Error())
+				continue
+			}
+
+			var status ds.TradingAvailability
+			status, err := s.broker.GetTradingAvailability(config.InstrInfo)
+			if err != nil {
+				s.logger.Errorf("failed getting trading availability for '%s': %s", config.InstrInfo.Uid, err.Error())
+				continue
+			}
+
+			if status == ds.NotAvailableViaAPI || status == ds.NotAvailableNow {
 				continue
 			}
 
@@ -152,7 +176,7 @@ func (s *TraderService) RunTrading() {
 				var res string
 				res, err = s.MakeAction(lastPrice, action)
 				if err != nil {
-					s.logger.Errorf("error making action '%s:%d' for '%s': %s", action.Action.ToString(), action.Lots, s.cfg.InstrInfo.Ticker, err.Error())
+					s.logger.Errorf("failed making action '%s:%d' for '%s': %s", action.Action.ToString(), action.Lots, config.InstrInfo.Ticker, err.Error())
 					continue
 				}
 				if action.Action != ds.Hold {
@@ -191,4 +215,58 @@ func (s *TraderService) MakeAction(lastPrice *ds.LastPrice, action *ds.StrategyA
 
 func (s *TraderService) Stop() {
 	s.cancelCtx()
+}
+
+func (s *TraderService) GetConfig() *TraderCfg {
+	s.RLock()
+	defer s.RUnlock()
+
+	return s.cfg
+}
+
+func (s *TraderService) GetStrategy() IStrategy {
+	s.RLock()
+	defer s.RUnlock()
+
+	return s.strategy
+}
+
+func (s *TraderService) UpdateConfig(newCfg *TraderCfg) error {
+	s.Lock()
+	defer s.Unlock()
+
+	err := s.broker.RegisterOrderStateRecipient(newCfg.InstrInfo, newCfg.AccountId)
+	if err != nil {
+		return fmt.Errorf("failed register new order state recipient on %s: %s", newCfg.TraderId, err.Error())
+	}
+	s.logger.Infof("register new order state recipient on %s", newCfg.TraderId)
+
+	err = s.broker.RegisterLastPriceRecipient(newCfg.InstrInfo)
+	if err != nil {
+		return fmt.Errorf("failed register new last price recipient on %s: %s", newCfg.TraderId, err.Error())
+	}
+	s.logger.Infof("register new last price recipient on %s", newCfg.TraderId)
+
+	err = s.broker.UnregisterOrderStateRecipient(s.cfg.InstrInfo, s.cfg.AccountId)
+	if err != nil {
+		s.logger.Errorf("failed unregisteg old order stare recipient on", s.cfg.TraderId)
+	}
+
+	err = s.broker.UnregisterLastPriceRecipient(s.cfg.InstrInfo)
+	if err != nil {
+		s.logger.Errorf("failed unregisteg old last price recipient on %s:", s.cfg.TraderId)
+	}
+
+	s.cfg = newCfg
+
+	return nil
+}
+
+func (s *TraderService) UpdateStrategy(strategy IStrategy) error {
+	s.Lock()
+	defer s.Unlock()
+
+	s.strategy = strategy
+
+	return nil
 }

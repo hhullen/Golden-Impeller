@@ -70,6 +70,54 @@ func NewClient(ctx context.Context, conf investgo.Config, l investgo.Logger) (*C
 	return c, nil
 }
 
+func (c *Client) FindInstrument(identifier string) (*ds.InstrumentInfo, error) {
+	instrs, err := c.NewInstrumentsServiceClient().FindInstrument(identifier)
+	if err != nil {
+		return nil, err
+	}
+
+	var instr *pb.InstrumentShort
+	for _, v := range instrs.Instruments {
+		if v.Uid == identifier || v.Figi == identifier || v.Ticker == identifier || v.Isin == identifier {
+			instr = v
+			break
+		}
+	}
+	if instr == nil {
+		return nil, fmt.Errorf("not found instrument '%s'", identifier)
+	}
+
+	return &ds.InstrumentInfo{
+		Isin:            instr.Isin,
+		Figi:            instr.Figi,
+		Ticker:          instr.Ticker,
+		ClassCode:       instr.ClassCode,
+		Name:            instr.Name,
+		Uid:             instr.Uid,
+		Lot:             instr.Lot,
+		AvailableApi:    instr.ApiTradeAvailableFlag,
+		ForQuals:        instr.ForQualInvestorFlag,
+		FirstCandleDate: instr.First_1MinCandleDate.AsTime(),
+	}, nil
+}
+
+func (c *Client) GetTradingAvailability(instrInfo *ds.InstrumentInfo) (ds.TradingAvailability, error) {
+	status, err := c.NewMarketDataServiceClient().GetTradingStatus(instrInfo.Uid)
+	if err != nil {
+		return ds.Undefined, err
+	}
+
+	if status.ApiTradeAvailableFlag {
+		return ds.NotAvailableViaAPI, nil
+	}
+
+	if status.TradingStatus != pb.SecurityTradingStatus_SECURITY_TRADING_STATUS_NORMAL_TRADING {
+		return ds.NotAvailableNow, nil
+	}
+
+	return ds.Available, nil
+}
+
 func (c *Client) RegisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) error {
 	if c.marketDataStream == nil {
 		if err := c.prepareStreamForInstrument(instrInfo); err != nil {
@@ -83,13 +131,34 @@ func (c *Client) RegisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) error 
 	}
 
 	c.Lock()
+	defer c.Unlock()
+
 	if _, ok := c.lastPriceInput[instrInfo.Uid]; !ok {
 		c.lastPriceInput[instrInfo.Uid] = make(map[uuid.UUID]chan *pb.LastPrice)
 	}
 	if _, ok := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]; !ok {
 		c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId] = make(chan *pb.LastPrice)
 	}
-	c.Unlock()
+
+	return nil
+}
+
+func (c *Client) UnregisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) error {
+	err := c.marketDataStream.UnSubscribeLastPrice([]string{instrInfo.Uid})
+	if err != nil {
+		return err
+	}
+
+	c.Lock()
+	defer c.Unlock()
+
+	if _, ok := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]; !ok {
+		close(c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId])
+		delete(c.lastPriceInput[instrInfo.Uid], instrInfo.InstanceId)
+	}
+	if _, ok := c.lastPriceInput[instrInfo.Uid]; !ok {
+		delete(c.lastPriceInput, instrInfo.Uid)
+	}
 
 	return nil
 }
@@ -137,6 +206,8 @@ func (c *Client) prepareStreamForInstrument(instrInfo *ds.InstrumentInfo) error 
 
 func (c *Client) startInstrumenstRouting(ch <-chan *pb.LastPrice) {
 	defer func() {
+		c.Lock()
+		defer c.Unlock()
 		for _, v := range c.lastPriceInput {
 			for _, ch := range v {
 				close(ch)
@@ -226,7 +297,13 @@ func (c *Client) MakeSellOrder(instrInfo *ds.InstrumentInfo, lots int64, request
 		OrderId:      requestId,
 	})
 	if err != nil {
-		return nil, err
+		msg := ""
+		if orderResp != nil {
+			for _, m := range orderResp.Header.Get("message") {
+				msg += "; " + m
+			}
+		}
+		return nil, fmt.Errorf("%s%s", err.Error(), msg)
 	}
 
 	return &ds.PostOrderResult{
@@ -258,7 +335,13 @@ func (c *Client) MakeBuyOrder(instrInfo *ds.InstrumentInfo, lots int64, requestI
 		OrderId:      requestId,
 	})
 	if err != nil {
-		return nil, err
+		msg := ""
+		if buyResp != nil {
+			for _, m := range buyResp.Header.Get("message") {
+				msg += "; " + m
+			}
+		}
+		return nil, fmt.Errorf("%s%s", err.Error(), msg)
 	}
 
 	return &ds.PostOrderResult{
@@ -293,6 +376,23 @@ func (c *Client) RegisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accou
 	}
 	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]; !ok {
 		c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId] = make(chan *pb.OrderStateStreamResponse_OrderState)
+	}
+	c.Unlock()
+
+	return nil
+}
+
+func (c *Client) UnregisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accountId string) error {
+	c.Lock()
+	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]; !ok {
+		close(c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId])
+		delete(c.ordersStateInput[accountId][instrInfo.Uid], instrInfo.InstanceId)
+	}
+	if _, ok := c.ordersStateInput[accountId]; !ok {
+		delete(c.ordersStateInput, accountId)
+	}
+	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid]; !ok {
+		delete(c.ordersStateInput[accountId], instrInfo.Uid)
 	}
 	c.Unlock()
 
@@ -376,6 +476,9 @@ func (c *Client) prepareStreamForOrdersState(instrInfo *ds.InstrumentInfo) error
 
 func (c *Client) startOrdersStateRouting(instrInfo *ds.InstrumentInfo, ch <-chan *pb.OrderStateStreamResponse_OrderState) {
 	defer func() {
+		c.Lock()
+		defer c.Unlock()
+
 		for _, byAccId := range c.ordersStateInput {
 			for _, byUID := range byAccId {
 				for _, ch := range byUID {

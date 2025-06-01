@@ -2,8 +2,10 @@ package btdstf
 
 import (
 	"context"
+	"fmt"
 
 	ds "trading_bot/internal/service/datastruct"
+	"trading_bot/internal/supports"
 
 	"github.com/google/uuid"
 )
@@ -13,7 +15,7 @@ const (
 )
 
 type IStorage interface {
-	GetLastLowestExcecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error)
+	GetLowestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error)
 	GetLatestExecutedSellOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error)
 	GetHighestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error)
 	GetUnsoldOrdersAmount(trId string, instrInfo *ds.InstrumentInfo) (int64, error)
@@ -22,7 +24,7 @@ type IStorage interface {
 // Buy the deep, sell the fix
 type BTDSTF struct {
 	name string
-	cfg  ConfigBTDSTF
+	cfg  *ConfigBTDSTF
 
 	storage IStorage
 }
@@ -34,7 +36,24 @@ type ConfigBTDSTF struct {
 	PercentUpToSell  float64
 }
 
-func NewBTDSTF(s IStorage, cfg ConfigBTDSTF) *BTDSTF {
+func NewConfigBTDSTF(params map[string]any) (cfg *ConfigBTDSTF, err error) {
+	defer func() {
+		if p := recover(); p != nil {
+			cfg = nil
+			err = fmt.Errorf("%v", p)
+		}
+	}()
+
+	cfg = &ConfigBTDSTF{
+		MaxDepth:         supports.CastToInt64(params["max_depth"]),
+		LotsToBuy:        supports.CastToInt64(params["lots_to_buy"]),
+		PercentDownToBuy: supports.CastToFloat64(params["percent_down_to_buy"]) / 100,
+		PercentUpToSell:  supports.CastToFloat64(params["percent_up_to_sell"]) / 100,
+	}
+	return
+}
+
+func NewBTDSTF(s IStorage, cfg *ConfigBTDSTF) *BTDSTF {
 	return &BTDSTF{
 		name:    "btdstf",
 		storage: s,
@@ -48,7 +67,7 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 		return nil, err
 	}
 
-	order, existBought, err := b.storage.GetLastLowestExcecutedBuyOrder(trId, instrInfo)
+	order, existBought, err := b.storage.GetLowestExecutedBuyOrder(trId, instrInfo)
 	if err != nil {
 		return nil, err
 	}
@@ -60,9 +79,10 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 			return nil, err
 		}
 	}
-
+	// uuid := uuid.NewString()
 	returnable := make([]*ds.StrategyAction, 0, 1)
 	if !existSold && !existBought {
+		// fmt.Println("BUY order :", uuid)
 		returnable = append(returnable, &ds.StrategyAction{
 			Action:    ds.Buy,
 			Lots:      b.cfg.LotsToBuy * (b.cfg.MaxDepth - orders),
@@ -88,6 +108,7 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 			}
 
 			if exist {
+				// fmt.Println("SELL order :", order.OrderId)
 				toSell = append(returnable, &ds.StrategyAction{
 					Action:    ds.Sell,
 					Lots:      orderHigh.LotsExecuted,
@@ -99,6 +120,7 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 
 		orders -= int64(len(toSell))
 
+		// fmt.Println("BUY order :", uuid)
 		returnable = append(returnable, &ds.StrategyAction{
 			Action:    ds.Buy,
 			Lots:      b.cfg.LotsToBuy * (b.cfg.MaxDepth - orders),
@@ -108,6 +130,7 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 		return returnable, nil
 
 	} else if IsUpToSell() && existBought {
+		// fmt.Println("SELL order :", order.OrderId)
 		returnable = append(returnable, &ds.StrategyAction{
 			Action:    ds.Sell,
 			Lots:      order.LotsExecuted,
@@ -126,4 +149,15 @@ func GetName() string {
 
 func (b *BTDSTF) GetName() string {
 	return name
+}
+
+func (b *BTDSTF) UpdateConfig(params map[string]any) error {
+	cfg, err := NewConfigBTDSTF(params)
+	if err != nil {
+		return err
+	}
+
+	b.cfg = cfg
+
+	return nil
 }
