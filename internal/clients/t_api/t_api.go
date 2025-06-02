@@ -15,6 +15,10 @@ import (
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
 )
 
+const (
+	onErrorListeningStreamDelay = time.Second * 10
+)
+
 var intervalMap = map[ds.CandleInterval]pb.CandleInterval{
 	ds.Interval_1_Min:  pb.CandleInterval_CANDLE_INTERVAL_1_MIN,
 	ds.Interval_5_Min:  pb.CandleInterval_CANDLE_INTERVAL_5_MIN,
@@ -107,7 +111,7 @@ func (c *Client) GetTradingAvailability(instrInfo *ds.InstrumentInfo) (ds.Tradin
 		return ds.Undefined, err
 	}
 
-	if status.ApiTradeAvailableFlag {
+	if !status.ApiTradeAvailableFlag {
 		return ds.NotAvailableViaAPI, nil
 	}
 
@@ -153,7 +157,7 @@ func (c *Client) UnregisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) erro
 	defer c.Unlock()
 
 	if _, ok := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]; !ok {
-		close(c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId])
+		supports.CloseIfMaybeClosed(c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId])
 		delete(c.lastPriceInput[instrInfo.Uid], instrInfo.InstanceId)
 	}
 	if _, ok := c.lastPriceInput[instrInfo.Uid]; !ok {
@@ -199,7 +203,7 @@ func (c *Client) prepareStreamForInstrument(instrInfo *ds.InstrumentInfo) error 
 
 	go c.startInstrumenstRouting(ch)
 
-	go c.startListeningInstrumentStream(instrInfo.Uid, c.marketDataStream)
+	go c.startListeningStream(instrInfo.Uid, c.marketDataStream)
 
 	return nil
 }
@@ -210,7 +214,7 @@ func (c *Client) startInstrumenstRouting(ch <-chan *pb.LastPrice) {
 		defer c.Unlock()
 		for _, v := range c.lastPriceInput {
 			for _, ch := range v {
-				close(ch)
+				supports.CloseIfMaybeClosed(ch)
 			}
 		}
 	}()
@@ -226,17 +230,17 @@ func (c *Client) startInstrumenstRouting(ch <-chan *pb.LastPrice) {
 
 			c.Lock()
 			for _, uniqueListener := range c.lastPriceInput[v.InstrumentUid] {
-				select {
-				case uniqueListener <- v:
-				default:
+				if err := supports.SendIfMaybeClosed(uniqueListener, v); err != nil {
+					c.Logger.Errorf(err.Error())
 				}
+
 			}
 			c.Unlock()
 		}
 	}
 }
 
-func (c *Client) startListeningInstrumentStream(uid string, s IStream) {
+func (c *Client) startListeningStream(uid string, s IStream) {
 	for {
 		select {
 		case <-c.ctx.Done():
@@ -245,9 +249,8 @@ func (c *Client) startListeningInstrumentStream(uid string, s IStream) {
 			if err := s.Listen(); err != nil {
 				c.Logger.Errorf("failed starting listening stream for '%s': %s", uid, err.Error())
 
-				const sleepToListenRetry = time.Second * 5
-				c.Logger.Infof("Sleep for '%s' second", sleepToListenRetry)
-				supports.WaitFor(c.ctx, sleepToListenRetry)
+				c.Logger.Infof("Sleep for '%s' second", onErrorListeningStreamDelay)
+				supports.WaitFor(c.ctx, onErrorListeningStreamDelay)
 			}
 		}
 	}
@@ -385,7 +388,7 @@ func (c *Client) RegisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accou
 func (c *Client) UnregisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accountId string) error {
 	c.Lock()
 	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]; !ok {
-		close(c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId])
+		supports.CloseIfMaybeClosed(c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId])
 		delete(c.ordersStateInput[accountId][instrInfo.Uid], instrInfo.InstanceId)
 	}
 	if _, ok := c.ordersStateInput[accountId]; !ok {
@@ -469,7 +472,7 @@ func (c *Client) prepareStreamForOrdersState(instrInfo *ds.InstrumentInfo) error
 
 	go c.startOrdersStateRouting(instrInfo, c.ordersDataStream.OrderState())
 
-	go c.startListeningInstrumentStream(instrInfo.Uid, c.ordersDataStream)
+	go c.startListeningStream(instrInfo.Uid, c.ordersDataStream)
 
 	return nil
 }
@@ -482,7 +485,7 @@ func (c *Client) startOrdersStateRouting(instrInfo *ds.InstrumentInfo, ch <-chan
 		for _, byAccId := range c.ordersStateInput {
 			for _, byUID := range byAccId {
 				for _, ch := range byUID {
-					close(ch)
+					supports.CloseIfMaybeClosed(ch)
 				}
 			}
 		}
@@ -499,9 +502,8 @@ func (c *Client) startOrdersStateRouting(instrInfo *ds.InstrumentInfo, ch <-chan
 
 			c.Lock()
 			for _, uniqueListener := range c.ordersStateInput[v.AccountId][v.InstrumentUid] {
-				select {
-				case uniqueListener <- v:
-				default:
+				if err := supports.SendIfMaybeClosed(uniqueListener, v); err != nil {
+					c.Logger.Errorf(err.Error())
 				}
 			}
 			c.Unlock()

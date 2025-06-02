@@ -31,14 +31,18 @@ const (
 )
 
 func main() {
-	ctx, cancelCtx := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	ctx, cancelCtx := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancelCtx()
 
 	f := openFile(brokerLogFilePath)
+	defer f.Close()
+
 	investLogger := lg.NewLogger(f, brokerLogPrefix)
 	defer investLogger.Stop()
 
 	f = openFile(managerLogFilePath)
+	defer f.Close()
+
 	tradingManagerLogger := lg.NewLogger(f, managerLogPrefix)
 	defer tradingManagerLogger.Stop()
 
@@ -99,7 +103,9 @@ func main() {
 		}
 	}()
 
+	traderLogger.Infof("Service started")
 	traderManager.Wait()
+	traderLogger.Infof("Service stopped")
 }
 
 func openFile(path string) *os.File {

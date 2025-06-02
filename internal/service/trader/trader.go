@@ -147,6 +147,8 @@ func (s *TraderService) RunTrading() {
 			s.logger.Infof("context is done on '%s'", config.TraderId)
 			return
 		default:
+			supports.WaitFor(s.ctx, s.cfg.TradingDelay)
+
 			var lastPrice *ds.LastPrice
 			lastPrice, err = s.broker.RecieveLastPrice(config.InstrInfo)
 			if err != nil {
@@ -168,7 +170,12 @@ func (s *TraderService) RunTrading() {
 				continue
 			}
 
-			if status == ds.NotAvailableViaAPI || status == ds.NotAvailableNow {
+			if status == ds.NotAvailableViaAPI {
+				s.logger.Errorf("instrument not available via API '%s' on '%s'", config.InstrInfo.Ticker, config.TraderId)
+				continue
+			}
+
+			if status == ds.NotAvailableNow {
 				continue
 			}
 
@@ -184,8 +191,6 @@ func (s *TraderService) RunTrading() {
 				}
 			}
 		}
-
-		supports.WaitFor(s.ctx, s.cfg.TradingDelay)
 	}
 }
 
@@ -215,6 +220,15 @@ func (s *TraderService) MakeAction(lastPrice *ds.LastPrice, action *ds.StrategyA
 
 func (s *TraderService) Stop() {
 	s.cancelCtx()
+	err := s.broker.UnregisterOrderStateRecipient(s.cfg.InstrInfo, s.cfg.AccountId)
+	if err != nil {
+		s.logger.Errorf("failed unregister order state recipient on %s", s.cfg.TraderId)
+	}
+
+	err = s.broker.UnregisterLastPriceRecipient(s.cfg.InstrInfo)
+	if err != nil {
+		s.logger.Errorf("failed unregister last price recipient on %s", s.cfg.TraderId)
+	}
 }
 
 func (s *TraderService) GetConfig() *TraderCfg {

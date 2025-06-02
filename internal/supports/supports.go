@@ -66,3 +66,29 @@ func CastToInt64(n any) int64 {
 	}
 	panic(fmt.Sprintf("impossible cast to number: %v", n))
 }
+
+func CloseIfMaybeClosed[Type any](ch chan<- Type) (err error) {
+	defer func() {
+		if p := recover(); p != nil {
+			err = fmt.Errorf("%v", p)
+		}
+	}()
+	close(ch)
+
+	return
+}
+
+func SendIfMaybeClosed[Type any](ch chan<- Type, v Type) (err error) {
+	defer func() {
+		if p := recover(); p != nil {
+			err = fmt.Errorf("%v", p)
+		}
+	}()
+
+	select {
+	case ch <- v:
+	default:
+	}
+
+	return
+}

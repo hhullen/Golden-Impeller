@@ -9,6 +9,8 @@ import (
 	"trading_bot/internal/service/trader"
 	"trading_bot/internal/strategy"
 	"trading_bot/internal/supports"
+
+	"github.com/google/uuid"
 )
 
 type TraderId string
@@ -59,6 +61,7 @@ func (tm *TraderManager) UpdateTradersWithConfig(cfg *config.TraderCfg) {
 			continue
 		}
 		instrInfo.Id = dbId
+		instrInfo.InstanceId = uuid.New()
 
 		resolvedStrategy, err := strategy.ResolveStrategy(traderCfg.StrategyCfg, tm.storage, tm.broker)
 		if err != nil {

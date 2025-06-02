@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	envFile = "C:/PROJECTS/trading-bot/.env.yaml"
+	envFile = ".env.yaml"
 )
 
 var (

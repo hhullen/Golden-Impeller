@@ -1,3 +1,131 @@
 TRADING MANAGER 2025/06/01 13:11:56 INFO trader started: 'tgld_test'
 TRADING_MANAGER 2025/06/01 18:56:11 INFO new trader started: 'tgld_test'
 TRADING_MANAGER 2025/06/01 18:56:11 INFO Start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:06:27 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:06:27 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:29:51 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:29:51 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:31:40 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:31:40 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:33:45 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:33:45 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:33:52 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:33:52 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:35:55 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:35:55 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:39:48 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:39:48 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:39:54 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:39:54 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:40:46 ERROR failed getting instrument from broker: rpc error: code = Canceled desc = context canceled
+TRADING_MANAGER 2025/06/02 14:40:46 ERROR failed getting instrument from broker: rpc error: code = Canceled desc = context canceled
+TRADING_MANAGER 2025/06/02 14:40:46 ERROR failed getting instrument from broker: rpc error: code = Canceled desc = context canceled
+TRADING_MANAGER 2025/06/02 14:40:46 ERROR failed getting instrument from broker: rpc error: code = Canceled desc = context canceled
+TRADING_MANAGER 2025/06/02 14:40:46 ERROR failed getting instrument from broker: rpc error: code = Canceled desc = context canceled
+TRADING_MANAGER 2025/06/02 14:45:44 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:45:44 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:47:21 INFO strategy config updated on 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:47:21 INFO config on 'tgld_test' updated
+TRADING_MANAGER 2025/06/02 14:48:24 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:48:24 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 14:59:07 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 14:59:07 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 11:15:47 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 11:15:47 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 11:19:54 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 11:19:54 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 11:20:09 INFO strategy config updated on 'tgld_test'
+TRADING_MANAGER 2025/06/02 11:20:09 INFO config on 'tgld_test' updated
+TRADING_MANAGER 2025/06/02 11:20:42 INFO strategy config updated on 'tgld_test'
+TRADING_MANAGER 2025/06/02 11:20:42 INFO config on 'tgld_test' updated
+TRADING_MANAGER 2025/06/02 11:24:14 ERROR failed resolving strategy: incorect strategy name specified
+TRADING_MANAGER 2025/06/02 11:24:25 ERROR failed resolving strategy: incorect strategy name specified
+TRADING_MANAGER 2025/06/02 11:25:15 ERROR failed resolving strategy: incorect strategy name specified
+TRADING_MANAGER 2025/06/02 11:26:03 ERROR failed resolving strategy: incorect strategy name specified
+TRADING_MANAGER 2025/06/02 11:26:17 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 11:26:17 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 11:29:52 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 11:29:52 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 11:31:03 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 11:31:03 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 11:32:11 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 11:32:11 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 11:32:38 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 11:32:38 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 15:34:10 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 15:34:10 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 15:34:48 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 15:34:48 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 11:41:38 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 11:41:38 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 15:49:24 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 15:49:24 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 15:50:55 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 15:50:55 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 15:52:21 INFO new trader started: 'sber_test'
+TRADING_MANAGER 2025/06/02 15:52:21 INFO trader removed from execution: tgld_test
+TRADING_MANAGER 2025/06/02 15:52:21 INFO start trader new sber_test
+TRADING_MANAGER 2025/06/02 15:52:37 INFO strategy config updated on 'sber_test'
+TRADING_MANAGER 2025/06/02 15:52:37 INFO config on 'sber_test' updated
+TRADING_MANAGER 2025/06/02 15:52:49 INFO strategy config updated on 'sber_test'
+TRADING_MANAGER 2025/06/02 15:52:49 INFO config on 'sber_test' updated
+TRADING_MANAGER 2025/06/02 15:53:05 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 15:53:05 INFO trader removed from execution: sber_test
+TRADING_MANAGER 2025/06/02 15:53:05 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 15:53:17 INFO strategy config updated on 'tgld_test'
+TRADING_MANAGER 2025/06/02 15:53:17 INFO config on 'tgld_test' updated
+TRADING_MANAGER 2025/06/02 15:53:30 INFO strategy config updated on 'tgld_test'
+TRADING_MANAGER 2025/06/02 15:53:30 INFO config on 'tgld_test' updated
+TRADING_MANAGER 2025/06/02 15:57:11 INFO new trader started: 'tgld_test'
+TRADING_MANAGER 2025/06/02 15:57:11 INFO start trader new tgld_test
+TRADING_MANAGER 2025/06/02 15:57:33 INFO strategy config updated on 'tgld_test'
+TRADING_MANAGER 2025/06/02 15:57:33 INFO config on 'tgld_test' updated
+TRADING_MANAGER 2025/06/02 15:58:52 INFO new trader started: 'sber_test'
+TRADING_MANAGER 2025/06/02 15:58:52 INFO trader removed from execution: tgld_test
+TRADING_MANAGER 2025/06/02 15:58:52 INFO start trader new sber_test
+TRADING_MANAGER 2025/06/02 16:00:53 INFO new trader started: 'sber_test'
+TRADING_MANAGER 2025/06/02 16:00:53 INFO start trader new sber_test
+TRADING_MANAGER 2025/06/02 16:07:16 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:07:16 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:07:16 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:07:16 INFO start trader new sber_[btdstf-5-1-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:13:57 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:13:57 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:13:57 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:13:57 INFO start trader new sber_[btdstf-5-1-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:15:10 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:15:10 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:15:11 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:15:11 INFO start trader new sber_[btdstf-5-1-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:15:45 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:15:45 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:15:45 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:15:45 INFO start trader new sber_[btdstf-5-1-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:16:49 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:16:49 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:16:49 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:16:49 INFO start trader new sber_[btdstf-5-1-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:37:31 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:37:31 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:37:31 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:37:31 INFO start trader new sber_[btdstf-5-1-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:39:20 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:39:20 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:39:20 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:39:20 INFO start trader new sber_[btdstf-5-1-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:39:46 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:39:46 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:39:46 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:39:46 INFO start trader new sber_[btdstf-5-1-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:40:49 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:40:49 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:40:49 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:40:49 INFO start trader new sber_[btdstf-5-1-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:43:09 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:43:09 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:43:09 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:43:09 INFO start trader new sber_[btdstf-5-1-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:46:47 INFO new trader started: 'tgld_[btdstf-4-100-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:46:47 INFO start trader new tgld_[btdstf-4-100-0.75-1.7]
+TRADING_MANAGER 2025/06/02 16:46:47 INFO new trader started: 'sber_[btdstf-5-1-0.75-1.7]'
+TRADING_MANAGER 2025/06/02 16:46:47 INFO start trader new sber_[btdstf-5-1-0.75-1.7]

@@ -97,7 +97,7 @@ func getBrokerClient() *t_api.Client {
 		Token:     envCfg.TInvestToken,
 		AccountId: envCfg.TInvestAccountID,
 	}
-	logger := logger.NewLogger(os.Stdout, "TOOLS")
+	logger := logger.NewLogger(os.Stdout, "API")
 
 	investClient, err := t_api.NewClient(ctx, investCfg, logger)
 	if err != nil {

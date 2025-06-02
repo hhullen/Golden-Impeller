@@ -1247,3 +1247,429 @@ INVEST-API 2025/06/01 19:30:26 info from order state stream ping:{time:{seconds:
 INVEST-API 2025/06/01 19:34:26 info from order state stream ping:{time:{seconds:1748792065 nanos:327110596} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
 INVEST-API 2025/06/01 19:38:26 info from order state stream ping:{time:{seconds:1748792305 nanos:427065812} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
 INVEST-API 2025/06/01 19:42:26 info from order state stream ping:{time:{seconds:1748792545 nanos:527071752} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:46:26 info from order state stream ping:{time:{seconds:1748792785 nanos:627138253} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:50:26 info from order state stream ping:{time:{seconds:1748793025 nanos:727040491} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:54:26 info from order state stream ping:{time:{seconds:1748793265 nanos:827052513} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 19:58:26 info from order state stream ping:{time:{seconds:1748793505 nanos:927052429} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:01:56 info from MD stream ping:{time:{seconds:1748793715 nanos:931268694} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 20:02:27 info from order state stream ping:{time:{seconds:1748793746 nanos:27108298} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:03:57 info from MD stream ping:{time:{seconds:1748793836 nanos:931245765} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 20:06:27 info from order state stream ping:{time:{seconds:1748793986 nanos:127035426} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:10:27 info from order state stream ping:{time:{seconds:1748794226 nanos:227057116} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:14:27 info from order state stream ping:{time:{seconds:1748794466 nanos:327066052} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:18:27 info from order state stream ping:{time:{seconds:1748794706 nanos:428731569} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:22:27 info from order state stream ping:{time:{seconds:1748794946 nanos:527058668} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:26:27 info from order state stream ping:{time:{seconds:1748795186 nanos:627055976} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:30:27 info from order state stream ping:{time:{seconds:1748795426 nanos:727170163} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:34:27 info from order state stream ping:{time:{seconds:1748795666 nanos:827106742} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:38:27 info from order state stream ping:{time:{seconds:1748795906 nanos:927052995} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:42:28 info from order state stream ping:{time:{seconds:1748796147 nanos:27222762} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:46:28 info from order state stream ping:{time:{seconds:1748796387 nanos:127043526} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:50:28 info from order state stream ping:{time:{seconds:1748796627 nanos:227065529} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:54:28 info from order state stream ping:{time:{seconds:1748796867 nanos:327097452} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 20:58:28 info from order state stream ping:{time:{seconds:1748797107 nanos:427035508} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:02:28 info from order state stream ping:{time:{seconds:1748797347 nanos:527049409} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:06:28 info from order state stream ping:{time:{seconds:1748797587 nanos:627078166} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:10:28 info from order state stream ping:{time:{seconds:1748797827 nanos:727047796} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:14:28 info from order state stream ping:{time:{seconds:1748798067 nanos:827087973} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:18:28 info from order state stream ping:{time:{seconds:1748798307 nanos:927066021} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:22:29 info from order state stream ping:{time:{seconds:1748798548 nanos:27081391} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:26:29 info from order state stream ping:{time:{seconds:1748798788 nanos:127054214} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:30:29 info from order state stream ping:{time:{seconds:1748799028 nanos:227076890} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:32:51 info from MD stream ping:{time:{seconds:1748799169 nanos:931180101} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 21:34:29 info from order state stream ping:{time:{seconds:1748799268 nanos:327087705} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:38:29 info from order state stream ping:{time:{seconds:1748799508 nanos:427257382} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:42:29 info from order state stream ping:{time:{seconds:1748799748 nanos:527045070} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:46:29 info from order state stream ping:{time:{seconds:1748799988 nanos:627075901} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:50:29 info from order state stream ping:{time:{seconds:1748800228 nanos:727115197} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:54:29 info from order state stream ping:{time:{seconds:1748800468 nanos:827049172} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 21:58:30 info from order state stream ping:{time:{seconds:1748800708 nanos:927056896} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:01:03 info from MD stream ping:{time:{seconds:1748800861 nanos:931187906} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 22:02:30 info from order state stream ping:{time:{seconds:1748800949 nanos:27162327} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:06:30 info from order state stream ping:{time:{seconds:1748801189 nanos:127043275} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:08:35 info from MD stream ping:{time:{seconds:1748801313 nanos:931235311} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 22:10:30 info from order state stream ping:{time:{seconds:1748801429 nanos:227213585} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:14:30 info from order state stream ping:{time:{seconds:1748801669 nanos:327056928} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:16:09 info from MD stream ping:{time:{seconds:1748801767 nanos:931285968} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 22:18:10 info from MD stream ping:{time:{seconds:1748801888 nanos:931310163} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 22:18:30 info from order state stream ping:{time:{seconds:1748801909 nanos:427088835} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:22:30 info from order state stream ping:{time:{seconds:1748802149 nanos:527064836} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:26:30 info from order state stream ping:{time:{seconds:1748802389 nanos:627054779} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:30:30 info from order state stream ping:{time:{seconds:1748802629 nanos:727033510} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:33:37 info from MD stream ping:{time:{seconds:1748802815 nanos:931264119} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 22:34:30 info from order state stream ping:{time:{seconds:1748802869 nanos:827041789} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:38:31 info from order state stream ping:{time:{seconds:1748803109 nanos:927033618} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:42:31 info from order state stream ping:{time:{seconds:1748803350 nanos:27027633} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:46:31 info from order state stream ping:{time:{seconds:1748803590 nanos:127122311} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:50:31 info from order state stream ping:{time:{seconds:1748803830 nanos:227049704} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:50:35 info from MD stream ping:{time:{seconds:1748803833 nanos:931177239} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 22:53:04 info from MD stream ping:{time:{seconds:1748803982 nanos:931205506} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 22:54:31 info from order state stream ping:{time:{seconds:1748804070 nanos:327023790} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 22:58:31 info from order state stream ping:{time:{seconds:1748804310 nanos:427021081} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:02:31 info from order state stream ping:{time:{seconds:1748804550 nanos:527029795} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:06:31 info from order state stream ping:{time:{seconds:1748804790 nanos:627045964} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:10:31 info from order state stream ping:{time:{seconds:1748805030 nanos:727061970} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:14:32 info from order state stream ping:{time:{seconds:1748805270 nanos:827032383} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:18:32 info from order state stream ping:{time:{seconds:1748805510 nanos:927048585} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:22:32 info from order state stream ping:{time:{seconds:1748805751 nanos:27025023} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:26:32 info from order state stream ping:{time:{seconds:1748805991 nanos:127061019} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:27:36 info from MD stream ping:{time:{seconds:1748806054 nanos:931177652} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 23:30:32 info from order state stream ping:{time:{seconds:1748806231 nanos:227055931} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:30:37 info from MD stream ping:{time:{seconds:1748806235 nanos:931190511} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 23:34:32 info from order state stream ping:{time:{seconds:1748806471 nanos:327052874} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:35:22 info from MD stream ping:{time:{seconds:1748806520 nanos:931227395} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 23:38:32 info from order state stream ping:{time:{seconds:1748806711 nanos:428943940} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:39:06 info from MD stream ping:{time:{seconds:1748806744 nanos:931257738} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/01 23:42:32 info from order state stream ping:{time:{seconds:1748806951 nanos:527076291} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:46:32 info from order state stream ping:{time:{seconds:1748807191 nanos:627029870} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:50:32 info from order state stream ping:{time:{seconds:1748807431 nanos:727016810} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:54:33 info from order state stream ping:{time:{seconds:1748807671 nanos:827039577} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:58:33 info from order state stream ping:{time:{seconds:1748807911 nanos:927045169} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/01 23:58:40 info from MD stream ping:{time:{seconds:1748807918 nanos:931295304} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 00:02:33 info from order state stream ping:{time:{seconds:1748808152 nanos:27064129} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:03:32 info from MD stream ping:{time:{seconds:1748808210 nanos:931183386} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 00:05:44 info from MD stream ping:{time:{seconds:1748808342 nanos:931188632} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 00:06:33 info from order state stream ping:{time:{seconds:1748808392 nanos:127051375} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:08:22 info from MD stream ping:{time:{seconds:1748808500 nanos:931204070} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 00:10:33 info from order state stream ping:{time:{seconds:1748808632 nanos:227055830} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:14:33 info from order state stream ping:{time:{seconds:1748808872 nanos:327097365} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:18:33 info from order state stream ping:{time:{seconds:1748809112 nanos:427057452} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:22:33 info from order state stream ping:{time:{seconds:1748809352 nanos:527020023} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:26:33 info from order state stream ping:{time:{seconds:1748809592 nanos:627028392} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:30:33 info from order state stream ping:{time:{seconds:1748809832 nanos:727038335} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:34:34 info from order state stream ping:{time:{seconds:1748810072 nanos:827045101} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:38:34 info from order state stream ping:{time:{seconds:1748810312 nanos:927039646} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:42:34 info from order state stream ping:{time:{seconds:1748810553 nanos:27054983} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:46:34 info from order state stream ping:{time:{seconds:1748810793 nanos:127029292} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:50:34 info from order state stream ping:{time:{seconds:1748811033 nanos:227043279} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:51:44 info from MD stream ping:{time:{seconds:1748811102 nanos:931260704} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 00:53:45 info from MD stream ping:{time:{seconds:1748811223 nanos:931275022} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 00:54:34 info from order state stream ping:{time:{seconds:1748811273 nanos:327071655} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:55:46 info from MD stream ping:{time:{seconds:1748811344 nanos:931270305} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 00:57:47 info from MD stream ping:{time:{seconds:1748811465 nanos:931245271} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 00:58:34 info from order state stream ping:{time:{seconds:1748811513 nanos:427030660} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 00:59:48 info from MD stream ping:{time:{seconds:1748811586 nanos:931291254} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:01:49 info from MD stream ping:{time:{seconds:1748811707 nanos:931304666} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:02:34 info from order state stream ping:{time:{seconds:1748811753 nanos:527130038} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:03:50 info from MD stream ping:{time:{seconds:1748811828 nanos:931275987} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:05:51 info from MD stream ping:{time:{seconds:1748811949 nanos:931273656} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:06:34 info from order state stream ping:{time:{seconds:1748811993 nanos:627036821} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:07:52 info from MD stream ping:{time:{seconds:1748812070 nanos:931334236} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:09:53 info from MD stream ping:{time:{seconds:1748812191 nanos:931222172} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:10:35 info from order state stream ping:{time:{seconds:1748812233 nanos:727039540} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:11:54 info from MD stream ping:{time:{seconds:1748812312 nanos:931506738} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:13:55 info from MD stream ping:{time:{seconds:1748812433 nanos:931314910} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:14:35 info from order state stream ping:{time:{seconds:1748812473 nanos:827041266} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:15:56 info from MD stream ping:{time:{seconds:1748812554 nanos:931239237} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:17:57 info from MD stream ping:{time:{seconds:1748812675 nanos:931478202} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:18:35 info from order state stream ping:{time:{seconds:1748812713 nanos:927028594} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:19:58 info from MD stream ping:{time:{seconds:1748812796 nanos:931279686} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:21:59 info from MD stream ping:{time:{seconds:1748812917 nanos:931232040} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:22:35 info from order state stream ping:{time:{seconds:1748812954 nanos:27052465} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:24:00 info from MD stream ping:{time:{seconds:1748813038 nanos:931245707} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:26:01 info from MD stream ping:{time:{seconds:1748813159 nanos:931256031} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:26:35 info from order state stream ping:{time:{seconds:1748813194 nanos:127060345} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:28:02 info from MD stream ping:{time:{seconds:1748813280 nanos:931485381} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:30:03 info from MD stream ping:{time:{seconds:1748813401 nanos:931218393} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:30:35 info from order state stream ping:{time:{seconds:1748813434 nanos:227048644} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:32:04 info from MD stream ping:{time:{seconds:1748813522 nanos:931234095} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:34:05 info from MD stream ping:{time:{seconds:1748813643 nanos:931269110} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:34:35 info from order state stream ping:{time:{seconds:1748813674 nanos:327061494} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:36:06 info from MD stream ping:{time:{seconds:1748813764 nanos:931251343} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:38:07 info from MD stream ping:{time:{seconds:1748813885 nanos:931265273} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:38:34 info from order state stream ping:{time:{seconds:1748813914 nanos:427068888} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:40:06 info from MD stream ping:{time:{seconds:1748814006 nanos:931249188} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:42:07 info from MD stream ping:{time:{seconds:1748814127 nanos:931215617} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:42:34 info from order state stream ping:{time:{seconds:1748814154 nanos:527035237} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:44:08 info from MD stream ping:{time:{seconds:1748814248 nanos:931267760} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:46:09 info from MD stream ping:{time:{seconds:1748814369 nanos:931219185} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:46:34 info from order state stream ping:{time:{seconds:1748814394 nanos:627057999} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:48:10 info from MD stream ping:{time:{seconds:1748814490 nanos:931210787} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:50:11 info from MD stream ping:{time:{seconds:1748814611 nanos:931259301} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:50:34 info from order state stream ping:{time:{seconds:1748814634 nanos:727035575} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:52:12 info from MD stream ping:{time:{seconds:1748814732 nanos:931353030} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:54:14 info from MD stream ping:{time:{seconds:1748814853 nanos:931467862} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:54:34 info from order state stream ping:{time:{seconds:1748814874 nanos:827052151} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 01:56:14 info from MD stream ping:{time:{seconds:1748814974 nanos:931408129} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:58:15 info from MD stream ping:{time:{seconds:1748815095 nanos:931243530} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 01:58:34 info from order state stream ping:{time:{seconds:1748815114 nanos:927039834} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 02:00:17 info from MD stream ping:{time:{seconds:1748815216 nanos:931287207} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:02:17 info from MD stream ping:{time:{seconds:1748815337 nanos:931305799} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:02:35 info from order state stream ping:{time:{seconds:1748815355 nanos:27030931} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 02:04:19 info from MD stream ping:{time:{seconds:1748815458 nanos:931244424} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:06:20 info from MD stream ping:{time:{seconds:1748815579 nanos:931214288} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:06:35 info from order state stream ping:{time:{seconds:1748815595 nanos:127025884} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 02:08:20 info from MD stream ping:{time:{seconds:1748815700 nanos:931202903} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:10:22 info from MD stream ping:{time:{seconds:1748815821 nanos:931252889} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:10:35 info from order state stream ping:{time:{seconds:1748815835 nanos:227054372} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 02:12:23 info from MD stream ping:{time:{seconds:1748815942 nanos:931258639} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:14:23 info from MD stream ping:{time:{seconds:1748816063 nanos:931272912} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:14:35 info from order state stream ping:{time:{seconds:1748816075 nanos:327070997} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 02:16:24 info from MD stream ping:{time:{seconds:1748816184 nanos:931299302} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:18:26 info from MD stream ping:{time:{seconds:1748816305 nanos:931267729} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:18:35 info from order state stream ping:{time:{seconds:1748816315 nanos:427067529} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 02:20:27 info from MD stream ping:{time:{seconds:1748816426 nanos:931288790} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:22:28 info from MD stream ping:{time:{seconds:1748816547 nanos:931281259} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 02:22:35 info from order state stream ping:{time:{seconds:1748816555 nanos:527061127} stream_id:"60977f3a-20d4-466d-a88d-2ba2c03eeddf"}
+INVEST-API 2025/06/02 02:24:28 info from MD stream ping:{time:{seconds:1748816668 nanos:931390816} stream_id:"a09b2587-a230-41a0-997d-1f4bfb627406"}
+INVEST-API 2025/06/02 13:23:28 try to restart md stream err = rpc error: code = Unavailable desc = error reading from server: read tcp 192.168.0.12:65197->178.130.128.33:443: wsarecv: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond., attempt = 1
+INVEST-API 2025/06/02 13:23:28 try to restart order state stream err = rpc error: code = Unavailable desc = error reading from server: read tcp 192.168.0.12:65197->178.130.128.33:443: wsarecv: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond., attempt = 1
+INVEST-API 2025/06/02 13:23:28 failed starting listening stream for '4c466956-d2ce-4a95-abb4-17947a65f18a': rpc error: code = Unavailable desc = error reading from server: read tcp 192.168.0.12:65197->178.130.128.33:443: wsarecv: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+INVEST-API 2025/06/02 13:23:28 try to restart order state stream err = rpc error: code = Unavailable desc = error reading from server: read tcp 192.168.0.12:65197->178.130.128.33:443: wsarecv: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond., attempt = 2
+INVEST-API 2025/06/02 13:23:28 close order state stream
+INVEST-API 2025/06/02 13:23:28 Sleep for '5s' second
+INVEST-API 2025/06/02 13:23:28 failed starting listening stream for '4c466956-d2ce-4a95-abb4-17947a65f18a': rpc error: code = Unavailable desc = error reading from server: read tcp 192.168.0.12:65197->178.130.128.33:443: wsarecv: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+INVEST-API 2025/06/02 13:23:28 try to restart md stream err = rpc error: code = Unavailable desc = error reading from server: read tcp 192.168.0.12:65197->178.130.128.33:443: wsarecv: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond., attempt = 2
+INVEST-API 2025/06/02 13:23:28 close market data stream
+INVEST-API 2025/06/02 13:23:28 Sleep for '5s' second
+INVEST-API 2025/06/02 13:23:34 try to restart order state stream err = rpc error: code = Unavailable desc = error reading from server: read tcp 192.168.0.12:65197->178.130.128.33:443: wsarecv: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond., attempt = 1
+INVEST-API 2025/06/02 13:23:34 try to restart md stream err = rpc error: code = Unavailable desc = error reading from server: read tcp 192.168.0.12:65197->178.130.128.33:443: wsarecv: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond., attempt = 1
+INVEST-API 2025/06/02 13:23:34 info from MD stream subscribe_last_price_response:{tracking_id:"fd5ba861723d0511af2d86feaa455c8f" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"9df9dc36-2df9-40f7-94b9-d764d1904a9a" subscription_id:"936ad5bd-26d3-4775-b889-1a8a3e1c908a" 6:1}}
+INVEST-API 2025/06/02 13:23:34 info from MD stream subscribe_last_price_response:{tracking_id:"fd5ba861723d0511af2d86feaa455c8f" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"9df9dc36-2df9-40f7-94b9-d764d1904a9a" subscription_id:"574faef5-a50b-4509-9dba-81ef591091c2" 6:1}}
+INVEST-API 2025/06/02 13:23:34 info from order state stream subscription:{tracking_id:"58371234652f9335667dcb5945d23381" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"4cf7ecea-1179-4fcd-9c3f-b053717c4815" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST-API 2025/06/02 13:23:34 close market data stream
+INVEST_API 2025/06/02 14:06:27 INFO info from MD stream subscribe_last_price_response:{tracking_id:"149979de4a1596bc7d150a662ecdf2fa"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"09eba1c2-fe04-4225-b0ea-6f229c601d74"  subscription_id:"9bf995cb-aa67-4f9a-bb06-439a2d7d9eaf"  6:1}}
+INVEST_API 2025/06/02 14:06:27 INFO info from order state stream subscription:{tracking_id:"efa8d4baeff751fb2abaa20c87d7e7e0"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"d673a331-37ca-42e1-8e18-8940ab24f675"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:13:10 INFO stop listening order state stream
+INVEST_API 2025/06/02 14:13:10 INFO stop listening market data stream
+INVEST_API 2025/06/02 14:13:10 INFO close order state stream
+INVEST_API 2025/06/02 14:13:10 INFO close market data stream
+INVEST_API 2025/06/02 14:29:51 INFO info from MD stream subscribe_last_price_response:{tracking_id:"21dd48cd96bf569d70f7eebeb4d26354" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"e982b45f-fbb4-484f-8506-ae3898f84cd0" subscription_id:"f3602583-21c2-44dd-bdeb-58858916f380" 6:1}}
+INVEST_API 2025/06/02 14:29:51 INFO info from order state stream subscription:{tracking_id:"051a993e0847033551446b045aa0449a" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"173003d4-d78e-41c3-8876-2ac524332b53" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:31:00 INFO stop listening order state stream
+INVEST_API 2025/06/02 14:31:00 INFO close order state stream
+INVEST_API 2025/06/02 14:31:00 INFO stop listening market data stream
+INVEST_API 2025/06/02 14:31:00 INFO close market data stream
+INVEST_API 2025/06/02 14:31:40 INFO info from MD stream subscribe_last_price_response:{tracking_id:"09b26e6a6119633e8b021944fd244810"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"db2c662f-291c-40f9-a96c-ec2461c6ff7c"  subscription_id:"a5ebad25-5533-49b8-bee4-c4c5d2ad05e7"  6:1}}
+INVEST_API 2025/06/02 14:31:40 INFO info from order state stream subscription:{tracking_id:"bdec03d72efdf4a55e1e75d0baf95361"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"7184a528-133a-46d9-a61a-f336cbe92e9c"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:31:42 INFO stop listening order state stream
+INVEST_API 2025/06/02 14:31:42 INFO close order state stream
+INVEST_API 2025/06/02 14:31:42 INFO stop listening market data stream
+INVEST_API 2025/06/02 14:31:42 INFO close market data stream
+INVEST_API 2025/06/02 14:33:45 INFO info from MD stream subscribe_last_price_response:{tracking_id:"fcdbc348c85fb5526bf54b310cdb993b" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"304c2597-253b-4f87-aef3-b1ac88f4d0a1" subscription_id:"a7f0f8f0-369a-4825-b35c-a51be4128385" 6:1}}
+INVEST_API 2025/06/02 14:33:45 INFO info from order state stream subscription:{tracking_id:"73958ea776ec5106060b75b3c8ac0238" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"d0071eaf-9d1e-4888-b375-f684f4f84ac1" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:33:46 INFO stop listening order state stream
+INVEST_API 2025/06/02 14:33:46 INFO close order state stream
+INVEST_API 2025/06/02 14:33:46 INFO stop listening market data stream
+INVEST_API 2025/06/02 14:33:46 INFO close market data stream
+INVEST_API 2025/06/02 14:33:52 INFO info from MD stream subscribe_last_price_response:{tracking_id:"8dafef9c5e8d14d78b8c68582477c4c0" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"18722798-2565-4d11-8126-f89fcf8a27f2" subscription_id:"d6b10832-129e-4b03-a088-bc94427ba289" 6:1}}
+INVEST_API 2025/06/02 14:33:52 INFO info from order state stream subscription:{tracking_id:"1f62c79673883fe19a9b73389ed002ba" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"eae83f40-d3df-4215-91af-cdb477b22585" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:35:55 INFO info from MD stream subscribe_last_price_response:{tracking_id:"20667d47650dbbace90e1280e490b588" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"a834f1dd-89a9-4c31-abcc-e793772007fb" subscription_id:"2fa2aa15-503a-4669-818e-cc1c88f89c2e" 6:1}}
+INVEST_API 2025/06/02 14:35:55 INFO info from order state stream subscription:{tracking_id:"5c8723eb5ce3e12568659702c01b418b" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"bc935b77-52a5-4e11-8a61-c7e767b462c4" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:37:52 INFO info from order state stream ping:{time:{seconds:1748860672 nanos:135159661} stream_id:"eae83f40-d3df-4215-91af-cdb477b22585"}
+INVEST_API 2025/06/02 14:39:48 INFO info from MD stream subscribe_last_price_response:{tracking_id:"94f10d175dfee548c10ab75bf8f1321f" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"4b9689d6-1b1d-46a7-99cf-0667fd2412a2" subscription_id:"183e244f-b9aa-40bb-9b91-b1502c3eff0e" 6:1}}
+INVEST_API 2025/06/02 14:39:48 INFO info from order state stream subscription:{tracking_id:"37c4faf38955020f04520e7fa733a495" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"18db40b3-a23c-422a-868b-4ab8d5e7a3f2" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:39:54 INFO info from MD stream subscribe_last_price_response:{tracking_id:"4b78dfa5377583f2ba9bbff475d9ad6d" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"7910c2d6-72c0-4880-be2d-b340fdd1be61" subscription_id:"62e1c5c7-068b-4dff-bb50-0e357ad6e94d" 6:1}}
+INVEST_API 2025/06/02 14:39:54 INFO info from order state stream subscription:{tracking_id:"73c751705386d0f23540d1085628fdea" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"d4340894-f4d7-4ffe-ad9e-a64c8dfb34ea" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:39:55 INFO info from order state stream ping:{time:{seconds:1748860795 nanos:119709259} stream_id:"bc935b77-52a5-4e11-8a61-c7e767b462c4"}
+INVEST_API 2025/06/02 14:40:45 INFO stop listening order state stream
+INVEST_API 2025/06/02 14:40:45 INFO close order state stream
+INVEST_API 2025/06/02 14:40:45 INFO stop listening order state stream
+INVEST_API 2025/06/02 14:40:45 INFO stop listening order state stream
+INVEST_API 2025/06/02 14:40:45 INFO stop listening order state stream
+INVEST_API 2025/06/02 14:40:45 INFO close order state stream
+INVEST_API 2025/06/02 14:40:45 INFO close order state stream
+INVEST_API 2025/06/02 14:40:45 INFO close order state stream
+INVEST_API 2025/06/02 14:40:45 INFO stop listening market data stream
+INVEST_API 2025/06/02 14:40:45 INFO stop listening market data stream
+INVEST_API 2025/06/02 14:40:45 INFO stop listening market data stream
+INVEST_API 2025/06/02 14:40:45 INFO close market data stream
+INVEST_API 2025/06/02 14:40:46 INFO stop listening market data stream
+INVEST_API 2025/06/02 14:40:46 INFO close market data stream
+INVEST_API 2025/06/02 14:40:46 INFO close market data stream
+INVEST_API 2025/06/02 14:40:46 INFO close market data stream
+INVEST_API 2025/06/02 14:45:44 INFO info from MD stream subscribe_last_price_response:{tracking_id:"ca76c86e0fe4ad7421180eca9062376f" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"3864ad75-0b89-4f76-8269-7d2172ca2c5e" subscription_id:"617e7185-5ca6-41d9-b7dc-850060c2a151" 6:1}}
+INVEST_API 2025/06/02 14:45:44 INFO info from order state stream subscription:{tracking_id:"a700c12e41bfbbd33ff2641c43d91522" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"3ea6fdee-40d1-49e5-9352-85820fc6a1c9" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:47:21 INFO info from MD stream subscribe_last_price_response:{tracking_id:"ca76c86e0fe4ad7421180eca9062376f" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"3864ad75-0b89-4f76-8269-7d2172ca2c5e" subscription_id:"a985540f-6bb0-4897-bc6f-8f48fe857d29" 6:1}}
+INVEST_API 2025/06/02 14:47:21 INFO info from MD stream subscribe_last_price_response:{tracking_id:"ca76c86e0fe4ad7421180eca9062376f" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"3864ad75-0b89-4f76-8269-7d2172ca2c5e" subscription_id:"a985540f-6bb0-4897-bc6f-8f48fe857d29" 6:2}}
+INVEST_API 2025/06/02 14:48:24 INFO info from MD stream subscribe_last_price_response:{tracking_id:"3f793c530bce7bf1ddb3afad7075f608"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"20922a7f-d498-4143-9f4b-a383612ff809"  subscription_id:"16cf7d42-2b9d-4cd2-a7a0-b0bf12688241"  6:1}}
+INVEST_API 2025/06/02 14:48:24 INFO info from order state stream subscription:{tracking_id:"4c6bd07035848df7cadb17ee463dda45"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"8c36a855-6b61-44cb-9c72-60b7c6b1c22a"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:52:24 INFO info from order state stream ping:{time:{seconds:1748861544  nanos:219649931}  stream_id:"8c36a855-6b61-44cb-9c72-60b7c6b1c22a"}
+INVEST_API 2025/06/02 14:54:59 INFO stop listening market data stream
+INVEST_API 2025/06/02 14:54:59 INFO close market data stream
+INVEST_API 2025/06/02 14:54:59 INFO stop listening order state stream
+INVEST_API 2025/06/02 14:54:59 INFO close order state stream
+INVEST_API 2025/06/02 14:59:07 INFO info from MD stream subscribe_last_price_response:{tracking_id:"f13a3d8441f623b668102bf659ded615"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"1205fa39-4980-4dba-8868-3957581f7efd"  subscription_id:"55727b80-83db-40d7-8d22-53a289a8b359"  6:1}}
+INVEST_API 2025/06/02 14:59:07 INFO info from order state stream subscription:{tracking_id:"d088e58a49b3a1f094727dc06bc9bad7"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"328cd1b6-f6b5-4b53-873f-ec16e3370304"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 14:59:49 INFO stop listening market data stream
+INVEST_API 2025/06/02 14:59:49 INFO close market data stream
+INVEST_API 2025/06/02 14:59:49 INFO stop listening order state stream
+INVEST_API 2025/06/02 14:59:49 INFO close order state stream
+INVEST_API 2025/06/02 11:15:47 INFO info from MD stream subscribe_last_price_response:{tracking_id:"3f5a3cc21f985ab358c462196610d110"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"f8476db7-d7a2-43b0-9dfc-b99713765fae"  subscription_id:"84ea7767-e3d9-4240-8fe3-10a0cc779601"  6:1}}
+INVEST_API 2025/06/02 11:15:47 INFO info from order state stream subscription:{tracking_id:"04801d4539af160e0e13ef02a4347b8d"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"5d54d0d9-5581-4e51-af1f-df575f50a217"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 11:15:53 INFO stop listening order state stream
+INVEST_API 2025/06/02 11:15:53 INFO close order state stream
+INVEST_API 2025/06/02 11:15:53 INFO stop listening market data stream
+INVEST_API 2025/06/02 11:15:53 INFO close market data stream
+INVEST_API 2025/06/02 11:19:54 INFO info from MD stream subscribe_last_price_response:{tracking_id:"90e89cbcad137a32378f2167dbf4b2b9" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"68154896-11a5-4582-b9e2-8dc6f9439887" subscription_id:"e8549cc5-8981-4c17-b0cb-bc8ce439624a" 6:1}}
+INVEST_API 2025/06/02 11:19:54 INFO info from order state stream subscription:{tracking_id:"f5355096977e8cce691f88ef87883fc3" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"131917da-8a99-4aa8-ab6c-33ca2375e479" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 11:20:09 INFO info from MD stream subscribe_last_price_response:{tracking_id:"90e89cbcad137a32378f2167dbf4b2b9" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"68154896-11a5-4582-b9e2-8dc6f9439887" subscription_id:"bca975c3-3d56-4a48-a75a-057463570557" 6:1}}
+INVEST_API 2025/06/02 11:20:09 INFO info from MD stream subscribe_last_price_response:{tracking_id:"90e89cbcad137a32378f2167dbf4b2b9" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"68154896-11a5-4582-b9e2-8dc6f9439887" subscription_id:"bca975c3-3d56-4a48-a75a-057463570557" 6:2}}
+INVEST_API 2025/06/02 11:20:42 INFO info from MD stream subscribe_last_price_response:{tracking_id:"90e89cbcad137a32378f2167dbf4b2b9" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"68154896-11a5-4582-b9e2-8dc6f9439887" subscription_id:"505fc858-2233-4ddb-8abf-624128e0dc99" 6:1}}
+INVEST_API 2025/06/02 11:20:42 INFO info from MD stream subscribe_last_price_response:{tracking_id:"90e89cbcad137a32378f2167dbf4b2b9" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"68154896-11a5-4582-b9e2-8dc6f9439887" subscription_id:"505fc858-2233-4ddb-8abf-624128e0dc99" 6:2}}
+INVEST_API 2025/06/02 11:21:08 INFO stop listening order state stream
+INVEST_API 2025/06/02 11:21:08 INFO close order state stream
+INVEST_API 2025/06/02 11:21:08 INFO stop listening market data stream
+INVEST_API 2025/06/02 11:21:08 INFO close market data stream
+INVEST_API 2025/06/02 11:26:17 INFO info from order state stream subscription:{tracking_id:"e10354bc81f65085b0c22e537a6570fd" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"2d291648-bdd0-4e16-b8d2-25dde1b6834d" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 11:26:17 INFO info from MD stream subscribe_last_price_response:{tracking_id:"6bb42fcbb6a5126746e8dfae51eb28c3" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"be8f2818-2688-414a-a9c9-7c6fd29e7960" subscription_id:"3d173e91-dd52-4941-aa81-2987b28e8e1d" 6:1}}
+INVEST_API 2025/06/02 11:26:42 INFO stop listening order state stream
+INVEST_API 2025/06/02 11:26:42 INFO close order state stream
+INVEST_API 2025/06/02 11:26:42 INFO stop listening market data stream
+INVEST_API 2025/06/02 11:26:42 INFO close market data stream
+INVEST_API 2025/06/02 11:29:52 INFO info from MD stream subscribe_last_price_response:{tracking_id:"7f5f1580ffe61475c8292a466afd6cc4"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"2555d447-7bd7-4377-8163-52b16507d451"  subscription_id:"8a2eeb37-62c9-4502-8aba-4f6dbe3d1066"  6:1}}
+INVEST_API 2025/06/02 11:29:52 INFO info from order state stream subscription:{tracking_id:"c450f68f594e0e7fbc2ccfd0f0407c28"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"a9c1c851-348f-4e33-9232-18aa07c747e4"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 11:30:27 INFO stop listening order state stream
+INVEST_API 2025/06/02 11:30:27 INFO close order state stream
+INVEST_API 2025/06/02 11:30:27 INFO stop listening market data stream
+INVEST_API 2025/06/02 11:30:27 INFO close market data stream
+INVEST_API 2025/06/02 11:31:03 INFO info from MD stream subscribe_last_price_response:{tracking_id:"4c85411d909df35b503b0ae062e7ba96"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"9ecd3dd7-3489-4c8e-85e4-e91bf4ddbbb2"  subscription_id:"8aa12e1d-8328-44d8-8a67-1d99c3103bc4"  6:1}}
+INVEST_API 2025/06/02 11:31:03 INFO info from order state stream subscription:{tracking_id:"219d3246dd8a0bbe886bcda2efa58576"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"b74368cb-8efd-4322-bb11-bca09b40dec3"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 11:31:17 INFO stop listening market data stream
+INVEST_API 2025/06/02 11:31:17 INFO stop listening order state stream
+INVEST_API 2025/06/02 11:31:17 INFO close market data stream
+INVEST_API 2025/06/02 11:31:17 INFO close order state stream
+INVEST_API 2025/06/02 11:32:12 INFO info from MD stream subscribe_last_price_response:{tracking_id:"f769aada61ae3b159d3f5e876e12f40e" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"abf56687-b52e-4c86-83ca-aa640d232ef4" subscription_id:"98a78137-f54c-4a82-9d60-c6593dca24f1" 6:1}}
+INVEST_API 2025/06/02 11:32:12 INFO info from order state stream subscription:{tracking_id:"a6a25b185e8203f4aa0e5be80f1aa394" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"9c2ee95f-2e10-4a30-91e5-93dee75afe53" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 11:32:38 INFO info from order state stream subscription:{tracking_id:"5b24bb2a1c0fce3830a6fa9f0349dc37" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"3c1b856b-6397-4786-948d-6074d2802acb" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 11:32:38 INFO info from MD stream subscribe_last_price_response:{tracking_id:"ca4e532846a3398f3a23d4be8ccbf5e1" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"770cfd32-a13d-4970-85b9-8bd687975645" subscription_id:"36df92c7-d2b7-4f03-9ded-9fdbaa1986e9" 6:1}}
+INVEST_API 2025/06/02 11:32:51 INFO stop listening order state stream
+INVEST_API 2025/06/02 11:32:51 INFO close order state stream
+INVEST_API 2025/06/02 11:32:51 INFO stop listening market data stream
+INVEST_API 2025/06/02 11:32:51 INFO close market data stream
+INVEST_API 2025/06/02 15:34:10 INFO info from MD stream subscribe_last_price_response:{tracking_id:"c1d8e115f21c7ef19017b379c1e4d65a" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"a3abb600-950d-4e76-b3a4-2b9acb153656" subscription_id:"ff6d9597-6b6c-4074-ad19-e6305578a5bc" 6:1}}
+INVEST_API 2025/06/02 15:34:10 INFO info from order state stream subscription:{tracking_id:"e7453792e0cd89dff49ffd715581b213" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"37b1879b-f18f-48b1-942b-5d4c3fe9afc7" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 15:34:13 INFO stop listening order state stream
+INVEST_API 2025/06/02 15:34:13 INFO close order state stream
+INVEST_API 2025/06/02 15:34:13 INFO stop listening market data stream
+INVEST_API 2025/06/02 15:34:13 INFO close market data stream
+INVEST_API 2025/06/02 15:34:48 INFO info from MD stream subscribe_last_price_response:{tracking_id:"bef3d64c240286f09054a28dffb70403"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"5750c4dc-3503-4dd8-b686-63ebef3b210f"  subscription_id:"ad2863c9-8011-4991-87cf-5119cd4f474b"  6:1}}
+INVEST_API 2025/06/02 15:34:48 INFO info from order state stream subscription:{tracking_id:"50078fa38ea9322406d7a7b814fdc249"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"95cd80e3-1f26-41a4-9fe2-c13a85923550"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 15:34:50 INFO stop listening order state stream
+INVEST_API 2025/06/02 15:34:50 INFO stop listening market data stream
+INVEST_API 2025/06/02 15:34:50 INFO close order state stream
+INVEST_API 2025/06/02 15:34:50 INFO close market data stream
+INVEST_API 2025/06/02 11:41:38 INFO info from MD stream subscribe_last_price_response:{tracking_id:"cc37ed9a93953a3298a125da9eb5da30" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"f778355e-5d8d-4f7a-ab82-7c3b333e5752" subscription_id:"d472cdf8-382c-4903-8ebf-28a2d84b23e6" 6:1}}
+INVEST_API 2025/06/02 11:41:38 INFO info from order state stream subscription:{tracking_id:"8cffc150f36fea22644abd19d063a52a" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"d539ebfa-d1b3-416c-a12e-407651d58214" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 11:41:54 INFO stop listening order state stream
+INVEST_API 2025/06/02 11:41:54 INFO close order state stream
+INVEST_API 2025/06/02 11:41:54 INFO stop listening market data stream
+INVEST_API 2025/06/02 11:41:54 INFO close market data stream
+INVEST_API 2025/06/02 15:49:24 INFO info from MD stream subscribe_last_price_response:{tracking_id:"60bc034e84c0b5cd002b69ce82f01c0a" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"6b9ead9d-3402-4210-b641-748823d2fbe8" subscription_id:"d9321325-ec0c-47c4-9ec8-e398e4373a68" 6:1}}
+INVEST_API 2025/06/02 15:49:24 INFO info from order state stream subscription:{tracking_id:"2e42aba77ff4a9c230c84c8a7d4436ef" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"09516308-cb25-4361-ae80-03e4629f310b" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 15:50:50 INFO stop listening order state stream
+INVEST_API 2025/06/02 15:50:50 INFO close order state stream
+INVEST_API 2025/06/02 15:50:50 INFO stop listening market data stream
+INVEST_API 2025/06/02 15:50:50 INFO close market data stream
+INVEST_API 2025/06/02 15:50:55 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"51b7f520-3102-4bf3-bcec-075f8d1e6803" 6:1}}
+INVEST_API 2025/06/02 15:50:55 INFO info from order state stream subscription:{tracking_id:"e53d378ec5d8ac07e4ef4c2cb56af5e2" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"776c0680-3fe6-4cb6-9dc0-d1d1f053c567" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 15:52:21 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"d90ee34f-c226-4f98-977b-6f14c61a0456" 6:1}}
+INVEST_API 2025/06/02 15:52:21 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"51b7f520-3102-4bf3-bcec-075f8d1e6803" 6:2}}
+INVEST_API 2025/06/02 15:52:37 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"54d6707b-ba32-4930-8524-acda847d5972" 6:1}}
+INVEST_API 2025/06/02 15:52:37 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"54d6707b-ba32-4930-8524-acda847d5972" 6:2}}
+INVEST_API 2025/06/02 15:52:49 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"aac1ab87-2bdd-4173-b2d3-aacae10ce2aa" 6:1}}
+INVEST_API 2025/06/02 15:52:49 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"aac1ab87-2bdd-4173-b2d3-aacae10ce2aa" 6:2}}
+INVEST_API 2025/06/02 15:53:05 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"ddba9ffb-9759-4899-8418-1342267a8c2f" 6:1}}
+INVEST_API 2025/06/02 15:53:05 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUBSCRIPTION_NOT_FOUND instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" 6:2}}
+INVEST_API 2025/06/02 15:53:17 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"8b29902f-eea2-42c4-b622-535f9c1664bf" 6:1}}
+INVEST_API 2025/06/02 15:53:17 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"8b29902f-eea2-42c4-b622-535f9c1664bf" 6:2}}
+INVEST_API 2025/06/02 15:53:30 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"0ad8f228-c95e-4a8f-82aa-9f6bb74cbbe0" 6:1}}
+INVEST_API 2025/06/02 15:53:30 INFO info from MD stream subscribe_last_price_response:{tracking_id:"1f415952af352c8ceb97882cd3502c67" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"d9e8d04c-227c-400e-908d-42c5299259ed" subscription_id:"0ad8f228-c95e-4a8f-82aa-9f6bb74cbbe0" 6:2}}
+INVEST_API 2025/06/02 15:54:55 INFO info from order state stream ping:{time:{seconds:1748865295 nanos:318047506} stream_id:"776c0680-3fe6-4cb6-9dc0-d1d1f053c567"}
+INVEST_API 2025/06/02 15:55:22 INFO stop listening order state stream
+INVEST_API 2025/06/02 15:55:22 INFO close order state stream
+INVEST_API 2025/06/02 15:57:11 INFO info from MD stream subscribe_last_price_response:{tracking_id:"3f41ca175b11c2e4012a3e36abc29b1b" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"0ab54a00-2239-4beb-ae5a-6d2a7b2912d2" subscription_id:"e200369b-dd29-4cd1-8e24-a680249c51c2" 6:1}}
+INVEST_API 2025/06/02 15:57:11 INFO info from order state stream subscription:{tracking_id:"a964a5b328791bda867e8b89640e3e55" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"e32691d3-3ae8-4059-8420-bf506711c18e" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 15:57:33 INFO info from MD stream subscribe_last_price_response:{tracking_id:"3f41ca175b11c2e4012a3e36abc29b1b" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"0ab54a00-2239-4beb-ae5a-6d2a7b2912d2" subscription_id:"a71e9f03-4588-4161-98cc-b23d98749966" 6:1}}
+INVEST_API 2025/06/02 15:57:33 INFO info from MD stream subscribe_last_price_response:{tracking_id:"3f41ca175b11c2e4012a3e36abc29b1b" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"0ab54a00-2239-4beb-ae5a-6d2a7b2912d2" subscription_id:"a71e9f03-4588-4161-98cc-b23d98749966" 6:2}}
+INVEST_API 2025/06/02 15:58:52 INFO info from MD stream subscribe_last_price_response:{tracking_id:"3f41ca175b11c2e4012a3e36abc29b1b" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"0ab54a00-2239-4beb-ae5a-6d2a7b2912d2" subscription_id:"bef2df7f-ee73-47e6-9b1a-7f55381d2a8f" 6:1}}
+INVEST_API 2025/06/02 15:58:52 INFO info from MD stream subscribe_last_price_response:{tracking_id:"3f41ca175b11c2e4012a3e36abc29b1b" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUBSCRIPTION_NOT_FOUND instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"0ab54a00-2239-4beb-ae5a-6d2a7b2912d2" 6:2}}
+INVEST_API 2025/06/02 16:00:19 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:00:19 INFO close order state stream
+INVEST_API 2025/06/02 16:00:19 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:00:19 INFO close market data stream
+INVEST_API 2025/06/02 16:00:53 INFO info from MD stream subscribe_last_price_response:{tracking_id:"68f61ef0aed65f6af4d7667d6c5e2d75" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"3970797c-ecd3-4093-9ccc-a92ad7badf93" subscription_id:"f88ee077-94c5-4724-b6f1-9c140a844f40" 6:1}}
+INVEST_API 2025/06/02 16:00:53 INFO info from order state stream subscription:{tracking_id:"f87e04368f335e9fb708b7066d25b937" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"130d189c-36b5-4551-b381-296100c58459" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:00:56 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:00:56 INFO close order state stream
+INVEST_API 2025/06/02 16:00:56 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:00:56 INFO close market data stream
+INVEST_API 2025/06/02 16:07:16 INFO info from MD stream subscribe_last_price_response:{tracking_id:"0bc1067113eaf8405100fe80a860da9c"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"16c2f5ab-4db0-489c-9419-a8ec27512682"  subscription_id:"c73288ce-e835-4634-b5ad-dc6eb74efcfb"  6:1}}
+INVEST_API 2025/06/02 16:07:16 INFO info from order state stream subscription:{tracking_id:"93834f0c125fdcd9000cf609f65388be"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"adebca38-177d-465a-9e50-c82c738bcf29"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:07:17 INFO info from MD stream subscribe_last_price_response:{tracking_id:"0bc1067113eaf8405100fe80a860da9c"  last_price_subscriptions:{figi:"BBG004730N88"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13"  stream_id:"16c2f5ab-4db0-489c-9419-a8ec27512682"  subscription_id:"e4eaa5a3-3b97-4f06-b4cc-c2c0e7bd3fa6"  6:1}}
+INVEST_API 2025/06/02 16:11:16 INFO info from order state stream ping:{time:{seconds:1748866276  nanos:818050825}  stream_id:"adebca38-177d-465a-9e50-c82c738bcf29"}
+INVEST_API 2025/06/02 16:13:53 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:13:53 INFO close market data stream
+INVEST_API 2025/06/02 16:13:53 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:13:53 INFO close order state stream
+INVEST_API 2025/06/02 16:13:57 INFO info from MD stream subscribe_last_price_response:{tracking_id:"efce182e6a01b9e7709fa266851efbfd" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"ad4e41d2-f516-48c0-8abf-ef92efae5c51" subscription_id:"b1ba6a8f-889c-4c48-a8b6-7695fed9124f" 6:1}}
+INVEST_API 2025/06/02 16:13:57 INFO info from order state stream subscription:{tracking_id:"d29241a175b0e0628fdd461c0e0acdc8" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"95841bc6-9d18-4dd0-a192-9c48e5b9ed6c" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:13:57 INFO info from MD stream subscribe_last_price_response:{tracking_id:"efce182e6a01b9e7709fa266851efbfd" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"ad4e41d2-f516-48c0-8abf-ef92efae5c51" subscription_id:"42a27e21-3950-407d-8475-5285c105b217" 6:1}}
+INVEST_API 2025/06/02 16:15:06 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:15:06 INFO close order state stream
+INVEST_API 2025/06/02 16:15:06 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:15:06 INFO close market data stream
+INVEST_API 2025/06/02 16:15:10 INFO info from order state stream subscription:{tracking_id:"332509b194a02c5fb079795a5f3f208f" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"9e0f02e6-d8fe-457a-b3d5-df966179a6b3" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:15:10 INFO info from MD stream subscribe_last_price_response:{tracking_id:"ef2b071e1d4ba323f4170ad5f86624c4" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"4e12581f-8eef-42b9-a1a1-67469090f1d6" subscription_id:"9d73f2e0-0115-4399-aee6-857865a7f053" 6:1}}
+INVEST_API 2025/06/02 16:15:11 INFO info from MD stream subscribe_last_price_response:{tracking_id:"ef2b071e1d4ba323f4170ad5f86624c4" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"4e12581f-8eef-42b9-a1a1-67469090f1d6" subscription_id:"e3752da4-2201-491d-b0ba-23d77f3ff73c" 6:1}}
+INVEST_API 2025/06/02 16:15:42 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:15:42 INFO close market data stream
+INVEST_API 2025/06/02 16:15:42 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:15:42 INFO close order state stream
+INVEST_API 2025/06/02 16:15:45 INFO info from MD stream subscribe_last_price_response:{tracking_id:"b45a49d17518eab7e9451abc54760388" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"0c22ed6c-a9f5-4ef4-bb6d-7eb7e6516b85" subscription_id:"c077e364-de4e-46ff-bfc8-d27c03aab49e" 6:1}}
+INVEST_API 2025/06/02 16:15:45 INFO info from order state stream subscription:{tracking_id:"e491b498e184517e43dc506e945eb80d" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"ef26cad9-0df7-4495-a0f8-a6a524be4d77" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:15:45 INFO info from MD stream subscribe_last_price_response:{tracking_id:"b45a49d17518eab7e9451abc54760388" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"0c22ed6c-a9f5-4ef4-bb6d-7eb7e6516b85" subscription_id:"524209c6-1969-4531-8a8f-7d488d6805c8" 6:1}}
+INVEST_API 2025/06/02 16:16:44 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:16:44 INFO close market data stream
+INVEST_API 2025/06/02 16:16:44 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:16:44 INFO close order state stream
+INVEST_API 2025/06/02 16:16:49 INFO info from order state stream subscription:{tracking_id:"cd19bbbe48679df63524920b26f315f0"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"ad003912-11e9-40a7-b2de-e676f35dd2bc"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:16:49 INFO info from MD stream subscribe_last_price_response:{tracking_id:"7d9a06ce4b5b130a715b4bd88d714540"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"d80a6b0e-5185-4e13-93db-3f209ceda2a0"  subscription_id:"b3a98b82-7222-4727-a9e9-ce6d63e467df"  6:1}}
+INVEST_API 2025/06/02 16:16:49 INFO info from MD stream subscribe_last_price_response:{tracking_id:"7d9a06ce4b5b130a715b4bd88d714540"  last_price_subscriptions:{figi:"BBG004730N88"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13"  stream_id:"d80a6b0e-5185-4e13-93db-3f209ceda2a0"  subscription_id:"17ce6999-5c6e-47f7-9b38-647a82485ca1"  6:1}}
+INVEST_API 2025/06/02 16:20:49 INFO info from order state stream ping:{time:{seconds:1748866849  nanos:418034379}  stream_id:"ad003912-11e9-40a7-b2de-e676f35dd2bc"}
+INVEST_API 2025/06/02 16:24:49 INFO info from order state stream ping:{time:{seconds:1748867089  nanos:518110513}  stream_id:"ad003912-11e9-40a7-b2de-e676f35dd2bc"}
+INVEST_API 2025/06/02 16:28:49 INFO info from order state stream ping:{time:{seconds:1748867329  nanos:618048903}  stream_id:"ad003912-11e9-40a7-b2de-e676f35dd2bc"}
+INVEST_API 2025/06/02 16:32:31 INFO close market data stream
+INVEST_API 2025/06/02 16:32:31 INFO Sleep for '10s' second
+INVEST_API 2025/06/02 16:32:31 ERROR failed starting listening stream for '4c466956-d2ce-4a95-abb4-17947a65f18a': rpc error: code = ResourceExhausted desc = 80001
+INVEST_API 2025/06/02 16:32:41 INFO close market data stream
+INVEST_API 2025/06/02 16:37:31 INFO info from order state stream subscription:{tracking_id:"3ed8c58814dbfe2c47a650bd3314efeb"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"bf6d24d9-997d-46a1-b5d5-a26f1e255567"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:37:31 INFO info from MD stream subscribe_last_price_response:{tracking_id:"c6a8dcaaa85fdc3cd03634bdc0a0543c"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"d35bd5d4-4f95-4952-b2b4-cfee1a3c6b03"  subscription_id:"d322167b-8d40-4e23-aefe-948e01c2ad2e"  6:1}}
+INVEST_API 2025/06/02 16:37:31 INFO info from MD stream subscribe_last_price_response:{tracking_id:"c6a8dcaaa85fdc3cd03634bdc0a0543c"  last_price_subscriptions:{figi:"BBG004730N88"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13"  stream_id:"d35bd5d4-4f95-4952-b2b4-cfee1a3c6b03"  subscription_id:"6ba60fc5-79b4-4af4-be4b-1662047579fb"  6:1}}
+INVEST_API 2025/06/02 16:37:39 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:37:39 INFO close order state stream
+INVEST_API 2025/06/02 16:37:39 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:37:39 INFO close market data stream
+INVEST_API 2025/06/02 16:39:20 INFO info from MD stream subscribe_last_price_response:{tracking_id:"a5e5c6b66691bb0f5a9a84cdf36b07d8" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"79898bc1-5f05-46a3-9005-24142b9765dd" subscription_id:"ec534268-5627-4801-87a4-9e9a6129a67f" 6:1}}
+INVEST_API 2025/06/02 16:39:20 INFO info from order state stream subscription:{tracking_id:"9fdc87e343b1887584aab2e0dd7fcd17" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"ad79cce9-d456-435b-8c25-dafd8250c2b7" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:39:20 INFO info from MD stream subscribe_last_price_response:{tracking_id:"a5e5c6b66691bb0f5a9a84cdf36b07d8" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"79898bc1-5f05-46a3-9005-24142b9765dd" subscription_id:"ca86d903-27fd-4b7a-99b0-41942732547b" 6:1}}
+INVEST_API 2025/06/02 16:39:30 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:39:30 INFO close order state stream
+INVEST_API 2025/06/02 16:39:30 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:39:30 INFO close market data stream
+INVEST_API 2025/06/02 16:39:46 INFO info from MD stream subscribe_last_price_response:{tracking_id:"70c02610d043500b5613368cb5724bc7" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"267d5a23-b960-40a6-ad70-e3202470cc0c" subscription_id:"a9318b00-a114-47cd-9959-f5b31f382447" 6:1}}
+INVEST_API 2025/06/02 16:39:46 INFO info from order state stream subscription:{tracking_id:"5bcd2b03eed8c760786894671f12db94" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"59f7614e-ace2-4774-912f-317f9a1717e9" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:39:46 INFO info from MD stream subscribe_last_price_response:{tracking_id:"70c02610d043500b5613368cb5724bc7" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"267d5a23-b960-40a6-ad70-e3202470cc0c" subscription_id:"e380f2bb-f333-40a3-8acf-cd1e93916a32" 6:1}}
+INVEST_API 2025/06/02 16:40:35 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:40:35 INFO close market data stream
+INVEST_API 2025/06/02 16:40:35 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:40:35 INFO close order state stream
+INVEST_API 2025/06/02 16:40:49 INFO info from order state stream subscription:{tracking_id:"3dc402d73964cf27eb1e2e47a1224b45" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"e4838f71-2d15-4756-8e60-f0fe97506d14" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:40:49 INFO info from MD stream subscribe_last_price_response:{tracking_id:"712715c095144dbc491b80058d65f152" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"d28c3886-8f43-42dc-a337-7c3e9baed0ed" subscription_id:"65eacb8e-4c7f-4dcb-b1c4-768b244ce491" 6:1}}
+INVEST_API 2025/06/02 16:40:49 INFO info from MD stream subscribe_last_price_response:{tracking_id:"712715c095144dbc491b80058d65f152" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"d28c3886-8f43-42dc-a337-7c3e9baed0ed" subscription_id:"3d696f4b-6578-4198-872b-fa8a752b5a2e" 6:1}}
+INVEST_API 2025/06/02 16:40:59 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:40:59 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:40:59 INFO close order state stream
+INVEST_API 2025/06/02 16:40:59 INFO close market data stream
+INVEST_API 2025/06/02 16:43:09 INFO info from MD stream subscribe_last_price_response:{tracking_id:"f2d18932beca6db4c3adafb99b5e38dc"  last_price_subscriptions:{figi:"TCS10A101X50"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a"  stream_id:"56cf04f5-a11c-4d5c-af8a-60ab8bf604eb"  subscription_id:"f21150bf-d069-41ed-942e-1351757702fc"  6:1}}
+INVEST_API 2025/06/02 16:43:09 INFO info from order state stream subscription:{tracking_id:"9e3c8f63af305ae90c9e6465e5402669"  status:RESULT_SUBSCRIPTION_STATUS_OK  stream_id:"fb0cd8ae-5b3c-484e-b7fd-dee891d97da0"  accounts:"418d16eb-8863-4401-9e6a-ea0b67290481"  accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:43:09 INFO info from MD stream subscribe_last_price_response:{tracking_id:"f2d18932beca6db4c3adafb99b5e38dc"  last_price_subscriptions:{figi:"BBG004730N88"  subscription_status:SUBSCRIPTION_STATUS_SUCCESS  instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13"  stream_id:"56cf04f5-a11c-4d5c-af8a-60ab8bf604eb"  subscription_id:"b4720f2b-c06d-4a4a-956a-10f91c1dc947"  6:1}}
+INVEST_API 2025/06/02 16:43:20 INFO stop listening order state stream
+INVEST_API 2025/06/02 16:43:20 INFO close order state stream
+INVEST_API 2025/06/02 16:43:20 INFO stop listening market data stream
+INVEST_API 2025/06/02 16:43:20 INFO close market data stream
+INVEST_API 2025/06/02 16:46:47 INFO info from MD stream subscribe_last_price_response:{tracking_id:"82fe64e572008b9ea546659ccba07607" last_price_subscriptions:{figi:"TCS10A101X50" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"4c466956-d2ce-4a95-abb4-17947a65f18a" stream_id:"3a8c3fd2-fbc7-4690-8cd6-8cead58dd480" subscription_id:"418227c3-85d8-4934-889d-a8704b7c7755" 6:1}}
+INVEST_API 2025/06/02 16:46:47 INFO info from order state stream subscription:{tracking_id:"a21b48b82b52f9631b9395fdff0d519d" status:RESULT_SUBSCRIPTION_STATUS_OK stream_id:"78958c5d-14cc-4e28-9847-8064b1315c61" accounts:"418d16eb-8863-4401-9e6a-ea0b67290481" accounts:"1d92bbcf-aae0-4912-a478-818031e0cbb0"}
+INVEST_API 2025/06/02 16:46:47 INFO info from MD stream subscribe_last_price_response:{tracking_id:"82fe64e572008b9ea546659ccba07607" last_price_subscriptions:{figi:"BBG004730N88" subscription_status:SUBSCRIPTION_STATUS_SUCCESS instrument_uid:"e6123145-9665-43e0-8413-cd61b8aa9b13" stream_id:"3a8c3fd2-fbc7-4690-8cd6-8cead58dd480" subscription_id:"a336a44c-61ec-468d-84ee-053e35cccafe" 6:1}}
+INVEST_API 2025/06/02 16:50:47 INFO info from order state stream ping:{time:{seconds:1748868647 nanos:318063392} stream_id:"78958c5d-14cc-4e28-9847-8064b1315c61"}
+INVEST_API 2025/06/02 16:54:47 INFO info from order state stream ping:{time:{seconds:1748868887 nanos:418042839} stream_id:"78958c5d-14cc-4e28-9847-8064b1315c61"}
