@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS orders (
     created_at TIMESTAMPTZ NOT NULL,
     completed_at TIMESTAMPTZ DEFAULT NULL,
     order_id TEXT NOT NULL,
+    order_id_ref TEXT DEFAULT NULL,
     direction TEXT NOT NULL,
     exec_report_status TEXT NOT NULL,
     price_units BIGINT NOT NULL,

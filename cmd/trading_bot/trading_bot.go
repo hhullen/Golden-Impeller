@@ -21,8 +21,6 @@ import (
 const (
 	waitOnPanic = time.Second * 10
 
-	pidFilePath = "pid"
-
 	brokerLogFilePath = "invest.log"
 	brokerLogPrefix   = "INVEST_API"
 
