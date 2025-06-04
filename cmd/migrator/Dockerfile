@@ -12,5 +12,5 @@ COPY --from=builder /build .
 
 ENV RUNNING_IN_CONTAINER=true
 
-ENTRYPOINT [ "./migrator" ]
+ENTRYPOINT [ "./migrator", "up" ]
 

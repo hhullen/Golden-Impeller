@@ -1,22 +1,26 @@
 services:
   trading_bot:
+    container_name: trading_bot
     build:
-      context: ./cmd/trading_bot
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./cmd/trading_bot/Dockerfile
     init: true
+    restart: unless-stopped
     depends_on:
       migrator:
         condition: service_completed_successfully
 
   migrator:
+    container_name: migrator
     build:
-      context: ./cmd/migrator
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./cmd/migrator/Dockerfile
     depends_on:
       db:
         condition: service_healthy
 
   db:
+    container_name: db
     image: postgres:17.5-alpine3.21
     restart: always
     environment:
@@ -27,6 +31,14 @@ services:
       - db_password_secret
       - db_user_secret
       - db_name_secret
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$(cat /run/secrets/db_user_secret) -d $$(cat /run/secrets/db_name_secret)"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
 
 secrets:
   db_password_secret:
@@ -36,3 +48,6 @@ secrets:
   db_name_secret:
     file: ./secrets/db_name.txt
 
+volumes:
+  db_data:
+    

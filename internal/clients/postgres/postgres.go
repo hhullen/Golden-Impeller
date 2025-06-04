@@ -7,7 +7,6 @@ import (
 	"os"
 	"strings"
 	"time"
-	"trading_bot/internal/service/datastruct"
 	ds "trading_bot/internal/service/datastruct"
 
 	"github.com/jmoiron/sqlx"
@@ -220,7 +219,6 @@ func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.O
 		price_nano = EXCLUDED.price_nano,
 		lots_executed = EXCLUDED.lots_executed;`
 
-	// fmt.Println("INSERT", order.OrderId, order.OrderIdRef)
 	_, err = tx.ExecContext(ctx, queryInsert,
 		instrInfo.Id, order.CreatedAt, order.CompletionTime, order.OrderId, order.OrderIdRef, order.Direction,
 		order.ExecutionReportStatus, order.OrderPrice.Units, order.OrderPrice.Nano,
@@ -240,7 +238,6 @@ func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.O
 			AND trader_id = $3
 			AND order_id = $4;`
 
-	// fmt.Println("UPDATE", order.OrderIdRef, order.OrderId)
 	_, err = tx.ExecContext(ctx, queryUpdate, order.OrderId, instrInfo.Id, trId, order.OrderIdRef)
 
 	return
@@ -262,7 +259,7 @@ func (c *Client) GetLowestExecutedBuyOrder(trId string, instrInfo *ds.Instrument
 	return c.selectOrder(query, trId, instrInfo)
 }
 
-func (c *Client) GetHighestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*datastruct.Order, bool, error) {
+func (c *Client) GetHighestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
 	query := `SELECT id, created_at, completed_at, order_id, direction, exec_report_status,
 		price_units AS "price.units", price_nano AS "price.nano", lots_requested, 
 		lots_executed, additional_info
@@ -293,7 +290,7 @@ func (c *Client) GetLatestExecutedSellOrder(trId string, instrInfo *ds.Instrumen
 	return c.selectOrder(query, trId, instrInfo)
 }
 
-func (c *Client) selectOrder(query string, trId string, instrInfo *ds.InstrumentInfo) (*datastruct.Order, bool, error) {
+func (c *Client) selectOrder(query string, trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
 	var orders []*ds.Order
 	err := c.db.Select(&orders, query, instrInfo.Id, trId)
 	if err != nil {

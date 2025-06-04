@@ -50,11 +50,15 @@ start-local-database:
 	  -v "$(PWD)/secrets/db_password.txt:/run/secrets/db_password:ro" \
       -v "$(PWD)/secrets/db_user.txt:/run/secrets/db_user:ro" \
       -v "$(PWD)/secrets/db_name.txt:/run/secrets/db_name:ro" \
+	  -v local_postgres_data:/var/lib/postgresql/data \
 	  --name trader-local-database \
 	   postgres:17.5-alpine3.21
 
 stop-local-database:
 	docker container stop trader-local-database
 
-trader:
+trader-local:
 	go run ./cmd/trading_bot
+
+trader:
+	docker compose up

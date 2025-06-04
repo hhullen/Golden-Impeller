@@ -126,7 +126,6 @@ func (tm *TraderManager) UpdateTradersWithConfig(cfg *config.TraderCfg) {
 			tm.managerLogger.Errorf("failed starting trader '%s': %s", traderCfg.UniqueTraderId, err.Error())
 			continue
 		}
-		tm.managerLogger.Infof("new trader started: '%s'", traderCfg.UniqueTraderId)
 	}
 
 	tm.stopMissingTraders(cfg)

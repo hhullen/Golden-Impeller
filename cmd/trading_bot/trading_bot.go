@@ -34,13 +34,13 @@ func main() {
 	ctx, cancelCtx := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancelCtx()
 
-	f := openFile(brokerLogFilePath)
+	f := openFileForLog(brokerLogFilePath)
 	defer f.Close()
 
 	investLogger := lg.NewLogger(f, brokerLogPrefix)
 	defer investLogger.Stop()
 
-	f = openFile(managerLogFilePath)
+	f = openFileForLog(managerLogFilePath)
 	defer f.Close()
 
 	tradingManagerLogger := lg.NewLogger(f, managerLogPrefix)
@@ -107,7 +107,11 @@ func main() {
 	traderLogger.Infof("Service stopped")
 }
 
-func openFile(path string) *os.File {
+func openFileForLog(path string) *os.File {
+	if os.Getenv("RUNNING_IN_CONTAINER") != "" {
+		return os.Stdout
+	}
+
 	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		panic(err)
