@@ -62,7 +62,8 @@ func (bs *BacktestStorage) GetLowestExecutedBuyOrder(trId string, instrInfo *ds.
 	found := false
 	for _, v := range bs.orders {
 		if v.Direction == ds.Buy.ToString() &&
-			v.ExecutionReportStatus == ds.Fill.ToString() {
+			v.ExecutionReportStatus == ds.Fill.ToString() &&
+			v.OrderIdRef == nil {
 			minPrice = v.OrderPrice.ToFloat64()
 			order = v
 			found = true
@@ -76,6 +77,7 @@ func (bs *BacktestStorage) GetLowestExecutedBuyOrder(trId string, instrInfo *ds.
 	for _, v := range bs.orders {
 		if v.Direction == ds.Buy.ToString() &&
 			v.ExecutionReportStatus == ds.Fill.ToString() &&
+			v.OrderIdRef == nil &&
 			v.OrderPrice.ToFloat64() < minPrice {
 			minPrice = v.OrderPrice.ToFloat64()
 			order = v
@@ -128,7 +130,8 @@ func (bs *BacktestStorage) GetHighestExecutedBuyOrder(trId string, instrInfo *ds
 	found := false
 	for _, v := range bs.orders {
 		if v.Direction == ds.Buy.ToString() &&
-			v.ExecutionReportStatus == ds.Fill.ToString() {
+			v.ExecutionReportStatus == ds.Fill.ToString() &&
+			v.OrderIdRef == nil {
 			highest = v.OrderPrice.ToFloat64()
 			order = v
 			found = true
@@ -142,6 +145,7 @@ func (bs *BacktestStorage) GetHighestExecutedBuyOrder(trId string, instrInfo *ds
 	for _, v := range bs.orders {
 		if v.Direction == ds.Buy.ToString() &&
 			v.ExecutionReportStatus == ds.Fill.ToString() &&
+			v.OrderIdRef == nil &&
 			v.OrderPrice.ToFloat64() > highest {
 			highest = v.OrderPrice.ToFloat64()
 			order = v
@@ -154,7 +158,7 @@ func (bs *BacktestStorage) GetHighestExecutedBuyOrder(trId string, instrInfo *ds
 func (bs *BacktestStorage) GetUnsoldOrdersAmount(trId string, instrInfo *ds.InstrumentInfo) (int64, error) {
 	count := int64(0)
 	for _, order := range bs.orders {
-		if order.Direction == ds.Buy.ToString() {
+		if order.Direction == ds.Buy.ToString() && order.OrderIdRef == nil {
 			count++
 		}
 	}
@@ -165,6 +169,9 @@ func (bs *BacktestStorage) GetUnsoldOrdersAmount(trId string, instrInfo *ds.Inst
 func (bs *BacktestStorage) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) (err error) {
 	v, ok := bs.orders[order.OrderId]
 	if ok {
+		// if order.OrderIdRef != nil {
+		// 	v.OrderIdRef = order.OrderIdRef
+		// }
 		v.CompletionTime = order.CompletionTime
 		v.Direction = order.Direction
 		v.ExecutionReportStatus = order.ExecutionReportStatus
@@ -172,6 +179,48 @@ func (bs *BacktestStorage) PutOrder(trId string, instrInfo *ds.InstrumentInfo, o
 		v.LotsExecuted = order.LotsExecuted
 	} else {
 		bs.orders[order.OrderId] = order
+	}
+
+	if order.OrderIdRef != nil {
+		vRef, ok := bs.orders[*order.OrderIdRef]
+		if ok {
+			vRef.OrderIdRef = &order.OrderId
+		}
+	}
+
+	return nil
+}
+
+// func (bs *BacktestStorage) setRef(v1, v2 *ds.Order) {
+// 	if v1.OrderIdRef != nil {
+// 		v1.OrderIdRef = v2.OrderIdRef
+// 		vRef, ok := bs.orders[*v2.OrderIdRef]
+// 		if ok {
+// 			vRef.OrderIdRef=
+// 		}
+// 	}
+// 	if ok {
+// 		vRef.OrderIdRef = &order.OrderId
+// 	}
+
+// }
+
+func (bs *BacktestStorage) MakeNewOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) error {
+	return bs.PutOrder(order.TraderId, instrInfo, order)
+}
+
+func (bs *BacktestStorage) RemoveOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) error {
+	defer delete(bs.orders, order.OrderId)
+
+	v, ok := bs.orders[order.OrderId]
+
+	if !ok {
+		return fmt.Errorf("not found order: %s", order.OrderId)
+	}
+
+	vRef, ok := bs.orders[*v.OrderIdRef]
+	if ok {
+		vRef.OrderIdRef = nil
 	}
 
 	return nil

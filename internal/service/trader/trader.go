@@ -183,11 +183,20 @@ func (s *TraderService) RunTrading() {
 				var res string
 				res, err = s.MakeAction(lastPrice, action)
 				if err != nil {
-					s.logger.Errorf("failed making action '%s:%d' for '%s': %s", action.Action.ToString(), action.Lots, config.InstrInfo.Ticker, err.Error())
+					s.logger.Errorf("failed making action '%s:%d' for '%s': %s",
+						action.Action.ToString(), action.Lots, config.InstrInfo.Ticker, err.Error())
+					if action.OnErrorFunc != nil {
+						if err := action.OnErrorFunc(); err != nil {
+							s.logger.Fatalf("failed executing on action error function: %s", err.Error())
+						}
+					}
 					continue
 				}
+
 				if action.Action != ds.Hold {
 					s.logger.Infof(res)
+					// s := ""
+					// fmt.Scanf("%s", &s)
 				}
 			}
 		}
@@ -215,7 +224,7 @@ func (s *TraderService) MakeAction(lastPrice *ds.LastPrice, action *ds.StrategyA
 
 	}
 
-	return fmt.Sprintf("HOLD: '%s', price: '%.2f', at: %s", s.cfg.InstrInfo.Ticker, lastPrice.Price.ToFloat64(), lastPrice.Time.Format(time.DateTime)), nil
+	return fmt.Sprintf("HOLD: '%s', price: '%.2f'", s.cfg.InstrInfo.Ticker, lastPrice.Price.ToFloat64()), nil
 }
 
 func (s *TraderService) Stop() {

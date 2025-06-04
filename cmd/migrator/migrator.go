@@ -1,11 +1,9 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"log"
 	"os"
-	"trading_bot/internal/config"
+	"trading_bot/internal/clients/postgres"
 
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
@@ -24,31 +22,24 @@ func main() {
 	}
 	command := os.Args[1]
 
-	envCfg, err := config.GetEnvCfg()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	db, err := sql.Open("postgres",
-		fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-			envCfg.DBHost, envCfg.DBPort, envCfg.DBUser, envCfg.DBPassword, envCfg.DBName))
+	db, err := postgres.NewClient()
 	if err != nil {
 		log.Fatalf("failed to open DB: %v", err)
 	}
-	defer db.Close()
+	defer db.GetDB().Close()
 
 	goose.SetBaseFS(nil)
 
 	if command == cmdUp {
-		if err := goose.Up(db, migrationsDir); err != nil {
+		if err := goose.Up(db.GetDB(), migrationsDir); err != nil {
 			log.Fatalf("failed to apply migrations: %v", err)
 		}
 	} else if command == cmdDown {
-		if err := goose.Down(db, migrationsDir); err != nil {
+		if err := goose.Down(db.GetDB(), migrationsDir); err != nil {
 			log.Fatalf("failed to apply migrations: %v", err)
 		}
 	} else if command == cmdStatus {
-		if err := goose.Status(db, migrationsDir); err != nil {
+		if err := goose.Status(db.GetDB(), migrationsDir); err != nil {
 			log.Fatalf("failed to apply migrations: %v", err)
 		}
 	} else {

@@ -6,7 +6,7 @@ import (
 	"trading_bot/internal/strategy/btdstf"
 )
 
-func ResolveStrategy(cfg map[string]any, db any, broker any) (s trader.IStrategy, err error) {
+func ResolveStrategy(cfg map[string]any, db any, broker any, traderId string) (s trader.IStrategy, err error) {
 	defer func() {
 		if p := recover(); p != nil {
 			s = nil
@@ -22,7 +22,7 @@ func ResolveStrategy(cfg map[string]any, db any, broker any) (s trader.IStrategy
 			return nil, err
 		}
 
-		return btdstf.NewBTDSTF(db.(btdstf.IStorage), cfg), nil
+		return btdstf.NewBTDSTF(db.(btdstf.IStorage), cfg, traderId), nil
 	}
 
 	return nil, fmt.Errorf("incorect strategy name specified")

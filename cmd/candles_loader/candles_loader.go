@@ -47,8 +47,7 @@ func main() {
 		panic(err)
 	}
 
-	dbClient, err := postgres.NewClient(envCfg.TestDBHost, envCfg.TestDBPort,
-		envCfg.TestDBUser, envCfg.TestDBPassword, envCfg.TestDBName)
+	dbClient, err := postgres.NewClient()
 	if err != nil {
 		panic(err)
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 	"trading_bot/internal/service/datastruct"
@@ -15,15 +16,29 @@ import (
 
 const (
 	insertOneTime = 1000
+
+	db_host_secret_path     = "./secrets/db_host.txt"
+	db_port_secret_path     = "./secrets/db_port.txt"
+	db_password_secret_path = "./secrets/db_password.txt"
+	db_user_secret_path     = "./secrets/db_user.txt"
+	db_name_secret_path     = "./secrets/db_name.txt"
 )
 
 type Client struct {
 	db *sqlx.DB
-
-	// historyBuffer []*ds.Candle
 }
 
-func NewClient(host, port, user, password, dbname string) (*Client, error) {
+func NewClient() (*Client, error) {
+	host := readSecret(db_host_secret_path)
+	port := readSecret(db_port_secret_path)
+	user := readSecret(db_user_secret_path)
+	password := readSecret(db_password_secret_path)
+	dbname := readSecret(db_name_secret_path)
+
+	if os.Getenv("RUNNING_IN_CONTAINER") == "" {
+		host = "localhost"
+	}
+
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 
@@ -38,6 +53,22 @@ func NewClient(host, port, user, password, dbname string) (*Client, error) {
 	return &Client{
 		db: db,
 	}, nil
+}
+
+func readSecret(path string) string {
+	f, err := os.OpenFile(path, os.O_RDONLY, 0644)
+	if err != nil {
+		panic(err)
+	}
+
+	secret := ""
+	fmt.Fscan(f, &secret)
+
+	return string(secret)
+}
+
+func (c *Client) GetDB() *sql.DB {
+	return c.db.DB
 }
 
 func (c *Client) AddInstrumentInfo(instrInfo *ds.InstrumentInfo) (dbId int64, err error) {
@@ -175,22 +206,42 @@ func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.O
 		return
 	}
 
-	query := `INSERT INTO orders 
-		(instrument_id, created_at, completed_at, order_id, direction, exec_report_status, 
+	queryInsert := `INSERT INTO orders 
+		(instrument_id, created_at, completed_at, order_id, order_id_ref, direction, exec_report_status, 
 		price_units, price_nano, lots_requested, lots_executed, trader_id)
-		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
 		ON CONFLICT (instrument_id, order_id) DO UPDATE SET
+		created_at = EXCLUDED.created_at,
 		completed_at = EXCLUDED.completed_at,
+		order_id_ref = EXCLUDED.order_id_ref,
 		direction = EXCLUDED.direction,
 		exec_report_status = EXCLUDED.exec_report_status,
 		price_units = EXCLUDED.price_units,
 		price_nano = EXCLUDED.price_nano,
 		lots_executed = EXCLUDED.lots_executed;`
 
-	_, err = tx.ExecContext(ctx, query,
-		instrInfo.Id, order.CreatedAt, order.CompletionTime, order.OrderId, order.Direction,
+	// fmt.Println("INSERT", order.OrderId, order.OrderIdRef)
+	_, err = tx.ExecContext(ctx, queryInsert,
+		instrInfo.Id, order.CreatedAt, order.CompletionTime, order.OrderId, order.OrderIdRef, order.Direction,
 		order.ExecutionReportStatus, order.OrderPrice.Units, order.OrderPrice.Nano,
 		order.LotsRequested, order.LotsExecuted, trId)
+
+	if err != nil {
+		return
+	}
+
+	if order.OrderIdRef == nil {
+		return
+	}
+
+	queryUpdate := `UPDATE orders
+			SET order_id_ref = $1
+			WHERE instrument_id = $2
+			AND trader_id = $3
+			AND order_id = $4;`
+
+	// fmt.Println("UPDATE", order.OrderIdRef, order.OrderId)
+	_, err = tx.ExecContext(ctx, queryUpdate, order.OrderId, instrInfo.Id, trId, order.OrderIdRef)
 
 	return
 }
@@ -204,10 +255,11 @@ func (c *Client) GetLowestExecutedBuyOrder(trId string, instrInfo *ds.Instrument
 		AND direction = 'BUY'
 		AND exec_report_status = 'FILL'
 		AND trader_id = $2
+		AND order_id_ref IS NULL
 		ORDER BY price_units, price_nano
 		LIMIT 1;`
 
-	return c.selectOrders(query, trId, instrInfo)
+	return c.selectOrder(query, trId, instrInfo)
 }
 
 func (c *Client) GetHighestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*datastruct.Order, bool, error) {
@@ -219,10 +271,11 @@ func (c *Client) GetHighestExecutedBuyOrder(trId string, instrInfo *ds.Instrumen
 		AND direction = 'BUY'
 		AND exec_report_status = 'FILL'
 		AND trader_id = $2
+		AND order_id_ref IS NULL
 		ORDER BY price_units, price_nano DESC
 		LIMIT 1;`
 
-	return c.selectOrders(query, trId, instrInfo)
+	return c.selectOrder(query, trId, instrInfo)
 }
 
 func (c *Client) GetLatestExecutedSellOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
@@ -237,10 +290,10 @@ func (c *Client) GetLatestExecutedSellOrder(trId string, instrInfo *ds.Instrumen
 		ORDER BY completed_at DESC
 		LIMIT 1;`
 
-	return c.selectOrders(query, trId, instrInfo)
+	return c.selectOrder(query, trId, instrInfo)
 }
 
-func (c *Client) selectOrders(query string, trId string, instrInfo *ds.InstrumentInfo) (*datastruct.Order, bool, error) {
+func (c *Client) selectOrder(query string, trId string, instrInfo *ds.InstrumentInfo) (*datastruct.Order, bool, error) {
 	var orders []*ds.Order
 	err := c.db.Select(&orders, query, instrInfo.Id, trId)
 	if err != nil {
@@ -260,7 +313,8 @@ func (c *Client) GetUnsoldOrdersAmount(trId string, instrInfo *ds.InstrumentInfo
 	query := `SELECT COUNT(*) FROM orders
 		WHERE instrument_id = $1
 		AND direction = 'BUY'
-		AND trader_id = $2;`
+		AND trader_id = $2
+		AND order_id_ref IS NULL;`
 
 	var res int64
 	err := c.db.Get(&res, query, instrInfo.Id, trId)
@@ -273,6 +327,33 @@ func (c *Client) ClearOrdersForTrader(trId string) error {
 		WHERE trader_id = $1;`
 
 	_, err := c.db.Exec(query, trId)
+
+	return err
+}
+
+func (c *Client) MakeNewOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) error {
+	return c.PutOrder(order.TraderId, instrInfo, order)
+}
+
+func (c *Client) RemoveOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) error {
+	queryUpdate := `UPDATE orders
+	SET order_id_ref = NULL
+	WHERE instrument_id = $1
+	AND trader_id = $2
+	AND order_id = $3;`
+
+	_, err := c.db.Exec(queryUpdate, instrInfo.Id, order.TraderId, order.OrderIdRef)
+
+	if err != nil {
+		return err
+	}
+
+	queryDelete := `DELETE FROM orders
+	WHERE instrument_id = $1
+	AND trader_id = $2
+	AND order_id = $3;`
+
+	_, err = c.db.Exec(queryDelete, instrInfo.Id, order.TraderId, order.OrderId)
 
 	return err
 }

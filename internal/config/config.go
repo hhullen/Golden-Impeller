@@ -28,16 +28,6 @@ type EnvCfg struct {
 	TInvestToken     string `yaml:"T_INVEST_TOKEN"`
 	TInvestAddress   string `yaml:"T_INVEST_ADDRESS"`
 	TInvestAccountID string `yaml:"T_INVEST_ACCOUNT_ID"`
-	DBHost           string `yaml:"DB_HOST"`
-	DBPort           string `yaml:"DB_PORT"`
-	DBUser           string `yaml:"DB_USER"`
-	DBPassword       string `yaml:"DB_PASSWORD"`
-	DBName           string `yaml:"DB_NAME"`
-	TestDBHost       string `yaml:"TEST_DB_HOST"`
-	TestDBPort       string `yaml:"TEST_DB_PORT"`
-	TestDBUser       string `yaml:"TEST_DB_USER"`
-	TestDBPassword   string `yaml:"TEST_DB_PASSWORD"`
-	TestDBName       string `yaml:"TEST_DB_NAME"`
 	Account2         string `yaml:"ACCOUNT_2"`
 
 	Trader               *TraderCfg          `yaml:"TRADER"`

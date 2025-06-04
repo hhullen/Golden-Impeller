@@ -21,6 +21,8 @@ import (
 const (
 	waitOnPanic = time.Second * 10
 
+	pidFilePath = "pid"
+
 	brokerLogFilePath = "invest.log"
 	brokerLogPrefix   = "INVEST_API"
 
@@ -64,8 +66,7 @@ func main() {
 		panic("no traders specified in config")
 	}
 
-	dbClient, err := postgres.NewClient(envCfg.DBHost, envCfg.DBPort,
-		envCfg.DBUser, envCfg.DBPassword, envCfg.DBName)
+	dbClient, err := postgres.NewClient()
 	if err != nil {
 		panic(err)
 	}

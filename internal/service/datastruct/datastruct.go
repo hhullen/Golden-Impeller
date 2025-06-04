@@ -117,9 +117,10 @@ func (os OrderStatus) ToString() string {
 }
 
 type StrategyAction struct {
-	Action    Action
-	Lots      int64
-	RequestId string
+	Action      Action
+	Lots        int64
+	RequestId   string
+	OnErrorFunc func() error
 }
 
 type Candle struct {
@@ -202,6 +203,7 @@ type Order struct {
 	Id                    int64      `db:"id"`
 	CreatedAt             *time.Time `db:"created_at"`
 	CompletionTime        *time.Time `db:"completed_at"`
+	OrderIdRef            *string    `db:"order_id_ref"`
 	OrderId               string     `db:"order_id"`
 	Direction             string     `db:"direction"`
 	ExecutionReportStatus string     `db:"exec_report_status"`

@@ -63,7 +63,7 @@ func (tm *TraderManager) UpdateTradersWithConfig(cfg *config.TraderCfg) {
 		instrInfo.Id = dbId
 		instrInfo.InstanceId = uuid.New()
 
-		resolvedStrategy, err := strategy.ResolveStrategy(traderCfg.StrategyCfg, tm.storage, tm.broker)
+		resolvedStrategy, err := strategy.ResolveStrategy(traderCfg.StrategyCfg, tm.storage, tm.broker, traderCfg.UniqueTraderId)
 		if err != nil {
 			tm.managerLogger.Errorf("failed resolving strategy: %s", err.Error())
 			continue
