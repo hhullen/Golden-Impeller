@@ -82,6 +82,7 @@ type OrderStatus int8
 
 const (
 	Fill OrderStatus = iota
+	PartiallyFill
 	New
 	Cancelled
 )
@@ -102,9 +103,10 @@ var (
 	}
 
 	orderStatusMap map[OrderStatus]string = map[OrderStatus]string{
-		Fill:      "FILL",
-		New:       "NEW",
-		Cancelled: "CANCELLED",
+		Fill:          "FILL",
+		PartiallyFill: "PARTIALLYFILL",
+		New:           "NEW",
+		Cancelled:     "CANCELLED",
 	}
 )
 

@@ -14,6 +14,7 @@ import (
 	"trading_bot/internal/config"
 	lg "trading_bot/internal/logger"
 	tradermanager "trading_bot/internal/service/trader_manager"
+	"trading_bot/internal/strategy"
 
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 )
@@ -81,7 +82,8 @@ func main() {
 		panic(err)
 	}
 
-	traderManager := tradermanager.NewTraderManager(ctx, waitOnPanic, investClient, dbClient, tradingManagerLogger, traderLogger)
+	strategyResolver := strategy.NewStrategy()
+	traderManager := tradermanager.NewTraderManager(ctx, waitOnPanic, investClient, dbClient, tradingManagerLogger, traderLogger, strategyResolver)
 
 	traderManager.UpdateTradersWithConfig(envCfg.Trader)
 
@@ -93,9 +95,15 @@ func main() {
 			case <-ctx.Done():
 				return
 			case <-sighup:
+				err := dbClient.UpdateConnection()
+				if err != nil {
+					traderLogger.Errorf("failed updating db connection: %s", err.Error())
+				}
+
 				envCfg, err := config.GetEnvCfg()
 				if err != nil {
 					tradingManagerLogger.Errorf("failed getting env config: %s", err.Error())
+					continue
 				}
 				traderManager.UpdateTradersWithConfig(envCfg.Trader)
 			}

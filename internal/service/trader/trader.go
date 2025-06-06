@@ -24,10 +24,10 @@ type ILogger interface {
 }
 
 type IBroker interface {
-	RecieveLastPrice(instrInfo *ds.InstrumentInfo) (*ds.LastPrice, error)
+	RecieveLastPrice(ctx context.Context, instrInfo *ds.InstrumentInfo) (*ds.LastPrice, error)
 	MakeSellOrder(instrInfo *ds.InstrumentInfo, lots int64, requestId, accountId string) (*ds.PostOrderResult, error)
 	MakeBuyOrder(instrInfo *ds.InstrumentInfo, lots int64, requestId, accountId string) (*ds.PostOrderResult, error)
-	RecieveOrdersUpdate(instrInfo *ds.InstrumentInfo, accountId string) (*ds.Order, error)
+	RecieveOrdersUpdate(ctx context.Context, instrInfo *ds.InstrumentInfo, accountId string) (*ds.Order, error)
 	RegisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accountId string) error
 	RegisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) error
 	UnregisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accountId string) error
@@ -116,7 +116,7 @@ func (s *TraderService) runOrdersOperating() {
 				supports.WaitFor(s.ctx, config.OnOrdersOperatingErrorDelay)
 			}
 
-			order, err := s.broker.RecieveOrdersUpdate(config.InstrInfo, config.AccountId)
+			order, err := s.broker.RecieveOrdersUpdate(s.ctx, config.InstrInfo, config.AccountId)
 			if err != nil {
 				operateError(err)
 				continue
@@ -134,6 +134,8 @@ func (s *TraderService) runOrdersOperating() {
 
 func (s *TraderService) RunTrading() {
 	var err error
+
+mainFor:
 	for {
 		config := s.GetConfig()
 
@@ -150,7 +152,7 @@ func (s *TraderService) RunTrading() {
 			supports.WaitFor(s.ctx, s.cfg.TradingDelay)
 
 			var lastPrice *ds.LastPrice
-			lastPrice, err = s.broker.RecieveLastPrice(config.InstrInfo)
+			lastPrice, err = s.broker.RecieveLastPrice(s.ctx, config.InstrInfo)
 			if err != nil {
 				s.logger.Errorf("failed recieving last price for '%s': %s", config.InstrInfo.Uid, err.Error())
 				continue
@@ -164,7 +166,7 @@ func (s *TraderService) RunTrading() {
 			}
 
 			var status ds.TradingAvailability
-			status, err := s.broker.GetTradingAvailability(config.InstrInfo)
+			status, err = s.broker.GetTradingAvailability(config.InstrInfo)
 			if err != nil {
 				s.logger.Errorf("failed getting trading availability for '%s': %s", config.InstrInfo.Uid, err.Error())
 				continue
@@ -190,13 +192,11 @@ func (s *TraderService) RunTrading() {
 							s.logger.Fatalf("failed executing on action error function: %s", err.Error())
 						}
 					}
-					continue
+					continue mainFor
 				}
 
 				if action.Action != ds.Hold {
 					s.logger.Infof(res)
-					// s := ""
-					// fmt.Scanf("%s", &s)
 				}
 			}
 		}

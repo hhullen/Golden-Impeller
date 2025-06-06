@@ -2,7 +2,6 @@ package t_api
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -35,11 +34,8 @@ var intervalMap = map[ds.CandleInterval]pb.CandleInterval{
 	ds.Interval_Month:  pb.CandleInterval_CANDLE_INTERVAL_MONTH,
 }
 
-func resolveIntoPbInterval(interval ds.CandleInterval) pb.CandleInterval {
-	if v, ok := intervalMap[interval]; ok {
-		return v
-	}
-	return pb.CandleInterval_CANDLE_INTERVAL_UNSPECIFIED
+func ResolveIntoPbInterval(interval ds.CandleInterval) pb.CandleInterval {
+	return intervalMap[interval]
 }
 
 type IStream interface {
@@ -167,14 +163,20 @@ func (c *Client) UnregisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) erro
 	return nil
 }
 
-func (c *Client) RecieveLastPrice(instrInfo *ds.InstrumentInfo) (*ds.LastPrice, error) {
+func (c *Client) RecieveLastPrice(ctx context.Context, instrInfo *ds.InstrumentInfo) (*ds.LastPrice, error) {
 	c.RLock()
 	ch := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]
 	c.RUnlock()
 
-	lastPrice, ok := <-ch
-	if !ok {
-		return nil, errors.New("marketDataStream closed")
+	var lastPrice *pb.LastPrice
+	var ok bool
+	select {
+	case <-ctx.Done():
+		return nil, fmt.Errorf("recieving last price context done for %s", instrInfo.Ticker)
+	case lastPrice, ok = <-ch:
+		if !ok {
+			return nil, fmt.Errorf("marketDataStream closed for %s", instrInfo.Ticker)
+		}
 	}
 
 	return &ds.LastPrice{
@@ -402,14 +404,20 @@ func (c *Client) UnregisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, acc
 	return nil
 }
 
-func (c *Client) RecieveOrdersUpdate(instrInfo *ds.InstrumentInfo, accountId string) (*ds.Order, error) {
+func (c *Client) RecieveOrdersUpdate(ctx context.Context, instrInfo *ds.InstrumentInfo, accountId string) (*ds.Order, error) {
 	c.RLock()
 	ch := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]
 	c.RUnlock()
 
-	order, ok := <-ch
-	if !ok {
-		return nil, fmt.Errorf("ordersDataStream closed")
+	var order *pb.OrderStateStreamResponse_OrderState
+	var ok bool
+	select {
+	case <-ctx.Done():
+		return nil, fmt.Errorf("recieving orders update context done for %s", instrInfo.Ticker)
+	case order, ok = <-ch:
+		if !ok {
+			return nil, fmt.Errorf("ordersDataStream closed for %s", instrInfo.Ticker)
+		}
 	}
 
 	returnable := &ds.Order{
@@ -445,10 +453,13 @@ func (c *Client) RecieveOrdersUpdate(instrInfo *ds.InstrumentInfo, accountId str
 		returnable.Direction = ds.Sell.ToString()
 	}
 
-	if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_FILL ||
-		order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_PARTIALLYFILL {
+	if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_FILL {
 
 		returnable.ExecutionReportStatus = ds.Fill.ToString()
+
+	} else if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_PARTIALLYFILL {
+
+		returnable.ExecutionReportStatus = ds.PartiallyFill.ToString()
 
 	} else if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_REJECTED ||
 		order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_CANCELLED {

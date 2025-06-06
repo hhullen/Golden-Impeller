@@ -15,7 +15,9 @@ const (
 	name = "btdstf"
 )
 
-type IStorage interface {
+//go:generate mockgen -source=btdstf.go -destination=btdstf_mock.go -package=btdstf . IStorage
+
+type IStorageStrategy interface {
 	GetLowestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error)
 	GetLatestExecutedSellOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error)
 	GetHighestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error)
@@ -29,7 +31,7 @@ type BTDSTF struct {
 	name string
 	cfg  *ConfigBTDSTF
 
-	storage IStorage
+	storage IStorageStrategy
 }
 
 type ConfigBTDSTF struct {
@@ -56,7 +58,7 @@ func NewConfigBTDSTF(params map[string]any) (cfg *ConfigBTDSTF, err error) {
 	return
 }
 
-func NewBTDSTF(s IStorage, cfg *ConfigBTDSTF, trId string) *BTDSTF {
+func NewBTDSTF(s IStorageStrategy, cfg *ConfigBTDSTF, trId string) *BTDSTF {
 	return &BTDSTF{
 		name:    name,
 		storage: s,

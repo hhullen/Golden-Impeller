@@ -122,7 +122,9 @@ func main() {
 
 		}(ctx, i, doneCh, backtestBroker, backtestStorage, test)
 
-		strategyInstance, err := strategy.ResolveStrategy(test.StrategyCfg, backtestStorage, investClient, test.UniqueTraderId)
+		strategyResolver := strategy.NewStrategy()
+
+		strategyInstance, err := strategyResolver.ResolveStrategy(test.StrategyCfg, backtestStorage, investClient, test.UniqueTraderId)
 		if err != nil {
 			panic(err)
 		}

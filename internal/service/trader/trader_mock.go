@@ -236,33 +236,33 @@ func (mr *MockIBrokerMockRecorder) MakeSellOrder(instrInfo, lots, requestId, acc
 }
 
 // RecieveLastPrice mocks base method.
-func (m *MockIBroker) RecieveLastPrice(instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error) {
+func (m *MockIBroker) RecieveLastPrice(ctx context.Context, instrInfo *datastruct.InstrumentInfo) (*datastruct.LastPrice, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RecieveLastPrice", instrInfo)
+	ret := m.ctrl.Call(m, "RecieveLastPrice", ctx, instrInfo)
 	ret0, _ := ret[0].(*datastruct.LastPrice)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // RecieveLastPrice indicates an expected call of RecieveLastPrice.
-func (mr *MockIBrokerMockRecorder) RecieveLastPrice(instrInfo interface{}) *gomock.Call {
+func (mr *MockIBrokerMockRecorder) RecieveLastPrice(ctx, instrInfo interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RecieveLastPrice", reflect.TypeOf((*MockIBroker)(nil).RecieveLastPrice), instrInfo)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RecieveLastPrice", reflect.TypeOf((*MockIBroker)(nil).RecieveLastPrice), ctx, instrInfo)
 }
 
 // RecieveOrdersUpdate mocks base method.
-func (m *MockIBroker) RecieveOrdersUpdate(instrInfo *datastruct.InstrumentInfo, accountId string) (*datastruct.Order, error) {
+func (m *MockIBroker) RecieveOrdersUpdate(ctx context.Context, instrInfo *datastruct.InstrumentInfo, accountId string) (*datastruct.Order, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RecieveOrdersUpdate", instrInfo, accountId)
+	ret := m.ctrl.Call(m, "RecieveOrdersUpdate", ctx, instrInfo, accountId)
 	ret0, _ := ret[0].(*datastruct.Order)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // RecieveOrdersUpdate indicates an expected call of RecieveOrdersUpdate.
-func (mr *MockIBrokerMockRecorder) RecieveOrdersUpdate(instrInfo, accountId interface{}) *gomock.Call {
+func (mr *MockIBrokerMockRecorder) RecieveOrdersUpdate(ctx, instrInfo, accountId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RecieveOrdersUpdate", reflect.TypeOf((*MockIBroker)(nil).RecieveOrdersUpdate), instrInfo, accountId)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RecieveOrdersUpdate", reflect.TypeOf((*MockIBroker)(nil).RecieveOrdersUpdate), ctx, instrInfo, accountId)
 }
 
 // RegisterLastPriceRecipient mocks base method.
@@ -357,21 +357,6 @@ func (m *MockIStorage) AddInstrumentInfo(instrInfo *datastruct.InstrumentInfo) (
 func (mr *MockIStorageMockRecorder) AddInstrumentInfo(instrInfo interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddInstrumentInfo", reflect.TypeOf((*MockIStorage)(nil).AddInstrumentInfo), instrInfo)
-}
-
-// GetInstrumentInfo mocks base method.
-func (m *MockIStorage) GetInstrumentInfo(uid string) (*datastruct.InstrumentInfo, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInstrumentInfo", uid)
-	ret0, _ := ret[0].(*datastruct.InstrumentInfo)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetInstrumentInfo indicates an expected call of GetInstrumentInfo.
-func (mr *MockIStorageMockRecorder) GetInstrumentInfo(uid interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInstrumentInfo", reflect.TypeOf((*MockIStorage)(nil).GetInstrumentInfo), uid)
 }
 
 // PutOrder mocks base method.

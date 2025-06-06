@@ -12,7 +12,7 @@ import (
 	"trading_bot/internal/clients/t_api"
 	"trading_bot/internal/config"
 	"trading_bot/internal/logger"
-	"trading_bot/internal/service/datastruct"
+	ds "trading_bot/internal/service/datastruct"
 	"trading_bot/internal/supports"
 
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
@@ -88,7 +88,7 @@ func main() {
 				panic(err)
 			}
 
-			interval, ok := datastruct.CandleIntervalFromString(instr.Interval)
+			interval, ok := ds.CandleIntervalFromString(instr.Interval)
 			if !ok {
 				panic("incorrect interval value")
 			}
@@ -111,12 +111,12 @@ func main() {
 }
 
 func loadCandlesToDB(ctx context.Context, c *t_api.Client, db *postgres.Client,
-	instrInfo *datastruct.InstrumentInfo, from, to time.Time, interval datastruct.CandleInterval, ch chan string) {
+	instrInfo *ds.InstrumentInfo, from, to time.Time, interval ds.CandleInterval, ch chan string) {
 	tick := time.NewTicker(time.Second * 2)
 
 	for t := from; t.Before(to); t = t.AddDate(0, 1, 0) {
 
-		candles, err := getCandles(c, t, t.AddDate(0, 1, 0), instrInfo.Uid)
+		candles, err := getCandles(c, t, t.AddDate(0, 1, 0), interval, instrInfo.Uid)
 		if err != nil {
 			panic(err)
 		}
@@ -133,10 +133,10 @@ func loadCandlesToDB(ctx context.Context, c *t_api.Client, db *postgres.Client,
 	}
 }
 
-func getCandles(c *t_api.Client, from, to time.Time, instr string) ([]*datastruct.Candle, error) {
+func getCandles(c *t_api.Client, from, to time.Time, interval ds.CandleInterval, instr string) ([]*ds.Candle, error) {
 	hist, err := c.NewMarketDataServiceClient().GetHistoricCandles(&investgo.GetHistoricCandlesRequest{
 		Instrument: instr,
-		Interval:   investapi.CandleInterval_CANDLE_INTERVAL_1_MIN,
+		Interval:   t_api.ResolveIntoPbInterval(interval),
 		From:       from,
 		To:         to,
 		Source:     investapi.GetCandlesRequest_CANDLE_SOURCE_EXCHANGE,
@@ -144,22 +144,22 @@ func getCandles(c *t_api.Client, from, to time.Time, instr string) ([]*datastruc
 	if err != nil {
 		return nil, err
 	}
-	candles := make([]*datastruct.Candle, 0, len(hist))
+	candles := make([]*ds.Candle, 0, len(hist))
 	for _, v := range hist {
-		candles = append(candles, &datastruct.Candle{
-			Open: datastruct.Quotation{
+		candles = append(candles, &ds.Candle{
+			Open: ds.Quotation{
 				Units: v.Open.Units,
 				Nano:  v.Open.Nano,
 			},
-			Close: datastruct.Quotation{
+			Close: ds.Quotation{
 				Units: v.Close.Units,
 				Nano:  v.Close.Nano,
 			},
-			High: datastruct.Quotation{
+			High: ds.Quotation{
 				Units: v.High.Units,
 				Nano:  v.High.Nano,
 			},
-			Low: datastruct.Quotation{
+			Low: ds.Quotation{
 				Units: v.Low.Units,
 				Nano:  v.Low.Nano,
 			},

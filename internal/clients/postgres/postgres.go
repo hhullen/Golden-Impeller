@@ -49,9 +49,13 @@ func NewClient() (*Client, error) {
 	db.SetMaxIdleConns(5)
 	db.SetMaxOpenConns(10)
 
+	return buildClient(db), nil
+}
+
+func buildClient(db *sqlx.DB) *Client {
 	return &Client{
 		db: db,
-	}, nil
+	}
 }
 
 func readSecret(path string) string {
@@ -64,6 +68,18 @@ func readSecret(path string) string {
 	fmt.Fscan(f, &secret)
 
 	return string(secret)
+}
+
+func (c *Client) UpdateConnection() error {
+	newClient, err := NewClient()
+	if err != nil {
+		return err
+	}
+
+	c.db.Close()
+	c.db = newClient.db
+
+	return nil
 }
 
 func (c *Client) GetDB() *sql.DB {
@@ -197,6 +213,8 @@ func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.O
 			err = fmt.Errorf("panic recovered: %v. rollback error: %v", p, tx.Rollback())
 		} else if err == nil {
 			err = tx.Commit()
+		} else {
+			tx.Rollback()
 		}
 	}()
 
@@ -212,7 +230,6 @@ func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.O
 		ON CONFLICT (instrument_id, order_id) DO UPDATE SET
 		created_at = EXCLUDED.created_at,
 		completed_at = EXCLUDED.completed_at,
-		order_id_ref = EXCLUDED.order_id_ref,
 		direction = EXCLUDED.direction,
 		exec_report_status = EXCLUDED.exec_report_status,
 		price_units = EXCLUDED.price_units,

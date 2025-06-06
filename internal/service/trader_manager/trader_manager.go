@@ -7,14 +7,18 @@ import (
 	"time"
 	"trading_bot/internal/config"
 	"trading_bot/internal/service/trader"
-	"trading_bot/internal/strategy"
 	"trading_bot/internal/supports"
 
 	"github.com/google/uuid"
 )
 
+//go:generate mockgen -source=trader_manager.go -destination=trader_manager_mock.go -package=tradermanager . IStrategyResolver
+
 type TraderId string
 
+type IStrategyResolver interface {
+	ResolveStrategy(cfg map[string]any, db any, broker any, traderId string) (strategy trader.IStrategy, err error)
+}
 type TraderManager struct {
 	sync.RWMutex
 
@@ -23,13 +27,15 @@ type TraderManager struct {
 	onTraderPanicDelay time.Duration
 	wg                 sync.WaitGroup
 
-	broker        trader.IBroker
-	storage       trader.IStorage
-	managerLogger trader.ILogger
-	traderLogger  trader.ILogger
+	broker           trader.IBroker
+	storage          trader.IStorage
+	managerLogger    trader.ILogger
+	traderLogger     trader.ILogger
+	strategyResolver IStrategyResolver
 }
 
-func NewTraderManager(ctx context.Context, onTraderPanicDelay time.Duration, broker trader.IBroker, storage trader.IStorage, managerLogger, traderLogger trader.ILogger) *TraderManager {
+func NewTraderManager(ctx context.Context, onTraderPanicDelay time.Duration, broker trader.IBroker,
+	storage trader.IStorage, managerLogger, traderLogger trader.ILogger, strategyResolver IStrategyResolver) *TraderManager {
 	return &TraderManager{
 		onTraderPanicDelay: onTraderPanicDelay,
 		traders:            make(map[TraderId]*trader.TraderService),
@@ -37,6 +43,7 @@ func NewTraderManager(ctx context.Context, onTraderPanicDelay time.Duration, bro
 		storage:            storage,
 		managerLogger:      managerLogger,
 		traderLogger:       traderLogger,
+		strategyResolver:   strategyResolver,
 		ctx:                ctx,
 	}
 }
@@ -63,15 +70,9 @@ func (tm *TraderManager) UpdateTradersWithConfig(cfg *config.TraderCfg) {
 		instrInfo.Id = dbId
 		instrInfo.InstanceId = uuid.New()
 
-		resolvedStrategy, err := strategy.ResolveStrategy(traderCfg.StrategyCfg, tm.storage, tm.broker, traderCfg.UniqueTraderId)
+		strategyInstance, err := tm.strategyResolver.ResolveStrategy(traderCfg.StrategyCfg, tm.storage, tm.broker, traderCfg.UniqueTraderId)
 		if err != nil {
 			tm.managerLogger.Errorf("failed resolving strategy: %s", err.Error())
-			continue
-		}
-
-		strategyInstance, err := castStrategyInstance(resolvedStrategy)
-		if err != nil {
-			tm.managerLogger.Errorf("failed getting strategy '%s': %s", traderCfg.UniqueTraderId, err.Error())
 			continue
 		}
 
@@ -138,15 +139,6 @@ func (tm *TraderManager) findTrader(trId TraderId) (*trader.TraderService, bool)
 	v, ok := tm.traders[trId]
 
 	return v, ok
-}
-
-func castStrategyInstance(instance any) (strategy trader.IStrategy, err error) {
-	defer func() {
-		if p := recover(); p != nil {
-			err = fmt.Errorf("%v", p)
-		}
-	}()
-	return instance.(trader.IStrategy), nil
 }
 
 func (tm *TraderManager) stopMissingTraders(cfg *config.TraderCfg) {

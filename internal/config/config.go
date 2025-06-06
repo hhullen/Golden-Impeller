@@ -59,12 +59,14 @@ type TraderCfg struct {
 	OnTradingErrorDelay         time.Duration `yaml:"on_trading_error_delay"`
 	OnOrdersOperatingErrorDelay time.Duration `yaml:"on_orders_operating_error_delay"`
 
-	Traders []*struct {
-		UniqueTraderId string         `yaml:"unique_trader_id"`
-		Uid            string         `yaml:"uid"`
-		AccountId      string         `yaml:"account_id"`
-		StrategyCfg    map[string]any `yaml:"strategy_cfg"`
-	} `yaml:"traders"`
+	Traders []*OneTraderCfg `yaml:"traders"`
+}
+
+type OneTraderCfg struct {
+	UniqueTraderId string         `yaml:"unique_trader_id"`
+	Uid            string         `yaml:"uid"`
+	AccountId      string         `yaml:"account_id"`
+	StrategyCfg    map[string]any `yaml:"strategy_cfg"`
 }
 
 func GetEnvCfg() (*EnvCfg, error) {

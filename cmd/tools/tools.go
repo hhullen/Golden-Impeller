@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"sync"
 	"syscall"
 	"time"
 	"trading_bot/internal/clients/t_api"
@@ -120,6 +121,9 @@ func sell(args []string) {
 	}
 
 	c := getBrokerClient()
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go listenOrders(c, accountId, &wg)
 
 	orderResp, err := c.NewOrdersServiceClient().PostOrder(&investgo.PostOrderRequest{
 		InstrumentId: instrumentUID,
@@ -132,6 +136,7 @@ func sell(args []string) {
 	if err != nil {
 		fatalMsg(err, orderResp)
 	}
+	wg.Wait()
 }
 
 func buy(args []string) {
@@ -147,6 +152,9 @@ func buy(args []string) {
 	}
 
 	c := getBrokerClient()
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go listenOrders(c, accountId, &wg)
 
 	orderResp, err := c.NewOrdersServiceClient().PostOrder(&investgo.PostOrderRequest{
 		InstrumentId: instrumentUID,
@@ -158,6 +166,36 @@ func buy(args []string) {
 
 	if err != nil {
 		fatalMsg(err, orderResp)
+	}
+	wg.Wait()
+}
+
+func listenOrders(c *t_api.Client, accId string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	s, err := c.NewOrdersStreamClient().OrderStateStream([]string{accId}, 0)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go s.Listen()
+
+	ch := s.OrderState()
+
+	for v := range ch {
+		price := datastruct.Quotation{
+			Units: v.ExecutedOrderPrice.Units,
+			Nano:  v.ExecutedOrderPrice.Nano,
+		}
+
+		fmt.Printf("Ticker: %s, order: %s, direction: %s, price: %.3f, status: %s\n",
+			v.Ticker, v.OrderId, v.Direction.String(), price.ToFloat64(), v.ExecutionReportStatus.String())
+
+		if v.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_CANCELLED ||
+			v.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_REJECTED ||
+			v.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_UNSPECIFIED ||
+			v.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_FILL {
+			s.Stop()
+		}
 	}
 }
 

@@ -1,6 +1,7 @@
 package backtest
 
 import (
+	"context"
 	"fmt"
 	"time"
 	ds "trading_bot/internal/service/datastruct"
@@ -90,7 +91,7 @@ func (c *BacktestBroker) GetInstrumentInfo(uid string) (*ds.InstrumentInfo, erro
 	}, nil
 }
 
-func (c *BacktestBroker) RecieveLastPrice(instrInfo *ds.InstrumentInfo) (*ds.LastPrice, error) {
+func (c *BacktestBroker) RecieveLastPrice(_ context.Context, instrInfo *ds.InstrumentInfo) (*ds.LastPrice, error) {
 	c.candleHistoryOffset++
 
 	candle, err := c.storage.GetCandleWithOffset(instrInfo, c.interval, c.from, c.to, c.candleHistoryOffset)
@@ -207,7 +208,7 @@ func (c *BacktestBroker) MakeSellOrder(instrInfo *ds.InstrumentInfo, lots int64,
 	}, nil
 }
 
-func (c *BacktestBroker) RecieveOrdersUpdate(instrInfo *ds.InstrumentInfo, _ string) (*ds.Order, error) {
+func (c *BacktestBroker) RecieveOrdersUpdate(_ context.Context, instrInfo *ds.InstrumentInfo, _ string) (*ds.Order, error) {
 	v := <-c.ordersCh
 	return &v, nil
 }

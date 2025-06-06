@@ -8,7 +8,7 @@ ifeq ($(OS),Windows_NT)
 	PWD=$(shell powershell -Command "(Get-Location).Path")
 endif
 
-.PHONY: start generate-mocks migrations-up migrations-down migrations-status get-accounts get-instruments
+.PHONY: start generate-mocks migrations-up migrations-down migrations-status backtest load-candles get-accounts get-instruments update-traders-config start-local-database stop-local-database trader-local trader
 
 start: migrations-up get-accounts get-instruments
 
@@ -43,7 +43,7 @@ update-traders-config:
 	docker compose kill -s SIGHUP trading_bot
 
 start-local-database:
-	docker run -d -p 5432:5432 \
+	docker run -d --rm -p 5432:5432 \
 	  -e POSTGRES_PASSWORD_FILE=/run/secrets/db_password \
   	  -e POSTGRES_USER_FILE=/run/secrets/db_user \
       -e POSTGRES_DB_FILE=/run/secrets/db_name \
@@ -52,7 +52,7 @@ start-local-database:
       -v "$(PWD)/secrets/db_name.txt:/run/secrets/db_name:ro" \
 	  -v local_postgres_data:/var/lib/postgresql/data \
 	  --name trader-local-database \
-	   postgres:17.5-alpine3.21
+	  postgres:17.5-alpine3.21
 
 stop-local-database:
 	docker container stop trader-local-database
