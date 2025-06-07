@@ -67,27 +67,6 @@ func NewBTDSTF(s IStorageStrategy, cfg *ConfigBTDSTF, trId string) *BTDSTF {
 }
 
 func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *ds.InstrumentInfo, lastPrice *ds.LastPrice) (acts []*ds.StrategyAction, err error) {
-	var orders int64
-	orders, err = b.storage.GetUnsoldOrdersAmount(trId, instrInfo)
-	if err != nil {
-		return
-	}
-
-	var order *ds.Order
-	var existBought bool
-	order, existBought, err = b.storage.GetLowestExecutedBuyOrder(trId, instrInfo)
-	if err != nil {
-		return
-	}
-
-	existSold := true
-	if !existBought {
-		order, existSold, err = b.storage.GetLatestExecutedSellOrder(trId, instrInfo)
-		if err != nil {
-			return
-		}
-	}
-
 	defer func() {
 		if len(acts) == 1 && acts[0].Action == ds.Hold {
 			return
@@ -109,6 +88,7 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 				TraderId:              trId,
 				OrderId:               newRequestId,
 			}
+
 			if act.Action == ds.Sell {
 				ref := act.RequestId
 				newOrder.OrderIdRef = &ref
@@ -117,6 +97,7 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 
 			err = b.storage.MakeNewOrder(instrInfo, newOrder)
 			if err != nil {
+				acts = nil
 				return
 			}
 
@@ -125,6 +106,27 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 			}
 		}
 	}()
+
+	var orders int64
+	orders, err = b.storage.GetUnsoldOrdersAmount(trId, instrInfo)
+	if err != nil {
+		return
+	}
+
+	var order *ds.Order
+	var existBought bool
+	order, existBought, err = b.storage.GetLowestExecutedBuyOrder(trId, instrInfo)
+	if err != nil {
+		return
+	}
+
+	existSold := true
+	if !existBought {
+		order, existSold, err = b.storage.GetLatestExecutedSellOrder(trId, instrInfo)
+		if err != nil {
+			return
+		}
+	}
 
 	if !existSold && !existBought {
 		acts = append(acts, &ds.StrategyAction{
