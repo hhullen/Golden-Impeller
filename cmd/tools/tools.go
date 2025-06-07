@@ -30,22 +30,26 @@ const (
 	bondsFilePath      = "bonds.txt"
 	currenciesFilePath = "currencies.txt"
 
-	getAccountsCommand         = "get-accounts"
-	getInstrumentsCommand      = "get-instruments"
-	topupSandboxAccountCommand = "topup-sandbox-account"
-	setupSandboxAccountCommand = "setup-sandbox-account"
-	sellCommand                = "sell"
-	buyCommand                 = "buy"
+	getAccountsCommand          = "get-accounts"
+	getInstrumentsCommand       = "get-instruments"
+	topupSandboxAccountCommand  = "topup-sandbox-account"
+	setupSandboxAccountCommand  = "setup-sandbox-account"
+	sellCommand                 = "sell"
+	buyCommand                  = "buy"
+	createSandboxAccountCommand = "create-sandbox-account"
+	closeSandboxAccountCommand  = "close-sandbox-account"
 )
 
 var (
 	commandsMap = map[string]func([]string){
-		getAccountsCommand:         getAccounts,
-		getInstrumentsCommand:      getInstruments,
-		topupSandboxAccountCommand: topUpSandboxAccount,
-		setupSandboxAccountCommand: setUpSandboxAccount,
-		sellCommand:                sell,
-		buyCommand:                 buy,
+		getAccountsCommand:          getAccounts,
+		getInstrumentsCommand:       getInstruments,
+		topupSandboxAccountCommand:  topUpSandboxAccount,
+		setupSandboxAccountCommand:  setUpSandboxAccount,
+		sellCommand:                 sell,
+		buyCommand:                  buy,
+		createSandboxAccountCommand: createSandboxAccount,
+		closeSandboxAccountCommand:  closeSandboxAccount,
 	}
 )
 
@@ -444,4 +448,28 @@ func writeInstruments(instr []IInstrumentInfo, filePath string) {
 		w.Write(line)
 	}
 	fmt.Printf("saved to %s\n", filePath)
+}
+
+func createSandboxAccount(_ []string) {
+	c := getBrokerClient()
+	res, err := c.NewSandboxServiceClient().OpenSandboxAccount()
+	if err != nil {
+		fatalMsg(err, res)
+	}
+
+	fmt.Printf("New account: %s\n", res.GetAccountId())
+}
+
+func closeSandboxAccount(args []string) {
+	if len(args) < 1 {
+		log.Fatalf("account id required: ./tool %s, <account id> ", closeSandboxAccountCommand)
+	}
+
+	c := getBrokerClient()
+	res, err := c.NewSandboxServiceClient().CloseSandboxAccount(args[0])
+	if err != nil {
+		fatalMsg(err, res)
+	}
+
+	fmt.Printf("Closed account: %s\n", args[0])
 }
