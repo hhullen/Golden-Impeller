@@ -18,7 +18,7 @@ type message struct {
 }
 
 type Logger struct {
-	log.Logger
+	l       log.Logger
 	infoCh  chan message
 	errCh   chan message
 	fatalCh chan message
@@ -33,13 +33,13 @@ func NewLogger(out io.Writer, prefix string) *Logger {
 		fatalCh: make(chan message, 1000),
 	}
 
-	l.SetOutput(out)
-	l.SetPrefix(prefix + " ")
-	l.SetFlags(log.Ltime + log.Ldate)
+	l.l.SetOutput(out)
+	l.l.SetPrefix(prefix + " ")
+	l.l.SetFlags(log.Ltime + log.Ldate)
 
-	go l.listenCh(l.infoCh, l.Printf)
-	go l.listenCh(l.errCh, l.Printf)
-	go l.listenCh(l.fatalCh, l.Printf)
+	go l.listenCh(l.infoCh, l.l.Printf)
+	go l.listenCh(l.errCh, l.l.Printf)
+	go l.listenCh(l.fatalCh, l.l.Printf)
 
 	return l
 }
