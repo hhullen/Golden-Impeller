@@ -12,23 +12,11 @@ const (
 	envFile = ".env.yaml"
 )
 
-var (
-	dateFormats = []string{
-		"2006-01-02",
-		"2006/01/02",
-		"2006.01.02",
-		"02-01-2006",
-		"02.01.2006",
-		"02/01/2006",
-	}
-)
-
 type EnvCfg struct {
 	AppName          string `yaml:"APP_NAME"`
 	TInvestToken     string `yaml:"T_INVEST_TOKEN"`
 	TInvestAddress   string `yaml:"T_INVEST_ADDRESS"`
 	TInvestAccountID string `yaml:"T_INVEST_ACCOUNT_ID"`
-	Account2         string `yaml:"ACCOUNT_2"`
 
 	Trader               *TraderCfg          `yaml:"TRADER"`
 	Backtester           []*BacktesterCfg    `yaml:"BACKTESTER"`

@@ -210,7 +210,7 @@ func (s *TraderService) MakeAction(lastPrice *ds.LastPrice, action *ds.StrategyA
 			return "", err
 		}
 
-		return fmt.Sprintf("[%s] SELL order %s: %s; Lots req: %d; Price: %.2f; Commission: %.8f", lastPrice.Time.Format(time.DateOnly),
+		return fmt.Sprintf("[%s] [%s] SELL order %s: %s; Lots req: %d; Price: %.2f; Commission: %.8f", s.cfg.TraderId, lastPrice.Time.Format(time.DateOnly),
 			s.cfg.InstrInfo.Name, res.ExecutionReportStatus, action.Lots, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
 
 	} else if action.Action == ds.Buy {
@@ -219,7 +219,7 @@ func (s *TraderService) MakeAction(lastPrice *ds.LastPrice, action *ds.StrategyA
 			return "", err
 		}
 
-		return fmt.Sprintf("[%s] BUY order %s: %s; Lots req: %d; Price: %.2f; Commission: %.8f", lastPrice.Time.Format(time.DateOnly),
+		return fmt.Sprintf("[%s] [%s] BUY order %s: %s; Lots req: %d; Price: %.2f; Commission: %.8f", s.cfg.TraderId, lastPrice.Time.Format(time.DateOnly),
 			s.cfg.InstrInfo.Name, res.ExecutionReportStatus, action.Lots, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
 
 	}
