@@ -2,6 +2,7 @@ package t_api
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -12,11 +13,16 @@ import (
 	"github.com/google/uuid"
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 	pb "github.com/russianinvestments/invest-api-go-sdk/proto"
+	"google.golang.org/grpc/metadata"
 )
 
 const (
 	onErrorListeningStreamDelay = time.Second * 10
 )
+
+type IGetterHeader interface {
+	GetHeader() metadata.MD
+}
 
 var intervalMap = map[ds.CandleInterval]pb.CandleInterval{
 	ds.Interval_1_Min:  pb.CandleInterval_CANDLE_INTERVAL_1_MIN,
@@ -152,13 +158,13 @@ func (c *Client) UnregisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) erro
 	c.Lock()
 	defer c.Unlock()
 
-	if _, ok := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]; !ok {
+	if _, ok := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]; ok {
 		supports.CloseIfMaybeClosed(c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId])
-		delete(c.lastPriceInput[instrInfo.Uid], instrInfo.InstanceId)
 	}
-	if _, ok := c.lastPriceInput[instrInfo.Uid]; !ok {
-		delete(c.lastPriceInput, instrInfo.Uid)
-	}
+
+	delete(c.lastPriceInput[instrInfo.Uid], instrInfo.InstanceId)
+
+	delete(c.lastPriceInput, instrInfo.Uid)
 
 	return nil
 }
@@ -211,16 +217,6 @@ func (c *Client) prepareStreamForInstrument(instrInfo *ds.InstrumentInfo) error 
 }
 
 func (c *Client) startInstrumenstRouting(ch <-chan *pb.LastPrice) {
-	defer func() {
-		c.Lock()
-		defer c.Unlock()
-		for _, v := range c.lastPriceInput {
-			for _, ch := range v {
-				supports.CloseIfMaybeClosed(ch)
-			}
-		}
-	}()
-
 	for {
 		select {
 		case <-c.ctx.Done():
@@ -302,13 +298,7 @@ func (c *Client) MakeSellOrder(instrInfo *ds.InstrumentInfo, lots int64, request
 		OrderId:      requestId,
 	})
 	if err != nil {
-		msg := ""
-		if orderResp != nil {
-			for _, m := range orderResp.Header.Get("message") {
-				msg += "; " + m
-			}
-		}
-		return nil, fmt.Errorf("%s%s", err.Error(), msg)
+		return nil, makeErrorMessage(err, orderResp)
 	}
 
 	return &ds.PostOrderResult{
@@ -340,13 +330,7 @@ func (c *Client) MakeBuyOrder(instrInfo *ds.InstrumentInfo, lots int64, requestI
 		OrderId:      requestId,
 	})
 	if err != nil {
-		msg := ""
-		if buyResp != nil {
-			for _, m := range buyResp.Header.Get("message") {
-				msg += "; " + m
-			}
-		}
-		return nil, fmt.Errorf("%s%s", err.Error(), msg)
+		return nil, makeErrorMessage(err, buyResp)
 	}
 
 	return &ds.PostOrderResult{
@@ -364,6 +348,17 @@ func (c *Client) MakeBuyOrder(instrInfo *ds.InstrumentInfo, lots int64, requestI
 	}, nil
 }
 
+func makeErrorMessage(err error, h IGetterHeader) error {
+	msg := err.Error()
+	if h != nil {
+		for _, s := range h.GetHeader()["message"] {
+			msg += "; " + s
+		}
+	}
+
+	return errors.New(msg)
+}
+
 func (c *Client) RegisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accountId string) error {
 	if c.ordersDataStream == nil {
 		err := c.prepareStreamForOrdersState(instrInfo)
@@ -373,6 +368,8 @@ func (c *Client) RegisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accou
 	}
 
 	c.Lock()
+	defer c.Unlock()
+
 	if _, ok := c.ordersStateInput[accountId]; !ok {
 		c.ordersStateInput[accountId] = make(map[string]map[uuid.UUID]chan *pb.OrderStateStreamResponse_OrderState)
 	}
@@ -382,24 +379,23 @@ func (c *Client) RegisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accou
 	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]; !ok {
 		c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId] = make(chan *pb.OrderStateStreamResponse_OrderState)
 	}
-	c.Unlock()
 
 	return nil
 }
 
 func (c *Client) UnregisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accountId string) error {
 	c.Lock()
-	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]; !ok {
+	defer c.Unlock()
+
+	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]; ok {
 		supports.CloseIfMaybeClosed(c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId])
-		delete(c.ordersStateInput[accountId][instrInfo.Uid], instrInfo.InstanceId)
 	}
-	if _, ok := c.ordersStateInput[accountId]; !ok {
-		delete(c.ordersStateInput, accountId)
-	}
-	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid]; !ok {
-		delete(c.ordersStateInput[accountId], instrInfo.Uid)
-	}
-	c.Unlock()
+
+	delete(c.ordersStateInput[accountId][instrInfo.Uid], instrInfo.InstanceId)
+
+	delete(c.ordersStateInput[accountId], instrInfo.Uid)
+
+	delete(c.ordersStateInput, accountId)
 
 	return nil
 }
@@ -481,27 +477,14 @@ func (c *Client) prepareStreamForOrdersState(instrInfo *ds.InstrumentInfo) error
 
 	c.ordersDataStream = stream
 
-	go c.startOrdersStateRouting(instrInfo, c.ordersDataStream.OrderState())
+	go c.startOrdersStateRouting(c.ordersDataStream.OrderState())
 
 	go c.startListeningStream(instrInfo.Uid, c.ordersDataStream)
 
 	return nil
 }
 
-func (c *Client) startOrdersStateRouting(instrInfo *ds.InstrumentInfo, ch <-chan *pb.OrderStateStreamResponse_OrderState) {
-	defer func() {
-		c.Lock()
-		defer c.Unlock()
-
-		for _, byAccId := range c.ordersStateInput {
-			for _, byUID := range byAccId {
-				for _, ch := range byUID {
-					supports.CloseIfMaybeClosed(ch)
-				}
-			}
-		}
-	}()
-
+func (c *Client) startOrdersStateRouting(ch <-chan *pb.OrderStateStreamResponse_OrderState) {
 	for {
 		select {
 		case <-c.ctx.Done():
