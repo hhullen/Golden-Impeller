@@ -3,14 +3,37 @@ MOCKGEN_INSTALL=go install github.com/golang/mock/mockgen@latest
 MOCKGEN=$(shell where mockgen)
 
 PWD=$(pwd)
+RM=rm -rf
+
+
+EXTENSION=.out
+
+TOOLS_DIR=./cmd/tools
+TOOLS_BIN=$(TOOLS_DIR)/tools$(EXTENSION)
+
+MIGRATOR_DIR=./cmd/migrator
+MIGRATOR_BIN=$(MIGRATOR_DIR)/migrator$(EXTENSION)
+
+CANDLES_LOADER_DIR=./cmd/candles_loader
+CANDLES_LOADER_BIN=$(CANDLES_LOADER_DIR)/candles_loader$(EXTENSION)
+
+BACKTEST_BOT_DIR=./cmd/backtest_bot
+BACKTEST_BOT_BIN=$(BACKTEST_BOT_DIR)/backtest_bot$(EXTENSION)
+
+TRADER_LOCAL_DIR=./cmd/trading_bot
+TRADER_LOCAL_BIN=$(TRADER_LOCAL_DIR)/trading_bot$(EXTENSION)
 
 ifeq ($(OS),Windows_NT)
+	SHELL=powershell.exe
+	EXTENSION=.exe
 	PWD=$(shell powershell -Command "(Get-Location).Path")
+	RM=echo
+	RM_POSTFIX=| Remove-Item -Force -ErrorAction SilentlyContinue; exit 0
 endif
 
 .PHONY: start generate-mocks migrations-up migrations-down migrations-status backtest load-candles get-accounts get-instruments update-traders-config start-local-database stop-local-database trader-local trader
 
-start: migrations-up get-accounts get-instruments
+start: start-local-database migrations-up get-accounts get-instruments
 
 generate-mocks:
 ifndef MOCKGEN
@@ -18,26 +41,43 @@ ifndef MOCKGEN
 endif
 	go generate ./...
 
-migrations-up:
-	go run ./cmd/migrator up
+$(MIGRATOR_BIN):
+	go build -o $(MIGRATOR_BIN) $(MIGRATOR_DIR)
 
-migrations-down:
-	go run ./cmd/migrator down
+$(TOOLS_BIN):
+	go build -o $(TOOLS_BIN) $(TOOLS_DIR)
 
-migrations-status:
-	go run ./cmd/migrator status
+tools: $(TOOLS_BIN)
 
-backtest:
-	go run ./cmd/backtest_bot
+$(CANDLES_LOADER_BIN):
+	go build -o $(CANDLES_LOADER_BIN) $(CANDLES_LOADER_DIR)
 
-load-candles:
-	go run ./cmd/candles_loader
+$(BACKTEST_BOT_BIN):
+	go build -o $(BACKTEST_BOT_BIN) $(BACKTEST_BOT_DIR)
 
-get-accounts:
-	go run ./cmd/tools get-accounts
+$(TRADER_LOCAL_BIN):
+	go build -o $(TRADER_LOCAL_BIN) $(TRADER_LOCAL_DIR)
 
-get-instruments:
-	go run ./cmd/tools get-instruments
+migrations-up: $(MIGRATOR_BIN)
+	$(MIGRATOR_BIN) up
+
+migrations-down: $(MIGRATOR_BIN)
+	$(MIGRATOR_BIN) down
+
+migrations-status: $(MIGRATOR_BIN)
+	$(MIGRATOR_BIN) status
+
+backtest: $(BACKTEST_BOT_BIN)
+	$(BACKTEST_BOT_BIN)
+
+load-candles: $(CANDLES_LOADER_BIN)
+	$(CANDLES_LOADER_BIN)
+
+get-accounts: $(TOOLS_BIN)
+	$(TOOLS_BIN) get-accounts
+
+get-instruments: $(TOOLS_BIN)
+	$(TOOLS_BIN) get-instruments
 
 update-traders-config:
 	docker compose kill -s SIGHUP trading_bot
@@ -57,8 +97,11 @@ start-local-database:
 stop-local-database:
 	docker container stop trader-local-database
 
-trader-local:
-	go run ./cmd/trading_bot
+trader-local: $(TRADER_LOCAL_BIN)
+	$(TRADER_LOCAL_BIN)
 
 trader:
 	docker compose up
+
+clean:
+	$(RM) $(MIGRATOR_BIN) $(TOOLS_BIN) $(CANDLES_LOADER_BIN) $(BACKTEST_BOT_BIN) $(TRADER_LOCAL_BIN) $(RM_POSTFIX)
