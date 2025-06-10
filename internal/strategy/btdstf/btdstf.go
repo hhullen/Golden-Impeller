@@ -3,7 +3,6 @@ package btdstf
 import (
 	"context"
 	"fmt"
-	"time"
 
 	ds "trading_bot/internal/service/datastruct"
 	"trading_bot/internal/supports"
@@ -77,10 +76,8 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 				act.Lots = 1
 			}
 
-			t := time.Now()
 			newRequestId := uuid.NewString()
 			newOrder := &ds.Order{
-				CreatedAt:             &t,
 				Direction:             act.Action.ToString(),
 				ExecutionReportStatus: ds.New.ToString(),
 				OrderPrice:            lastPrice.Price,
