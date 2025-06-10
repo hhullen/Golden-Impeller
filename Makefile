@@ -5,7 +5,6 @@ MOCKGEN=$(shell where mockgen)
 PWD=$(pwd)
 RM=rm -rf
 
-
 EXTENSION=.out
 
 TOOLS_DIR=./cmd/tools
@@ -82,22 +81,14 @@ get-instruments: $(TOOLS_BIN)
 update-traders-config:
 	docker compose kill -s SIGHUP trading_bot
 
+# this shit in one line because Poweshell don't work with backslash
 start-local-database:
-	docker run -d --rm -p 5432:5432 \
-	  -e POSTGRES_PASSWORD_FILE=/run/secrets/db_password \
-  	  -e POSTGRES_USER_FILE=/run/secrets/db_user \
-      -e POSTGRES_DB_FILE=/run/secrets/db_name \
-	  -v "$(PWD)/secrets/db_password.txt:/run/secrets/db_password:ro" \
-      -v "$(PWD)/secrets/db_user.txt:/run/secrets/db_user:ro" \
-      -v "$(PWD)/secrets/db_name.txt:/run/secrets/db_name:ro" \
-	  -v local_postgres_data:/var/lib/postgresql/data \
-	  --name trader-local-database \
-	  postgres:17.5-alpine3.21
+	docker run -d --rm -p 5432:5432 -e POSTGRES_PASSWORD_FILE=/run/secrets/db_password -e POSTGRES_USER_FILE=/run/secrets/db_user -e POSTGRES_DB_FILE=/run/secrets/db_name -v $(PWD)/secrets/db_password.txt:/run/secrets/db_password:ro -v $(PWD)/secrets/db_user.txt:/run/secrets/db_user:ro -v $(PWD)/secrets/db_name.txt:/run/secrets/db_name:ro -v local_postgres_data:/var/lib/postgresql/data --name trader-local-database postgres:17.5-alpine3.21
 
 stop-local-database:
 	docker container stop trader-local-database
 
-trader-local: $(TRADER_LOCAL_BIN)
+local-trader: $(TRADER_LOCAL_BIN)
 	$(TRADER_LOCAL_BIN)
 
 trader:
