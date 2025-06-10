@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 	"trading_bot/internal/config"
-	"trading_bot/internal/service/datastruct"
 	ds "trading_bot/internal/service/datastruct"
 	"trading_bot/internal/service/trader"
 	"trading_bot/internal/strategy/btdstf"
@@ -174,9 +173,9 @@ func TestTraderManager(t *testing.T) {
 		ts.mockBrocker.EXPECT().RegisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
 
 		ts.mockBrocker.EXPECT().RecieveOrdersUpdate(gomock.Any(), gomock.Any(), gomock.Any()).Return(&ds.Order{CreatedAt: &time.Time{}}, nil).MinTimes(1)
-		ts.mockStorage.MockIStorage.EXPECT().PutOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
+		ts.mockStorage.MockIStorage.EXPECT().UpdateOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
 
-		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&datastruct.LastPrice{}, nil).MinTimes(1)
+		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MinTimes(1)
 
 		oldMockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MinTimes(1)
 
@@ -223,9 +222,9 @@ func TestTraderManager(t *testing.T) {
 		ts.mockBrocker.EXPECT().RegisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
 
 		ts.mockBrocker.EXPECT().RecieveOrdersUpdate(gomock.Any(), gomock.Any(), gomock.Any()).Return(&ds.Order{CreatedAt: &time.Time{}}, nil).MinTimes(1)
-		ts.mockStorage.MockIStorage.EXPECT().PutOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
+		ts.mockStorage.MockIStorage.EXPECT().UpdateOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
 
-		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&datastruct.LastPrice{}, nil).MinTimes(1)
+		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MinTimes(1)
 
 		oldMockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MinTimes(1)
 

@@ -372,3 +372,17 @@ func (mr *MockIStorageMockRecorder) PutOrder(trId, instrInfo, order interface{})
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PutOrder", reflect.TypeOf((*MockIStorage)(nil).PutOrder), trId, instrInfo, order)
 }
+
+// UpdateOrder mocks base method.
+func (m *MockIStorage) UpdateOrder(trId string, instrInfo *datastruct.InstrumentInfo, order *datastruct.Order) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateOrder", trId, instrInfo, order)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateOrder indicates an expected call of UpdateOrder.
+func (mr *MockIStorageMockRecorder) UpdateOrder(trId, instrInfo, order interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOrder", reflect.TypeOf((*MockIStorage)(nil).UpdateOrder), trId, instrInfo, order)
+}

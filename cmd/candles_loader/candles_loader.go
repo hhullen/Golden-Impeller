@@ -114,9 +114,10 @@ func loadCandlesToDB(ctx context.Context, c *t_api.Client, db *postgres.Client,
 	instrInfo *ds.InstrumentInfo, from, to time.Time, interval ds.CandleInterval, ch chan string) {
 	tick := time.NewTicker(time.Second * 2)
 
-	for t := from; t.Before(to); t = t.AddDate(0, 1, 0) {
+	const stepMonths = 2
+	for t := from; t.Before(to); t = t.AddDate(0, stepMonths, 0) {
 
-		candles, err := getCandles(c, t, t.AddDate(0, 1, 0), interval, instrInfo.Uid)
+		candles, err := getCandles(c, t, t.AddDate(0, stepMonths, 0), interval, instrInfo.Uid)
 		if err != nil {
 			panic(err)
 		}
@@ -127,7 +128,7 @@ func loadCandlesToDB(ctx context.Context, c *t_api.Client, db *postgres.Client,
 		}
 
 		ch <- fmt.Sprintf("Loaded: %d candles for [%s] with interval '%s' for: %s - %s",
-			len(candles), instrInfo.Ticker, interval.ToString(), t.Format(time.DateOnly), t.AddDate(0, 1, 0).Format(time.DateOnly))
+			len(candles), instrInfo.Ticker, interval.ToString(), t.Format(time.DateOnly), t.AddDate(0, stepMonths, 0).Format(time.DateOnly))
 
 		<-tick.C
 	}

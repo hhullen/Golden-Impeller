@@ -87,11 +87,26 @@ func (c *Client) GetDB() *sql.DB {
 }
 
 func (c *Client) AddInstrumentInfo(instrInfo *ds.InstrumentInfo) (dbId int64, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	var tx *sql.Tx
 	defer func() {
 		if p := recover(); p != nil {
-			err = fmt.Errorf("panic recovered: %v", p)
+			err = fmt.Errorf("panic recovered: %v. rollback error: %s", p, tx.Rollback().Error())
+		} else if err == nil {
+			err = tx.Commit()
+		} else {
+			if rbErr := tx.Rollback(); rbErr != nil {
+				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
+			}
 		}
 	}()
+
+	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
+	if err != nil {
+		return
+	}
 
 	query := `INSERT INTO instruments (uid, isin, figi, ticker, class_code, name, lot, available_api, for_quals)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (uid, isin, figi, ticker)
@@ -102,7 +117,7 @@ func (c *Client) AddInstrumentInfo(instrInfo *ds.InstrumentInfo) (dbId int64, er
 			for_quals = EXCLUDED.for_quals
 		RETURNING id;`
 
-	err = c.db.Get(&dbId, query, instrInfo.Uid, instrInfo.Isin, instrInfo.Figi, instrInfo.Ticker,
+	err = c.db.GetContext(ctx, &dbId, query, instrInfo.Uid, instrInfo.Isin, instrInfo.Figi, instrInfo.Ticker,
 		instrInfo.ClassCode, instrInfo.Name, instrInfo.Lot, instrInfo.AvailableApi, instrInfo.ForQuals)
 
 	return
@@ -128,8 +143,12 @@ func (c *Client) AddCandles(ctx context.Context, instrInfo *ds.InstrumentInfo, c
 	defer func() {
 		if p := recover(); p != nil {
 			err = fmt.Errorf("panic recovered: %v. rollback error: %s", p, tx.Rollback().Error())
-		} else {
+		} else if err == nil {
 			err = tx.Commit()
+		} else {
+			if rbErr := tx.Rollback(); rbErr != nil {
+				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
+			}
 		}
 	}()
 
@@ -214,7 +233,9 @@ func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.O
 		} else if err == nil {
 			err = tx.Commit()
 		} else {
-			tx.Rollback()
+			if rbErr := tx.Rollback(); rbErr != nil {
+				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
+			}
 		}
 	}()
 
@@ -226,15 +247,7 @@ func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.O
 	queryInsert := `INSERT INTO orders 
 		(instrument_id, created_at, completed_at, order_id, order_id_ref, direction, exec_report_status, 
 		price_units, price_nano, lots_requested, lots_executed, trader_id)
-		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
-		ON CONFLICT (instrument_id, order_id) DO UPDATE SET
-		created_at = EXCLUDED.created_at,
-		completed_at = EXCLUDED.completed_at,
-		direction = EXCLUDED.direction,
-		exec_report_status = EXCLUDED.exec_report_status,
-		price_units = EXCLUDED.price_units,
-		price_nano = EXCLUDED.price_nano,
-		lots_executed = EXCLUDED.lots_executed;`
+		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12);`
 
 	_, err = tx.ExecContext(ctx, queryInsert,
 		instrInfo.Id, order.CreatedAt, order.CompletionTime, order.OrderId, order.OrderIdRef, order.Direction,
@@ -256,6 +269,47 @@ func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.O
 			AND order_id = $4;`
 
 	_, err = tx.ExecContext(ctx, queryUpdate, order.OrderId, instrInfo.Id, trId, order.OrderIdRef)
+
+	return
+}
+
+func (c *Client) UpdateOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) (err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	var tx *sql.Tx
+	defer func() {
+		if p := recover(); p != nil {
+			err = fmt.Errorf("panic recovered: %v. rollback error: %v", p, tx.Rollback())
+		} else if err == nil {
+			err = tx.Commit()
+		} else {
+			if rbErr := tx.Rollback(); rbErr != nil {
+				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
+			}
+		}
+	}()
+
+	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		return
+	}
+
+	queryUpdate := `UPDATE orders
+			SET created_at = $1,
+				completed_at = $2,
+				direction = $3,
+				exec_report_status = $4,
+				price_units = $5,
+				price_nano = $6,
+				lots_executed = $7
+			WHERE instrument_id = $8
+			AND trader_id = $9
+			AND order_id = $10;`
+
+	_, err = tx.ExecContext(ctx, queryUpdate, order.CreatedAt, order.CompletionTime, order.Direction,
+		order.ExecutionReportStatus, order.OrderPrice.Units, order.OrderPrice.Nano, order.LotsExecuted,
+		instrInfo.Id, trId, order.OrderId)
 
 	return
 }
@@ -336,30 +390,71 @@ func (c *Client) GetUnsoldOrdersAmount(trId string, instrInfo *ds.InstrumentInfo
 	return res, err
 }
 
-func (c *Client) ClearOrdersForTrader(trId string) error {
+func (c *Client) ClearOrdersForTrader(trId string) (err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	var tx *sql.Tx
+	defer func() {
+		if p := recover(); p != nil {
+			err = fmt.Errorf("panic recovered: %v. rollback error: %v", p, tx.Rollback())
+		} else if err == nil {
+			err = tx.Commit()
+		} else {
+			if rbErr := tx.Rollback(); rbErr != nil {
+				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
+			}
+		}
+	}()
+
+	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		return
+	}
 	query := `DELETE FROM orders
 		WHERE trader_id = $1;`
 
-	_, err := c.db.Exec(query, trId)
+	_, err = tx.ExecContext(ctx, query, trId)
 
-	return err
+	return
 }
 
 func (c *Client) MakeNewOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) error {
 	return c.PutOrder(order.TraderId, instrInfo, order)
 }
 
-func (c *Client) RemoveOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) error {
+func (c *Client) RemoveOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) (err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	var tx *sql.Tx
+	defer func() {
+		if p := recover(); p != nil {
+			err = fmt.Errorf("panic recovered: %v. rollback error: %v", p, tx.Rollback())
+		} else if err == nil {
+			err = tx.Commit()
+		} else {
+			if rbErr := tx.Rollback(); rbErr != nil {
+				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
+			}
+		}
+	}()
+
+	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
+	if err != nil {
+		return
+	}
+
 	queryUpdate := `UPDATE orders
 	SET order_id_ref = NULL
 	WHERE instrument_id = $1
 	AND trader_id = $2
 	AND order_id = $3;`
 
-	_, err := c.db.Exec(queryUpdate, instrInfo.Id, order.TraderId, order.OrderIdRef)
+	_, err = tx.ExecContext(ctx, queryUpdate, instrInfo.Id, order.TraderId, order.OrderIdRef)
 
 	if err != nil {
-		return err
+		return
 	}
 
 	queryDelete := `DELETE FROM orders
@@ -367,7 +462,7 @@ func (c *Client) RemoveOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) erro
 	AND trader_id = $2
 	AND order_id = $3;`
 
-	_, err = c.db.Exec(queryDelete, instrInfo.Id, order.TraderId, order.OrderId)
+	_, err = tx.ExecContext(ctx, queryDelete, instrInfo.Id, order.TraderId, order.OrderId)
 
-	return err
+	return
 }

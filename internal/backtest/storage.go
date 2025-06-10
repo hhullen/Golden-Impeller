@@ -169,9 +169,6 @@ func (bs *BacktestStorage) GetUnsoldOrdersAmount(trId string, instrInfo *ds.Inst
 func (bs *BacktestStorage) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) (err error) {
 	v, ok := bs.orders[order.OrderId]
 	if ok {
-		// if order.OrderIdRef != nil {
-		// 	v.OrderIdRef = order.OrderIdRef
-		// }
 		v.CompletionTime = order.CompletionTime
 		v.Direction = order.Direction
 		v.ExecutionReportStatus = order.ExecutionReportStatus
@@ -191,19 +188,9 @@ func (bs *BacktestStorage) PutOrder(trId string, instrInfo *ds.InstrumentInfo, o
 	return nil
 }
 
-// func (bs *BacktestStorage) setRef(v1, v2 *ds.Order) {
-// 	if v1.OrderIdRef != nil {
-// 		v1.OrderIdRef = v2.OrderIdRef
-// 		vRef, ok := bs.orders[*v2.OrderIdRef]
-// 		if ok {
-// 			vRef.OrderIdRef=
-// 		}
-// 	}
-// 	if ok {
-// 		vRef.OrderIdRef = &order.OrderId
-// 	}
-
-// }
+func (bs *BacktestStorage) UpdateOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) (err error) {
+	return nil
+}
 
 func (bs *BacktestStorage) MakeNewOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) error {
 	return bs.PutOrder(order.TraderId, instrInfo, order)

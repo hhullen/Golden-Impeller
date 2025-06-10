@@ -38,6 +38,7 @@ type IBroker interface {
 
 type IStorage interface {
 	PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) error
+	UpdateOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) error
 	AddInstrumentInfo(instrInfo *ds.InstrumentInfo) (dbId int64, err error)
 }
 
@@ -123,7 +124,7 @@ func (s *TraderService) runOrdersOperating() {
 			}
 
 			if order.CreatedAt != nil {
-				err := s.storage.PutOrder(config.TraderId, config.InstrInfo, order)
+				err := s.storage.UpdateOrder(config.TraderId, config.InstrInfo, order)
 				if err != nil {
 					operateError(err)
 				}
@@ -157,6 +158,7 @@ mainFor:
 				s.logger.Errorf("failed recieving last price for '%s': %s", config.InstrInfo.Uid, err.Error())
 				continue
 			}
+			start := time.Now()
 
 			var actions []*ds.StrategyAction
 			actions, err = s.GetStrategy().GetActionDecision(s.ctx, config.TraderId, config.InstrInfo, lastPrice)
@@ -196,7 +198,7 @@ mainFor:
 				}
 
 				if action.Action != ds.Hold {
-					s.logger.Infof(res)
+					s.logger.Infof("%s; %v", res, time.Since(start))
 				}
 			}
 		}
