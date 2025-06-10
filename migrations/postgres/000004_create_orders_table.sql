@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     instrument_id INT NOT NULL REFERENCES instruments(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NULL,
     completed_at TIMESTAMPTZ DEFAULT NULL,
     order_id TEXT NOT NULL,
     order_id_ref TEXT DEFAULT NULL,
