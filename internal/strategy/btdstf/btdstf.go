@@ -136,6 +136,11 @@ func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *
 	orF := order.OrderPrice.ToFloat64()
 	lpF := lastPrice.Price.ToFloat64()
 
+	if lpF <= 0.0 {
+		acts = []*ds.StrategyAction{{Action: ds.Hold}}
+		return
+	}
+
 	IsDownToBuy := func() bool { return lpF*(1+b.cfg.PercentDownToBuy) < orF }
 	IsUpToSell := func() bool { return orF*(1+b.cfg.PercentUpToSell) < lpF }
 
