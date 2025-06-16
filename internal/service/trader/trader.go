@@ -160,13 +160,6 @@ mainFor:
 			}
 			start := time.Now()
 
-			var actions []*ds.StrategyAction
-			actions, err = s.GetStrategy().GetActionDecision(s.ctx, config.TraderId, config.InstrInfo, lastPrice)
-			if err != nil {
-				s.logger.Errorf("failed getting action decision '%s': %s", config.InstrInfo.Uid, err.Error())
-				continue
-			}
-
 			var status ds.TradingAvailability
 			status, err = s.broker.GetTradingAvailability(config.InstrInfo)
 			if err != nil {
@@ -180,6 +173,13 @@ mainFor:
 			}
 
 			if status == ds.NotAvailableNow {
+				continue
+			}
+
+			var actions []*ds.StrategyAction
+			actions, err = s.GetStrategy().GetActionDecision(s.ctx, config.TraderId, config.InstrInfo, lastPrice)
+			if err != nil {
+				s.logger.Errorf("failed getting action decision '%s': %s", config.InstrInfo.Uid, err.Error())
 				continue
 			}
 
