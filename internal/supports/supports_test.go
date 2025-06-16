@@ -150,9 +150,29 @@ func TestSendIfMaybeClosed(t *testing.T) {
 
 	t.Run("ok", func(t *testing.T) {
 		t.Parallel()
-		ch := make(chan int)
+		ch := make(chan int, 1)
 
 		err := SendIfMaybeClosed(ch, 1)
+		require.Nil(t, err)
+	})
+}
+
+func TestSendOrSkipIfMaybeClosed(t *testing.T) {
+	t.Parallel()
+
+	t.Run("send to closed", func(t *testing.T) {
+		t.Parallel()
+		ch := make(chan int)
+		close(ch)
+		err := SendOrSkipIfMaybeClosed(ch, 1)
+		require.NotNil(t, err)
+	})
+
+	t.Run("ok", func(t *testing.T) {
+		t.Parallel()
+		ch := make(chan int)
+
+		err := SendOrSkipIfMaybeClosed(ch, 1)
 		require.Nil(t, err)
 	})
 }

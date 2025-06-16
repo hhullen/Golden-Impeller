@@ -67,13 +67,34 @@ func CastToInt64(n any) int64 {
 	panic(fmt.Sprintf("impossible cast to number: %v", n))
 }
 
-func CloseIfMaybeClosed[Type any](ch chan<- Type) (err error) {
+func CloseIfMaybeClosed[Type any](ch chan Type) (err error) {
 	defer func() {
 		if p := recover(); p != nil {
 			err = fmt.Errorf("%v", p)
 		}
 	}()
+
+	select {
+	case <-ch:
+	default:
+	}
+
 	close(ch)
+
+	return
+}
+
+func SendOrSkipIfMaybeClosed[Type any](ch chan<- Type, v Type) (err error) {
+	defer func() {
+		if p := recover(); p != nil {
+			err = fmt.Errorf("%v", p)
+		}
+	}()
+
+	select {
+	case ch <- v:
+	default:
+	}
 
 	return
 }
@@ -85,10 +106,7 @@ func SendIfMaybeClosed[Type any](ch chan<- Type, v Type) (err error) {
 		}
 	}()
 
-	select {
-	case ch <- v:
-	default:
-	}
+	ch <- v
 
 	return
 }
