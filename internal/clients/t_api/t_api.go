@@ -49,14 +49,20 @@ type IStream interface {
 	Stop()
 }
 
+type AccountId string
+
+type InstrumentUid string
+
+type InstanceId uuid.UUID
+
 type Client struct {
 	sync.RWMutex
 	investgo.Client
 
 	marketDataStream *investgo.MarketDataStream
 	ordersDataStream *investgo.OrderStateStream
-	lastPriceInput   map[string]map[uuid.UUID]chan *pb.LastPrice
-	ordersStateInput map[string]map[string]map[uuid.UUID]chan *pb.OrderStateStreamResponse_OrderState
+	lastPriceInput   map[InstrumentUid]map[InstanceId]chan *pb.LastPrice
+	ordersStateInput map[AccountId]map[InstrumentUid]map[InstanceId]chan *pb.OrderStateStreamResponse_OrderState
 	ctx              context.Context
 }
 
@@ -69,8 +75,8 @@ func NewClient(ctx context.Context, conf investgo.Config, l investgo.Logger) (*C
 	c := &Client{
 		Client:           *investClient,
 		ctx:              ctx,
-		lastPriceInput:   make(map[string]map[uuid.UUID]chan *pb.LastPrice),
-		ordersStateInput: make(map[string]map[string]map[uuid.UUID]chan *pb.OrderStateStreamResponse_OrderState),
+		lastPriceInput:   make(map[InstrumentUid]map[InstanceId]chan *pb.LastPrice),
+		ordersStateInput: make(map[AccountId]map[InstrumentUid]map[InstanceId]chan *pb.OrderStateStreamResponse_OrderState),
 	}
 
 	return c, nil
@@ -139,11 +145,14 @@ func (c *Client) RegisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) error 
 	c.Lock()
 	defer c.Unlock()
 
-	if _, ok := c.lastPriceInput[instrInfo.Uid]; !ok {
-		c.lastPriceInput[instrInfo.Uid] = make(map[uuid.UUID]chan *pb.LastPrice)
+	instrUid := InstrumentUid(instrInfo.Uid)
+	instanceId := InstanceId(instrInfo.InstanceId)
+
+	if _, ok := c.lastPriceInput[instrUid]; !ok {
+		c.lastPriceInput[instrUid] = make(map[InstanceId]chan *pb.LastPrice)
 	}
-	if _, ok := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]; !ok {
-		c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId] = make(chan *pb.LastPrice)
+	if _, ok := c.lastPriceInput[instrUid][instanceId]; !ok {
+		c.lastPriceInput[instrUid][instanceId] = make(chan *pb.LastPrice, 1)
 	}
 
 	return nil
@@ -158,20 +167,25 @@ func (c *Client) UnregisterLastPriceRecipient(instrInfo *ds.InstrumentInfo) erro
 	c.Lock()
 	defer c.Unlock()
 
-	if _, ok := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]; ok {
-		supports.CloseIfMaybeClosed(c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId])
+	instrUid := InstrumentUid(instrInfo.Uid)
+	instanceId := InstanceId(instrInfo.InstanceId)
+
+	if _, ok := c.lastPriceInput[instrUid][instanceId]; ok {
+		supports.CloseIfMaybeClosed(c.lastPriceInput[instrUid][instanceId])
 	}
 
-	delete(c.lastPriceInput[instrInfo.Uid], instrInfo.InstanceId)
+	delete(c.lastPriceInput[instrUid], instanceId)
 
-	delete(c.lastPriceInput, instrInfo.Uid)
+	delete(c.lastPriceInput, instrUid)
 
 	return nil
 }
 
 func (c *Client) RecieveLastPrice(ctx context.Context, instrInfo *ds.InstrumentInfo) (*ds.LastPrice, error) {
 	c.RLock()
-	ch := c.lastPriceInput[instrInfo.Uid][instrInfo.InstanceId]
+	instrUid := InstrumentUid(instrInfo.Uid)
+	instanceId := InstanceId(instrInfo.InstanceId)
+	ch := c.lastPriceInput[instrUid][instanceId]
 	c.RUnlock()
 
 	var lastPrice *pb.LastPrice
@@ -209,14 +223,14 @@ func (c *Client) prepareStreamForInstrument(instrInfo *ds.InstrumentInfo) error 
 		return err
 	}
 
-	go c.startInstrumenstRouting(ch)
+	go c.startLastPriceRouting(ch)
 
 	go c.startListeningStream(instrInfo.Uid, c.marketDataStream)
 
 	return nil
 }
 
-func (c *Client) startInstrumenstRouting(ch <-chan *pb.LastPrice) {
+func (c *Client) startLastPriceRouting(ch <-chan *pb.LastPrice) {
 	for {
 		select {
 		case <-c.ctx.Done():
@@ -227,8 +241,8 @@ func (c *Client) startInstrumenstRouting(ch <-chan *pb.LastPrice) {
 			}
 
 			c.Lock()
-			for _, uniqueListener := range c.lastPriceInput[v.InstrumentUid] {
-				if err := supports.SendIfMaybeClosed(uniqueListener, v); err != nil {
+			for _, uniqueListener := range c.lastPriceInput[InstrumentUid(v.InstrumentUid)] {
+				if err := supports.SendOrSkipIfMaybeClosed(uniqueListener, v); err != nil {
 					c.Logger.Errorf(err.Error())
 				}
 
@@ -312,7 +326,7 @@ func (c *Client) MakeSellOrder(instrInfo *ds.InstrumentInfo, lots int64, request
 		},
 		InstrumentUid:         orderResp.InstrumentUid,
 		OrderId:               orderResp.OrderId,
-		ExecutionReportStatus: orderResp.ExecutionReportStatus.String(),
+		ExecutionReportStatus: resolveExecutionReportStatus(orderResp.ExecutionReportStatus).ToString(),
 	}, nil
 }
 
@@ -344,7 +358,7 @@ func (c *Client) MakeBuyOrder(instrInfo *ds.InstrumentInfo, lots int64, requestI
 		},
 		InstrumentUid:         buyResp.InstrumentUid,
 		OrderId:               buyResp.OrderId,
-		ExecutionReportStatus: buyResp.ExecutionReportStatus.String(),
+		ExecutionReportStatus: resolveExecutionReportStatus(buyResp.ExecutionReportStatus).ToString(),
 	}, nil
 }
 
@@ -370,14 +384,18 @@ func (c *Client) RegisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, accou
 	c.Lock()
 	defer c.Unlock()
 
-	if _, ok := c.ordersStateInput[accountId]; !ok {
-		c.ordersStateInput[accountId] = make(map[string]map[uuid.UUID]chan *pb.OrderStateStreamResponse_OrderState)
+	accId := AccountId(accountId)
+	instrUid := InstrumentUid(instrInfo.Uid)
+	instanceId := InstanceId(instrInfo.InstanceId)
+
+	if _, ok := c.ordersStateInput[accId]; !ok {
+		c.ordersStateInput[accId] = make(map[InstrumentUid]map[InstanceId]chan *pb.OrderStateStreamResponse_OrderState)
 	}
-	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid]; !ok {
-		c.ordersStateInput[accountId][instrInfo.Uid] = make(map[uuid.UUID]chan *pb.OrderStateStreamResponse_OrderState)
+	if _, ok := c.ordersStateInput[accId][instrUid]; !ok {
+		c.ordersStateInput[accId][instrUid] = make(map[InstanceId]chan *pb.OrderStateStreamResponse_OrderState)
 	}
-	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]; !ok {
-		c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId] = make(chan *pb.OrderStateStreamResponse_OrderState)
+	if _, ok := c.ordersStateInput[accId][instrUid][instanceId]; !ok {
+		c.ordersStateInput[accId][instrUid][instanceId] = make(chan *pb.OrderStateStreamResponse_OrderState, 100)
 	}
 
 	return nil
@@ -387,22 +405,29 @@ func (c *Client) UnregisterOrderStateRecipient(instrInfo *ds.InstrumentInfo, acc
 	c.Lock()
 	defer c.Unlock()
 
-	if _, ok := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]; ok {
-		supports.CloseIfMaybeClosed(c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId])
+	accId := AccountId(accountId)
+	instrUid := InstrumentUid(instrInfo.Uid)
+	instanceId := InstanceId(instrInfo.InstanceId)
+
+	if _, ok := c.ordersStateInput[accId][instrUid][instanceId]; ok {
+		supports.CloseIfMaybeClosed(c.ordersStateInput[accId][instrUid][instanceId])
 	}
 
-	delete(c.ordersStateInput[accountId][instrInfo.Uid], instrInfo.InstanceId)
+	delete(c.ordersStateInput[accId][instrUid], instanceId)
 
-	delete(c.ordersStateInput[accountId], instrInfo.Uid)
+	delete(c.ordersStateInput[accId], instrUid)
 
-	delete(c.ordersStateInput, accountId)
+	delete(c.ordersStateInput, accId)
 
 	return nil
 }
 
 func (c *Client) RecieveOrdersUpdate(ctx context.Context, instrInfo *ds.InstrumentInfo, accountId string) (*ds.Order, error) {
 	c.RLock()
-	ch := c.ordersStateInput[accountId][instrInfo.Uid][instrInfo.InstanceId]
+	accId := AccountId(accountId)
+	instrUid := InstrumentUid(instrInfo.Uid)
+	instanceId := InstanceId(instrInfo.InstanceId)
+	ch := c.ordersStateInput[accId][instrUid][instanceId]
 	c.RUnlock()
 
 	var order *pb.OrderStateStreamResponse_OrderState
@@ -417,7 +442,6 @@ func (c *Client) RecieveOrdersUpdate(ctx context.Context, instrInfo *ds.Instrume
 	}
 
 	returnable := &ds.Order{
-		ExecutionReportStatus: order.ExecutionReportStatus.String(),
 		OrderPrice: ds.Quotation{
 			Units: order.OrderPrice.Units,
 			Nano:  order.OrderPrice.Nano,
@@ -449,24 +473,28 @@ func (c *Client) RecieveOrdersUpdate(ctx context.Context, instrInfo *ds.Instrume
 		returnable.Direction = ds.Sell.ToString()
 	}
 
-	if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_FILL {
-
-		returnable.ExecutionReportStatus = ds.Fill.ToString()
-
-	} else if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_PARTIALLYFILL {
-
-		returnable.ExecutionReportStatus = ds.PartiallyFill.ToString()
-
-	} else if order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_REJECTED ||
-		order.ExecutionReportStatus == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_CANCELLED {
-
-		returnable.ExecutionReportStatus = ds.Cancelled.ToString()
-
-	} else {
-		returnable.ExecutionReportStatus = ds.New.ToString()
-	}
+	returnable.ExecutionReportStatus = resolveExecutionReportStatus(order.ExecutionReportStatus).ToString()
 
 	return returnable, nil
+}
+
+func resolveExecutionReportStatus(status pb.OrderExecutionReportStatus) ds.OrderStatus {
+	if status == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_FILL {
+
+		return ds.Fill
+
+	} else if status == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_PARTIALLYFILL {
+
+		return ds.PartiallyFill
+
+	} else if status == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_REJECTED ||
+		status == pb.OrderExecutionReportStatus_EXECUTION_REPORT_STATUS_CANCELLED {
+
+		return ds.Cancelled
+
+	}
+
+	return ds.New
 }
 
 func (c *Client) prepareStreamForOrdersState(instrInfo *ds.InstrumentInfo) error {
@@ -495,7 +523,7 @@ func (c *Client) startOrdersStateRouting(ch <-chan *pb.OrderStateStreamResponse_
 			}
 
 			c.Lock()
-			for _, uniqueListener := range c.ordersStateInput[v.AccountId][v.InstrumentUid] {
+			for _, uniqueListener := range c.ordersStateInput[AccountId(v.AccountId)][InstrumentUid(v.InstrumentUid)] {
 				if err := supports.SendIfMaybeClosed(uniqueListener, v); err != nil {
 					c.Logger.Errorf(err.Error())
 				}
