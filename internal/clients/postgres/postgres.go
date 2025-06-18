@@ -340,7 +340,7 @@ func (c *Client) GetHighestExecutedBuyOrder(trId string, instrInfo *ds.Instrumen
 		AND exec_report_status = 'FILL'
 		AND trader_id = $2
 		AND order_id_ref IS NULL
-		ORDER BY price_units, price_nano DESC
+		ORDER BY price_units DESC, price_nano DESC
 		LIMIT 1;`
 
 	return c.selectOrder(query, trId, instrInfo)
