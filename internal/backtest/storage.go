@@ -24,7 +24,7 @@ func NewBacktestStorage(i ds.InstrumentInfo, b []*ds.Candle) *BacktestStorage {
 func (bs *BacktestStorage) GetInInstrumentsSum() float64 {
 	summ := float64(0)
 	for _, v := range bs.orders {
-		if v.Direction == ds.Buy.ToString() && v.ExecutionReportStatus == ds.Fill.ToString() {
+		if v.Direction == ds.Buy.ToString() && v.ExecutionReportStatus == ds.Fill.ToString() && v.OrderIdRef == nil {
 			summ += v.OrderPrice.ToFloat64() * float64(v.LotsExecuted) * float64(bs.instrument.Lot)
 		}
 	}
@@ -169,6 +169,7 @@ func (bs *BacktestStorage) GetUnsoldOrdersAmount(trId string, instrInfo *ds.Inst
 func (bs *BacktestStorage) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) (err error) {
 	v, ok := bs.orders[order.OrderId]
 	if ok {
+		v.CreatedAt = order.CreatedAt
 		v.CompletionTime = order.CompletionTime
 		v.Direction = order.Direction
 		v.ExecutionReportStatus = order.ExecutionReportStatus
