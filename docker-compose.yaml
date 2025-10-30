@@ -1,3 +1,5 @@
+name: golden-impeller
+
 services:
   trading_bot:
     container_name: trading_bot
@@ -9,6 +11,47 @@ services:
     depends_on:
       migrator:
         condition: service_completed_successfully
+
+  kafka_broker:
+    image: apache/kafka:4.0.1
+    container_name: kafka_broker
+    restart: always
+    environment:
+      # defaults
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka_broker:9092,CONTROLLER://kafka_broker:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_broker:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka_broker:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+      # other
+      KAFKA_NUM_PARTITIONS: 1
+      KAFKA_LOG_RETENTION_HOURS: 24
+      KAFKA_LOG_CLEANUP_POLICY: delete
+      KAFKA_RETENTION_CHECK_INTERVAL_MS: 600000
+      KAFKA_ACKS: all
+      KAFKA_ENABLE_IDEMPOTENCE: true
+      KAFKA_RETRIES: 15
+      KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION: 1
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+  
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    container_name: kafka-ui
+    environment:
+      KAFKA_CLUSTERS_0_NAME: trader_cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka_broker:9092
+    depends_on:
+      - kafka_broker
+    ports:
+      - 8080:8080
 
   migrator:
     container_name: migrator
@@ -35,10 +78,35 @@ services:
       - db_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$(cat /run/secrets/db_user_secret) -d $$(cat /run/secrets/db_name_secret)"]
-      interval: 5s
-      timeout: 3s
+      interval: 10s
+      timeout: 5s
       retries: 5
       start_period: 10s
+  
+  clickhouse_db:
+    image: clickhouse:25.9.4.58-jammy
+    restart: always
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    ports:
+      - 8123:8123
+    secrets:
+      - clickhouse_password_secret
+      - clickhouse_user_secret
+      - clickhouse_name_secret
+    command: >
+      bash -c "
+      export CLICKHOUSE_USER=$(cat /run/secrets/clickhouse_user_secret);
+      export CLICKHOUSE_PASSWORD=$(cat /run/secrets/clickhouse_password_secret);
+      export CLICKHOUSE_DB=$(cat /run/secrets/clickhouse_name_secret);
+      exec /entrypoint.sh;"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "clickhouse-client --user=$${CLICKHOUSE_USER} --password=$${CLICKHOUSE_PASSWORD} --query='SELECT 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
 
 secrets:
   db_password_secret:
@@ -48,6 +116,15 @@ secrets:
   db_name_secret:
     file: ./secrets/db_name.txt
 
+  clickhouse_password_secret:
+    file: ./secrets/clickhouse_password.txt
+  clickhouse_user_secret:
+    file: ./secrets/clickhouse_user.txt
+  clickhouse_name_secret:
+    file: ./secrets/clickhouse_name.txt
+
 volumes:
   db_data:
+  kafka_data:
+  clickhouse_data:
     
