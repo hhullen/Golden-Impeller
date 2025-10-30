@@ -25,3 +25,8 @@ go.work.sum
 .env.yaml
 .ENV*
 *.log
+accounts.yaml
+bonds.txt
+currencies.txt
+etfs.txt
+shares.txt
