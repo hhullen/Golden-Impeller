@@ -120,6 +120,32 @@ services:
       timeout: 5s
       retries: 5
       start_period: 20s
+    
+  grafana:
+    image: grafana/grafana:12.3.0-18925857539
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clickhouse-datasource
+      - DS_USER_FILE=/run/secrets/clickhouse_user_secret
+      - DS_PASSWORD_FILE=/run/secrets/clickhouse_password_secret
+      - DS_DATABASE_FILE=/run/secrets/clickhouse_name_secret
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./grafana/golden_impeller.json:/etc/grafana/dashboards/golden_impeller.json
+    secrets:
+      - clickhouse_password_secret
+      - clickhouse_user_secret
+      - clickhouse_name_secret
+    entrypoint: >
+      sh -c "
+      export DS_USER=$(cat $${DS_USER_FILE});
+      export DS_PASSWORD=$(cat $${DS_PASSWORD_FILE});
+      export DS_DATABASE=$(cat $${DS_DATABASE_FILE});
+      /run.sh;"
 
 
 secrets:
@@ -141,3 +167,4 @@ volumes:
   db_data:
   kafka_data:
   clickhouse_data:
+  grafana-data:
