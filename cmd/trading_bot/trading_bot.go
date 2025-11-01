@@ -9,12 +9,17 @@ import (
 	"os/signal"
 	"syscall"
 
+	"trading_bot/internal/backtest"
+	"trading_bot/internal/clients/kafka"
 	"trading_bot/internal/clients/postgres"
 	"trading_bot/internal/clients/t_api"
 	"trading_bot/internal/config"
 	lg "trading_bot/internal/logger"
+	ds "trading_bot/internal/service/datastruct"
+	"trading_bot/internal/service/trader"
 	tradermanager "trading_bot/internal/service/trader_manager"
 	"trading_bot/internal/strategy"
+	"trading_bot/internal/supports"
 
 	"github.com/russianinvestments/invest-api-go-sdk/investgo"
 )
@@ -38,16 +43,23 @@ func main() {
 	f := openFileForLog(brokerLogFilePath)
 	defer f.Close()
 
-	investLogger := lg.NewLogger(f, brokerLogPrefix)
+	var kafkaBroker trader.IHistoryWriter
+	if supports.IsInContainer() {
+		kafkaBroker = kafka.NewClient(ctx)
+	} else {
+		kafkaBroker = &backtest.BacktestHystory{}
+	}
+
+	investLogger := lg.NewLogger(f, brokerLogPrefix, kafkaBroker)
 	defer investLogger.Stop()
 
 	f = openFileForLog(managerLogFilePath)
 	defer f.Close()
 
-	tradingManagerLogger := lg.NewLogger(f, managerLogPrefix)
+	tradingManagerLogger := lg.NewLogger(f, managerLogPrefix, kafkaBroker)
 	defer tradingManagerLogger.Stop()
 
-	traderLogger := lg.NewLogger(os.Stdout, traderLogPrefix)
+	traderLogger := lg.NewLogger(os.Stdout, traderLogPrefix, kafkaBroker)
 	defer traderLogger.Stop()
 
 	defer func() {
@@ -65,7 +77,7 @@ func main() {
 		panic("no traders specified in config")
 	}
 
-	dbClient, err := postgres.NewClient()
+	dbClient, err := postgres.NewClient(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -83,7 +95,7 @@ func main() {
 	}
 
 	strategyResolver := strategy.NewStrategy()
-	traderManager := tradermanager.NewTraderManager(ctx, waitOnPanic, investClient, dbClient, tradingManagerLogger, traderLogger, strategyResolver)
+	traderManager := tradermanager.NewTraderManager(ctx, waitOnPanic, investClient, dbClient, tradingManagerLogger, traderLogger, strategyResolver, kafkaBroker)
 
 	traderManager.UpdateTradersWithConfig(envCfg.Trader)
 
@@ -95,14 +107,14 @@ func main() {
 			case <-ctx.Done():
 				return
 			case <-sighup:
-				err := dbClient.UpdateConnection()
+				err := dbClient.UpdateConnection(ctx)
 				if err != nil {
-					traderLogger.Errorf("failed updating db connection: %s", err.Error())
+					traderLogger.Errorf("failed updating db connection", ds.HistoryColError, err.Error())
 				}
 
 				envCfg, err := config.GetEnvCfg()
 				if err != nil {
-					tradingManagerLogger.Errorf("failed getting env config: %s", err.Error())
+					tradingManagerLogger.Errorf("failed getting env config", ds.HistoryColError, err.Error())
 					continue
 				}
 				traderManager.UpdateTradersWithConfig(envCfg.Trader)
@@ -116,7 +128,7 @@ func main() {
 }
 
 func openFileForLog(path string) *os.File {
-	if os.Getenv("RUNNING_IN_CONTAINER") != "" {
+	if supports.IsInContainer() {
 		return os.Stdout
 	}
 

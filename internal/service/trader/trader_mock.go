@@ -101,55 +101,55 @@ func (m *MockILogger) EXPECT() *MockILoggerMockRecorder {
 	return m.recorder
 }
 
-// Errorf mocks base method.
-func (m *MockILogger) Errorf(template string, args ...any) {
+// ErrorfKV mocks base method.
+func (m *MockILogger) ErrorfKV(message string, argsKV ...any) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{template}
-	for _, a := range args {
+	varargs := []interface{}{message}
+	for _, a := range argsKV {
 		varargs = append(varargs, a)
 	}
-	m.ctrl.Call(m, "Errorf", varargs...)
+	m.ctrl.Call(m, "ErrorfKV", varargs...)
 }
 
-// Errorf indicates an expected call of Errorf.
-func (mr *MockILoggerMockRecorder) Errorf(template interface{}, args ...interface{}) *gomock.Call {
+// ErrorfKV indicates an expected call of ErrorfKV.
+func (mr *MockILoggerMockRecorder) ErrorfKV(message interface{}, argsKV ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{template}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Errorf", reflect.TypeOf((*MockILogger)(nil).Errorf), varargs...)
+	varargs := append([]interface{}{message}, argsKV...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ErrorfKV", reflect.TypeOf((*MockILogger)(nil).ErrorfKV), varargs...)
 }
 
-// Fatalf mocks base method.
-func (m *MockILogger) Fatalf(template string, args ...any) {
+// FatalfKV mocks base method.
+func (m *MockILogger) FatalfKV(message string, argsKV ...any) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{template}
-	for _, a := range args {
+	varargs := []interface{}{message}
+	for _, a := range argsKV {
 		varargs = append(varargs, a)
 	}
-	m.ctrl.Call(m, "Fatalf", varargs...)
+	m.ctrl.Call(m, "FatalfKV", varargs...)
 }
 
-// Fatalf indicates an expected call of Fatalf.
-func (mr *MockILoggerMockRecorder) Fatalf(template interface{}, args ...interface{}) *gomock.Call {
+// FatalfKV indicates an expected call of FatalfKV.
+func (mr *MockILoggerMockRecorder) FatalfKV(message interface{}, argsKV ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{template}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Fatalf", reflect.TypeOf((*MockILogger)(nil).Fatalf), varargs...)
+	varargs := append([]interface{}{message}, argsKV...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FatalfKV", reflect.TypeOf((*MockILogger)(nil).FatalfKV), varargs...)
 }
 
-// Infof mocks base method.
-func (m *MockILogger) Infof(template string, args ...any) {
+// InfofKV mocks base method.
+func (m *MockILogger) InfofKV(message string, argsKV ...any) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{template}
-	for _, a := range args {
+	varargs := []interface{}{message}
+	for _, a := range argsKV {
 		varargs = append(varargs, a)
 	}
-	m.ctrl.Call(m, "Infof", varargs...)
+	m.ctrl.Call(m, "InfofKV", varargs...)
 }
 
-// Infof indicates an expected call of Infof.
-func (mr *MockILoggerMockRecorder) Infof(template interface{}, args ...interface{}) *gomock.Call {
+// InfofKV indicates an expected call of InfofKV.
+func (mr *MockILoggerMockRecorder) InfofKV(message interface{}, argsKV ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{template}, args...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Infof", reflect.TypeOf((*MockILogger)(nil).Infof), varargs...)
+	varargs := append([]interface{}{message}, argsKV...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InfofKV", reflect.TypeOf((*MockILogger)(nil).InfofKV), varargs...)
 }
 
 // MockIBroker is a mock of IBroker interface.
@@ -385,4 +385,46 @@ func (m *MockIStorage) UpdateOrder(trId string, instrInfo *datastruct.Instrument
 func (mr *MockIStorageMockRecorder) UpdateOrder(trId, instrInfo, order interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOrder", reflect.TypeOf((*MockIStorage)(nil).UpdateOrder), trId, instrInfo, order)
+}
+
+// MockIHistoryWriter is a mock of IHistoryWriter interface.
+type MockIHistoryWriter struct {
+	ctrl     *gomock.Controller
+	recorder *MockIHistoryWriterMockRecorder
+}
+
+// MockIHistoryWriterMockRecorder is the mock recorder for MockIHistoryWriter.
+type MockIHistoryWriterMockRecorder struct {
+	mock *MockIHistoryWriter
+}
+
+// NewMockIHistoryWriter creates a new mock instance.
+func NewMockIHistoryWriter(ctrl *gomock.Controller) *MockIHistoryWriter {
+	mock := &MockIHistoryWriter{ctrl: ctrl}
+	mock.recorder = &MockIHistoryWriterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockIHistoryWriter) EXPECT() *MockIHistoryWriterMockRecorder {
+	return m.recorder
+}
+
+// WriteInTopicKV mocks base method.
+func (m *MockIHistoryWriter) WriteInTopicKV(arg0 string, arg1 ...any) error {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "WriteInTopicKV", varargs...)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// WriteInTopicKV indicates an expected call of WriteInTopicKV.
+func (mr *MockIHistoryWriterMockRecorder) WriteInTopicKV(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteInTopicKV", reflect.TypeOf((*MockIHistoryWriter)(nil).WriteInTopicKV), varargs...)
 }

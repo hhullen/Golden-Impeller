@@ -44,7 +44,7 @@ func main() {
 		AccountId: envCfg.TInvestAccountID,
 	}
 
-	logger := logger.NewLogger(os.Stdout, "BACKTEST")
+	logger := logger.NewLogger(os.Stdout, "BACKTEST", nil)
 
 	investClient, err := t_api.NewClient(ctx, investCfg, logger)
 	if err != nil {
@@ -66,7 +66,7 @@ func main() {
 			panic(err)
 		}
 
-		dbClient, err := postgres.NewClient()
+		dbClient, err := postgres.NewClient(ctx)
 		if err != nil {
 			panic(err)
 		}
@@ -137,7 +137,7 @@ func main() {
 			OnOrdersOperatingErrorDelay: time.Second * 1,
 		}
 
-		trader, _ := trader.NewTraderService(ctx, backtestBroker, logger, strategyInstance, backtestStorage, trCfg)
+		trader, _ := trader.NewTraderService(ctx, backtestBroker, logger, strategyInstance, backtestStorage, &backtest.BacktestHystory{}, trCfg)
 
 		fmt.Printf("Start backtest on %s for %s - %s with interval '%s'\n",
 			test.UniqueTraderId, from.Format(time.DateOnly), to.Format(time.DateOnly), test.Interval)

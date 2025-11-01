@@ -9,7 +9,7 @@ import (
 	"trading_bot/internal/supports"
 )
 
-//go:generate mockgen -source=trader.go -destination=trader_mock.go -package=trader IStrategy,ILogger,IBroker,IStorage
+//go:generate mockgen -source=trader.go -destination=trader_mock.go -package=trader IStrategy,ILogger,IBroker,IStorage,IHistoryWriter
 
 type IStrategy interface {
 	GetActionDecision(ctx context.Context, trId string, instrInfo *ds.InstrumentInfo, lp *ds.LastPrice) ([]*ds.StrategyAction, error)
@@ -18,9 +18,9 @@ type IStrategy interface {
 }
 
 type ILogger interface {
-	Infof(template string, args ...any)
-	Errorf(template string, args ...any)
-	Fatalf(template string, args ...any)
+	InfofKV(message string, argsKV ...any)
+	ErrorfKV(message string, argsKV ...any)
+	FatalfKV(message string, argsKV ...any)
 }
 
 type IBroker interface {
@@ -40,6 +40,10 @@ type IStorage interface {
 	PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) error
 	UpdateOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) error
 	AddInstrumentInfo(instrInfo *ds.InstrumentInfo) (dbId int64, err error)
+}
+
+type IHistoryWriter interface {
+	WriteInTopicKV(string, ...any) error
 }
 
 type TraderCfg struct {
@@ -62,17 +66,18 @@ type TraderService struct {
 	logger   ILogger
 	strategy IStrategy
 	storage  IStorage
+	history  IHistoryWriter
 }
 
 func NewTraderService(ctx context.Context, broker IBroker, logger ILogger,
-	strategy IStrategy, storage IStorage, cfg *TraderCfg) (*TraderService, error) {
+	strategy IStrategy, storage IStorage, history IHistoryWriter, cfg *TraderCfg) (*TraderService, error) {
 	if cfg.TraderId == "" {
 		return nil, fmt.Errorf("empty unique trader id")
 	}
 
 	ctx, cancelCtx := context.WithCancel(ctx)
 
-	s := buildTraderService(ctx, cancelCtx, broker, logger, strategy, storage, cfg)
+	s := buildTraderService(ctx, cancelCtx, broker, logger, strategy, storage, history, cfg)
 
 	err := s.broker.RegisterOrderStateRecipient(s.cfg.InstrInfo, s.cfg.AccountId)
 	if err != nil {
@@ -90,7 +95,7 @@ func NewTraderService(ctx context.Context, broker IBroker, logger ILogger,
 }
 
 func buildTraderService(ctx context.Context, cancelCtx func(), b IBroker, l ILogger,
-	s IStrategy, store IStorage, cfg *TraderCfg) *TraderService {
+	s IStrategy, store IStorage, hw IHistoryWriter, cfg *TraderCfg) *TraderService {
 	return &TraderService{
 		ctx:       ctx,
 		cancelCtx: cancelCtx,
@@ -98,6 +103,7 @@ func buildTraderService(ctx context.Context, cancelCtx func(), b IBroker, l ILog
 		logger:    l,
 		strategy:  s,
 		storage:   store,
+		history:   hw,
 		cfg:       cfg,
 	}
 }
@@ -106,14 +112,14 @@ func (s *TraderService) runOrdersOperating() {
 	for {
 		select {
 		case <-s.ctx.Done():
-			s.logger.Infof("orders listener: context is done")
+			s.logger.InfofKV("orders listener: context is done")
 			return
 		default:
 			config := s.GetConfig()
 
 			operateError := func(err error) {
-				s.logger.Errorf("operating orders update: %v. Delay for %v",
-					err, config.OnOrdersOperatingErrorDelay)
+				s.logger.ErrorfKV("error on operating orders update",
+					ds.HistoryColError, err, ds.HistoryColSeconds, config.OnOrdersOperatingErrorDelay.Seconds())
 				supports.WaitFor(s.ctx, config.OnOrdersOperatingErrorDelay)
 			}
 
@@ -136,7 +142,7 @@ func (s *TraderService) runOrdersOperating() {
 func (s *TraderService) RunTrading() {
 	var err error
 
-mainFor:
+mainLoop:
 	for {
 		config := s.GetConfig()
 
@@ -147,7 +153,7 @@ mainFor:
 
 		select {
 		case <-s.ctx.Done():
-			s.logger.Infof("context is done on '%s'", config.TraderId)
+			s.logger.InfofKV("context is done", ds.HistoryColTraderId, config.TraderId)
 			return
 		default:
 			supports.WaitFor(s.ctx, s.cfg.TradingDelay)
@@ -155,20 +161,31 @@ mainFor:
 			var lastPrice *ds.LastPrice
 			lastPrice, err = s.broker.RecieveLastPrice(s.ctx, config.InstrInfo)
 			if err != nil {
-				s.logger.Errorf("failed recieving last price for '%s': %s", config.InstrInfo.Uid, err.Error())
+				s.logger.ErrorfKV("failed recieving last price",
+					ds.HistoryColInstrumentUID, config.InstrInfo.Uid, ds.HistoryColError, err.Error())
 				continue
 			}
+
+			writeErr := s.history.WriteInTopicKV(ds.TopicPriceHistory, ds.HistoryColPrice,
+				lastPrice.Price.ToFloat64(), ds.HistoryColTimestamp, lastPrice.Time.Unix(),
+				ds.HistoryColTicker, config.InstrInfo.Ticker)
+			if writeErr != nil {
+				s.logger.ErrorfKV("failed writing history", ds.HistoryColError, writeErr.Error())
+			}
+
 			start := time.Now()
 
 			var status ds.TradingAvailability
 			status, err = s.broker.GetTradingAvailability(config.InstrInfo)
 			if err != nil {
-				s.logger.Errorf("failed getting trading availability for '%s': %s", config.InstrInfo.Uid, err.Error())
+				s.logger.ErrorfKV("failed getting trading availability",
+					ds.HistoryColInstrumentUID, config.InstrInfo.Uid, ds.HistoryColError, err.Error())
 				continue
 			}
 
 			if status == ds.NotAvailableViaAPI {
-				s.logger.Errorf("instrument not available via API '%s' on '%s'", config.InstrInfo.Ticker, config.TraderId)
+				s.logger.ErrorfKV("instrument not available via API",
+					ds.HistoryColTicker, config.InstrInfo.Ticker, ds.HistoryColTraderId, config.TraderId)
 				continue
 			}
 
@@ -179,66 +196,69 @@ mainFor:
 			var actions []*ds.StrategyAction
 			actions, err = s.GetStrategy().GetActionDecision(s.ctx, config.TraderId, config.InstrInfo, lastPrice)
 			if err != nil {
-				s.logger.Errorf("failed getting action decision '%s': %s", config.InstrInfo.Uid, err.Error())
+				s.logger.ErrorfKV("failed getting action decision",
+					ds.HistoryColInstrumentUID, config.InstrInfo.Uid, ds.HistoryColError, err.Error())
 				continue
 			}
 
 			for _, action := range actions {
-				var res string
+				var res *ds.PostOrderResult
 				res, err = s.MakeAction(lastPrice, action)
 				if err != nil {
-					s.logger.Errorf("failed making action '%s:%d' for '%s': %s",
-						action.Action.ToString(), action.Lots, config.InstrInfo.Ticker, err.Error())
+					s.logger.ErrorfKV("failed executing action",
+						ds.HistoryColAction, action.Action.ToString(), ds.HistoryColLots, action.Lots,
+						ds.HistoryColTicker, config.InstrInfo.Ticker, ds.HistoryColError, err.Error())
 					if action.OnErrorFunc != nil {
 						if err := action.OnErrorFunc(); err != nil {
-							s.logger.Fatalf("failed executing on action error function: %s", err.Error())
+							s.logger.FatalfKV("failed executing on error function of action",
+								ds.HistoryColAction, action.Action.ToString(), ds.HistoryColError, err.Error())
 						}
 					}
-					continue mainFor
+					continue mainLoop
 				}
 
-				if action.Action != ds.Hold {
-					s.logger.Infof("%s; %v", res, time.Since(start))
+				if action.Action == ds.Hold {
+					continue
 				}
+
+				s.logger.InfofKV("Executed order", ds.HistoryColAction, action.Action.ToString(), ds.HistoryColLots, action.Lots,
+					ds.HistoryColPrice, res.ExecutedOrderPrice.ToFloat64(), ds.HistoryColCommission, res.ExecutedCommission.ToFloat64(),
+					ds.HistoryColInstrumentUID, res.InstrumentUid, ds.HistoryColTicker, config.InstrInfo.Ticker,
+					ds.HistoryColTimestamp, lastPrice.Time.Unix(), ds.HistoryColExecDurationMs, time.Since(start).Milliseconds())
+
+				writeErr := s.history.WriteInTopicKV(ds.TopicOrdersHistory, ds.HistoryColAction, action.Action.ToString(), ds.HistoryColLots, action.Lots,
+					ds.HistoryColPrice, res.ExecutedOrderPrice.ToFloat64(), ds.HistoryColRequestId, action.RequestId, ds.HistoryColTraderId, config.TraderId,
+					ds.HistoryColTimestamp, time.Now().Unix())
+
+				if writeErr != nil {
+					s.logger.ErrorfKV("failed write orders history", ds.HistoryColError, writeErr)
+				}
+
 			}
 		}
 	}
 }
 
-func (s *TraderService) MakeAction(lastPrice *ds.LastPrice, action *ds.StrategyAction) (string, error) {
+func (s *TraderService) MakeAction(lastPrice *ds.LastPrice, action *ds.StrategyAction) (res *ds.PostOrderResult, err error) {
 	if action.Action == ds.Sell {
-		res, err := s.broker.MakeSellOrder(s.cfg.InstrInfo, action.Lots, action.RequestId, s.cfg.AccountId)
-		if err != nil {
-			return "", err
-		}
-
-		return fmt.Sprintf("[%s] [%s] SELL order %s: %s; Lots req: %d; Price: %.2f; Commission: %.8f", s.cfg.TraderId, lastPrice.Time.Format(time.DateOnly),
-			s.cfg.InstrInfo.Name, res.ExecutionReportStatus, action.Lots, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
-
+		return s.broker.MakeSellOrder(s.cfg.InstrInfo, action.Lots, action.RequestId, s.cfg.AccountId)
 	} else if action.Action == ds.Buy {
-		res, err := s.broker.MakeBuyOrder(s.cfg.InstrInfo, action.Lots, action.RequestId, s.cfg.AccountId)
-		if err != nil {
-			return "", err
-		}
-
-		return fmt.Sprintf("[%s] [%s] BUY order %s: %s; Lots req: %d; Price: %.2f; Commission: %.8f", s.cfg.TraderId, lastPrice.Time.Format(time.DateOnly),
-			s.cfg.InstrInfo.Name, res.ExecutionReportStatus, action.Lots, res.ExecutedOrderPrice.ToFloat64(), res.ExecutedCommission.ToFloat64()), nil
-
+		return s.broker.MakeBuyOrder(s.cfg.InstrInfo, action.Lots, action.RequestId, s.cfg.AccountId)
 	}
 
-	return fmt.Sprintf("HOLD: '%s', price: '%.2f'", s.cfg.InstrInfo.Ticker, lastPrice.Price.ToFloat64()), nil
+	return nil, nil
 }
 
 func (s *TraderService) Stop() {
 	s.cancelCtx()
 	err := s.broker.UnregisterOrderStateRecipient(s.cfg.InstrInfo, s.cfg.AccountId)
 	if err != nil {
-		s.logger.Errorf("failed unregister order state recipient on %s", s.cfg.TraderId)
+		s.logger.ErrorfKV("failed unregister order state recipient", ds.HistoryColTraderId, s.cfg.TraderId)
 	}
 
 	err = s.broker.UnregisterLastPriceRecipient(s.cfg.InstrInfo)
 	if err != nil {
-		s.logger.Errorf("failed unregister last price recipient on %s", s.cfg.TraderId)
+		s.logger.ErrorfKV("failed unregister last price recipient", ds.HistoryColTraderId, s.cfg.TraderId)
 	}
 }
 
@@ -264,22 +284,22 @@ func (s *TraderService) UpdateConfig(newCfg *TraderCfg) error {
 	if err != nil {
 		return fmt.Errorf("failed register new order state recipient on %s: %s", newCfg.TraderId, err.Error())
 	}
-	s.logger.Infof("register new order state recipient on %s", newCfg.TraderId)
+	s.logger.InfofKV("register new order state recipient", ds.HistoryColTraderId, newCfg.TraderId)
 
 	err = s.broker.RegisterLastPriceRecipient(newCfg.InstrInfo)
 	if err != nil {
 		return fmt.Errorf("failed register new last price recipient on %s: %s", newCfg.TraderId, err.Error())
 	}
-	s.logger.Infof("register new last price recipient on %s", newCfg.TraderId)
+	s.logger.InfofKV("register new last price recipient", ds.HistoryColTraderId, newCfg.TraderId)
 
 	err = s.broker.UnregisterOrderStateRecipient(s.cfg.InstrInfo, s.cfg.AccountId)
 	if err != nil {
-		s.logger.Errorf("failed unregisteg old order stare recipient on", s.cfg.TraderId)
+		s.logger.ErrorfKV("failed unregisteg old order stare recipient", ds.HistoryColTraderId, s.cfg.TraderId)
 	}
 
 	err = s.broker.UnregisterLastPriceRecipient(s.cfg.InstrInfo)
 	if err != nil {
-		s.logger.Errorf("failed unregisteg old last price recipient on %s:", s.cfg.TraderId)
+		s.logger.ErrorfKV("failed unregisteg old last price recipient", ds.HistoryColTraderId, s.cfg.TraderId)
 	}
 
 	s.cfg = newCfg

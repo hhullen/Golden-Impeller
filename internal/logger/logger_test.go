@@ -13,14 +13,14 @@ func TestLogger(t *testing.T) {
 	t.Run("NewLogger", func(t *testing.T) {
 		t.Parallel()
 
-		l := NewLogger(os.Stdout, "test")
+		l := NewLogger(os.Stdout, "test", nil)
 		require.NotNil(t, l)
 	})
 
 	t.Run("send", func(t *testing.T) {
 		t.Parallel()
 
-		l := NewLogger(os.Stdout, "test")
+		l := NewLogger(os.Stdout, "test", nil)
 
 		require.NotPanics(t, func() {
 			l.Infof("%s", "Hello MF!")
@@ -40,7 +40,7 @@ func TestLogger(t *testing.T) {
 	t.Run("send to stopped", func(t *testing.T) {
 		t.Parallel()
 
-		l := NewLogger(os.Stdout, "test")
+		l := NewLogger(os.Stdout, "test", nil)
 		l.Stop()
 
 		require.Panics(t, func() {

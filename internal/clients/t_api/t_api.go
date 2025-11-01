@@ -243,7 +243,7 @@ func (c *Client) startLastPriceRouting(ch <-chan *pb.LastPrice) {
 			c.Lock()
 			for _, uniqueListener := range c.lastPriceInput[InstrumentUid(v.InstrumentUid)] {
 				if err := supports.SendOrSkipIfMaybeClosed(uniqueListener, v); err != nil {
-					c.Logger.Errorf(err.Error())
+					c.Logger.Errorf("error on getting last price", ds.HistoryColError, err.Error())
 				}
 
 			}
@@ -259,9 +259,10 @@ func (c *Client) startListeningStream(uid string, s IStream) {
 			s.Stop()
 		default:
 			if err := s.Listen(); err != nil {
-				c.Logger.Errorf("failed starting listening stream for '%s': %s", uid, err.Error())
+				c.Logger.Errorf("failed starting stream listening",
+					ds.HistoryColInstrumentUID, uid, ds.HistoryColError, err.Error())
 
-				c.Logger.Infof("Sleep for '%s' second", onErrorListeningStreamDelay)
+				c.Logger.Infof("Sleep", ds.HistoryColSeconds, onErrorListeningStreamDelay.Seconds())
 				supports.WaitFor(c.ctx, onErrorListeningStreamDelay)
 			}
 		}
@@ -525,7 +526,7 @@ func (c *Client) startOrdersStateRouting(ch <-chan *pb.OrderStateStreamResponse_
 			c.Lock()
 			for _, uniqueListener := range c.ordersStateInput[AccountId(v.AccountId)][InstrumentUid(v.InstrumentUid)] {
 				if err := supports.SendIfMaybeClosed(uniqueListener, v); err != nil {
-					c.Logger.Errorf(err.Error())
+					c.Logger.Errorf("error on getting orders state", ds.HistoryColError, err.Error())
 				}
 			}
 			c.Unlock()

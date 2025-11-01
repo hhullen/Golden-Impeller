@@ -94,5 +94,12 @@ local-trader: $(TRADER_LOCAL_BIN)
 trader:
 	docker compose up
 
+stop-trader:
+	docker compose down
+
+trader-rebuild:
+	docker compose down -v
+	docker compose up --build --renew-anon-volumes --force-recreate
+
 clean:
 	$(RM) $(MIGRATOR_BIN) $(TOOLS_BIN) $(CANDLES_LOADER_BIN) $(BACKTEST_BOT_BIN) $(TRADER_LOCAL_BIN) $(RM_POSTFIX)

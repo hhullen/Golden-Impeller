@@ -7,10 +7,13 @@ services:
       context: .
       dockerfile: ./cmd/trading_bot/Dockerfile
     init: true
-    restart: unless-stopped
+    restart: always
     depends_on:
+      kafka_broker:
+        condition: service_healthy
       migrator:
         condition: service_completed_successfully
+      
 
   kafka_broker:
     image: apache/kafka:4.0.1
@@ -41,6 +44,12 @@ services:
       KAFKA_MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION: 1
     volumes:
       - kafka_data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "bash", "-c", "kafka-topics.sh --bootstrap-server kafka_broker:9092 --list > /dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
   
   kafka-ui:
     image: provectuslabs/kafka-ui:v0.7.2
@@ -58,8 +67,11 @@ services:
     build:
       context: .
       dockerfile: ./cmd/migrator/Dockerfile
+    restart: on-failure
     depends_on:
       db:
+        condition: service_healthy
+      clickhouse_db:
         condition: service_healthy
 
   db:
@@ -70,6 +82,8 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password_secret
       POSTGRES_USER_FILE: /run/secrets/db_user_secret
       POSTGRES_DB_FILE: /run/secrets/db_name_secret
+    ports:
+      - 5432:5432
     secrets:
       - db_password_secret
       - db_user_secret
@@ -101,11 +115,11 @@ services:
       export CLICKHOUSE_DB=$(cat /run/secrets/clickhouse_name_secret);
       exec /entrypoint.sh;"
     healthcheck:
-      test: ["CMD", "bash", "-c", "clickhouse-client --user=$${CLICKHOUSE_USER} --password=$${CLICKHOUSE_PASSWORD} --query='SELECT 1'"]
+      test: ["CMD-SHELL", "sh", "-c", "clickhouse-client --user=$${CLICKHOUSE_USER} --password=$${CLICKHOUSE_PASSWORD} --query='SELECT 1'"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 20s
 
 
 secrets:
@@ -127,4 +141,3 @@ volumes:
   db_data:
   kafka_data:
   clickhouse_data:
-    

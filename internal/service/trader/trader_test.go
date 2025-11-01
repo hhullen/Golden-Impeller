@@ -19,6 +19,7 @@ type TestTradingService struct {
 	mockLogger   *MockILogger
 	mockStrategy *MockIStrategy
 	mockStorage  *MockIStorage
+	mockHistory  *MockIHistoryWriter
 }
 
 func newTestService(ctx context.Context, t *testing.T) *TestTradingService {
@@ -27,6 +28,7 @@ func newTestService(ctx context.Context, t *testing.T) *TestTradingService {
 	mockLogger := NewMockILogger(mc)
 	mockStrategy := NewMockIStrategy(mc)
 	mockStorage := NewMockIStorage(mc)
+	mockHistory := NewMockIHistoryWriter(mc)
 
 	instrInfo := &ds.InstrumentInfo{
 		Isin:         "ISIN",
@@ -51,11 +53,12 @@ func newTestService(ctx context.Context, t *testing.T) *TestTradingService {
 
 	return &TestTradingService{
 		service: buildTraderService(ctx, cancelCtx, mockBrocker, mockLogger,
-			mockStrategy, mockStorage, trCfg),
+			mockStrategy, mockStorage, mockHistory, trCfg),
 		mockBrocker:  mockBrocker,
 		mockLogger:   mockLogger,
 		mockStrategy: mockStrategy,
 		mockStorage:  mockStorage,
+		mockHistory:  mockHistory,
 	}
 }
 
@@ -78,7 +81,7 @@ func TestTraderService(t *testing.T) {
 		ts.mockBrocker.EXPECT().RecieveOrdersUpdate(gomock.Any(), gomock.Any(), gomock.Any()).Return(&ds.Order{CreatedAt: &time.Time{}}, nil).MinTimes(1)
 		ts.mockStorage.EXPECT().UpdateOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
 
-		s, err := NewTraderService(ctx, ts.mockBrocker, ts.mockLogger, ts.mockStrategy, ts.mockStorage, ts.service.cfg)
+		s, err := NewTraderService(ctx, ts.mockBrocker, ts.mockLogger, ts.mockStrategy, ts.mockStorage, ts.mockHistory, ts.service.cfg)
 
 		time.Sleep(time.Microsecond * 500)
 
@@ -95,9 +98,9 @@ func TestTraderService(t *testing.T) {
 		ts.mockBrocker.EXPECT().RegisterOrderStateRecipient(ts.service.cfg.InstrInfo, ts.service.cfg.AccountId).Return(nil)
 
 		ts.mockBrocker.EXPECT().RecieveOrdersUpdate(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error")).MinTimes(1)
-		ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1)
+		ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MinTimes(1)
 
-		s, err := NewTraderService(ctx, ts.mockBrocker, ts.mockLogger, ts.mockStrategy, ts.mockStorage, ts.service.cfg)
+		s, err := NewTraderService(ctx, ts.mockBrocker, ts.mockLogger, ts.mockStrategy, ts.mockStorage, ts.mockHistory, ts.service.cfg)
 
 		time.Sleep(time.Microsecond * 500)
 
@@ -116,9 +119,9 @@ func TestTraderService(t *testing.T) {
 		ts.mockBrocker.EXPECT().RecieveOrdersUpdate(gomock.Any(), gomock.Any(), gomock.Any()).Return(&ds.Order{CreatedAt: &time.Time{}}, nil).MinTimes(1)
 		ts.mockStorage.EXPECT().UpdateOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("error")).MinTimes(1)
 
-		ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1)
+		ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MinTimes(1)
 
-		s, err := NewTraderService(ctx, ts.mockBrocker, ts.mockLogger, ts.mockStrategy, ts.mockStorage, ts.service.cfg)
+		s, err := NewTraderService(ctx, ts.mockBrocker, ts.mockLogger, ts.mockStrategy, ts.mockStorage, ts.mockHistory, ts.service.cfg)
 
 		time.Sleep(time.Microsecond * 500)
 
@@ -138,7 +141,9 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Hold}}, nil).MinTimes(1)
 
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MinTimes(1)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MinTimes(1)
+
+		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
 
 		ts.service.RunTrading()
 	})
@@ -152,8 +157,8 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(nil, errors.New("error")).MaxTimes(1)
 
-		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)
+		logCall := ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MaxTimes(1)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MaxTimes(1).After(logCall)
 
 		ts.service.RunTrading()
 	})
@@ -166,11 +171,14 @@ func TestTraderService(t *testing.T) {
 		ts.service.cfg.OnTradingErrorDelay = time.Millisecond * 200
 
 		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MaxTimes(1)
+		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
 
 		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return(nil, errors.New("error")).MaxTimes(1)
 
-		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)
+		logCall := ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MaxTimes(1)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MaxTimes(1).After(logCall)
+
+		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
 
 		ts.service.RunTrading()
 	})
@@ -188,8 +196,10 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.NotAvailableNow, errors.New("error")).MinTimes(1)
 
-		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)
+		logCall := ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MaxTimes(1)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MaxTimes(1).After(logCall)
+
+		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
 
 		ts.service.RunTrading()
 	})
@@ -209,8 +219,10 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().MakeSellOrder(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 
-		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)
+		logCall := ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MaxTimes(1)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MaxTimes(1).After(logCall)
+
+		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
 
 		ts.service.RunTrading()
 	})
@@ -224,12 +236,12 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MinTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Sell}}, nil).MinTimes(1)
-
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.NotAvailableViaAPI, nil).MinTimes(1)
 
-		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1)
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall).MinTimes(1)
+		logCall := ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MinTimes(1)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MaxTimes(1).After(logCall).MinTimes(1)
+
+		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
 
 		ts.service.RunTrading()
 	})
@@ -243,11 +255,11 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MinTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Sell}}, nil).MinTimes(1)
-
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.NotAvailableNow, nil).MinTimes(1)
 
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MaxTimes(1).MinTimes(1)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MaxTimes(1).MinTimes(1)
+
+		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
 
 		ts.service.RunTrading()
 	})
@@ -267,8 +279,10 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().MakeBuyOrder(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 
-		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).MaxTimes(1)
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MaxTimes(1).After(logCall)
+		logCall := ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MaxTimes(1)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MaxTimes(1).After(logCall)
+
+		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
 
 		ts.service.RunTrading()
 	})
@@ -288,8 +302,10 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().MakeBuyOrder(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error")).MinTimes(1)
 
-		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1)
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MinTimes(1).After(logCall)
+		logCall := ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MinTimes(1)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MinTimes(1).After(logCall)
+
+		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
 
 		go ts.service.RunTrading()
 		time.Sleep(time.Microsecond * 500)
@@ -314,18 +330,18 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
 
+		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
+
 		buy := ts.mockBrocker.EXPECT().MakeBuyOrder(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error")).MinTimes(1)
 
-		logCall := ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).MinTimes(1).After(buy)
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MinTimes(1).After(logCall)
+		logCall := ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MinTimes(1).After(buy)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MinTimes(1).After(logCall)
 
 		go ts.service.RunTrading()
 		time.Sleep(time.Microsecond * 500)
 
-		un1 := ts.mockBrocker.EXPECT().UnregisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(errors.New("error"))
-		ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any()).After(un1)
-		un2 := ts.mockBrocker.EXPECT().UnregisterLastPriceRecipient(gomock.Any()).Return(errors.New("error"))
-		ts.mockLogger.EXPECT().Errorf(gomock.Any(), gomock.Any()).After(un2)
+		ts.mockBrocker.EXPECT().UnregisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(errors.New("error"))
+		ts.mockBrocker.EXPECT().UnregisterLastPriceRecipient(gomock.Any()).Return(errors.New("error"))
 
 		ts.service.Stop()
 		time.Sleep(time.Microsecond * 500)
@@ -366,7 +382,7 @@ func TestTraderService(t *testing.T) {
 		ts.mockBrocker.EXPECT().UnregisterLastPriceRecipient(gomock.Any()).Return(nil)
 		ts.mockBrocker.EXPECT().UnregisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(nil)
 
-		ts.mockLogger.EXPECT().Infof(gomock.Any(), gomock.Any()).MinTimes(2)
+		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MinTimes(2)
 
 		err := ts.service.UpdateConfig(newCfg)
 

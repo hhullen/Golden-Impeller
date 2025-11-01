@@ -8,6 +8,30 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	TopicPriceHistory  = "price_history"
+	TopicOrdersHistory = "orders_history"
+	TopicLogs          = "app_logs"
+)
+
+const (
+	HistoryColPrice          = "price"
+	HistoryColTimestamp      = "timestamp"
+	HistoryColTicker         = "ticker"
+	HistoryColAction         = "action"
+	HistoryColLots           = "lots"
+	HistoryColRequestId      = "request_id"
+	HistoryColTraderId       = "trader_id"
+	HistoryColCommission     = "commission"
+	HistoryColInstrumentUID  = "instrument_uid"
+	HistoryColExecDurationMs = "exec_duration"
+	HistoryColError          = "error"
+	HistoryColOrderId        = "order_id"
+	HistoryColSeconds        = "seconds"
+	HistoryColMessage        = "message"
+	HistoryColDetails        = "details"
+)
+
 type TradingAvailability int8
 
 const (

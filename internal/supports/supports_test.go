@@ -2,6 +2,7 @@ package supports
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 	"time"
 
@@ -175,4 +176,32 @@ func TestSendOrSkipIfMaybeClosed(t *testing.T) {
 		err := SendOrSkipIfMaybeClosed(ch, 1)
 		require.Nil(t, err)
 	})
+}
+
+func TestIsInContainer(t *testing.T) {
+	t.Parallel()
+
+	require.Equal(t, IsInContainer(), false)
+
+}
+
+func TestReadSecret(t *testing.T) {
+	t.Parallel()
+
+	require.NotEqual(t, ReadSecret("./supports_test.go"), "")
+
+}
+
+func TestMakeKVMessagesJSON(t *testing.T) {
+	t.Parallel()
+
+	b, _ := MakeKVMessagesJSON("key1", "val1", "key2", "val2", "KeyNoVal")
+	data := map[string]string{}
+	json.Unmarshal(b, &data)
+
+	require.Equal(t, data["key1"], "val1")
+	require.Equal(t, data["key2"], "val2")
+	_, exists := data["KeyNoVal"]
+	require.False(t, exists)
+
 }

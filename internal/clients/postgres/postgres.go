@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"os"
 	"strings"
 	"time"
 	ds "trading_bot/internal/service/datastruct"
+	"trading_bot/internal/supports"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -27,14 +27,14 @@ type Client struct {
 	db *sqlx.DB
 }
 
-func NewClient() (*Client, error) {
-	host := readSecret(db_host_secret_path)
-	port := readSecret(db_port_secret_path)
-	user := readSecret(db_user_secret_path)
-	password := readSecret(db_password_secret_path)
-	dbname := readSecret(db_name_secret_path)
+func NewClient(ctx context.Context) (*Client, error) {
+	host := supports.ReadSecret(db_host_secret_path)
+	port := supports.ReadSecret(db_port_secret_path)
+	user := supports.ReadSecret(db_user_secret_path)
+	password := supports.ReadSecret(db_password_secret_path)
+	dbname := supports.ReadSecret(db_name_secret_path)
 
-	if os.Getenv("RUNNING_IN_CONTAINER") == "" {
+	if !supports.IsInContainer() {
 		host = "localhost"
 	}
 
@@ -43,8 +43,13 @@ func NewClient() (*Client, error) {
 
 	db, err := sqlx.Connect("postgres", dsn)
 	if err != nil {
-		return nil, fmt.Errorf("unable to connect to db: %w", err)
+		return nil, fmt.Errorf("unable to connect to db: %s", err.Error())
 	}
+
+	go func() {
+		<-ctx.Done()
+		db.Close()
+	}()
 
 	db.SetMaxIdleConns(5)
 	db.SetMaxOpenConns(10)
@@ -58,20 +63,8 @@ func buildClient(db *sqlx.DB) *Client {
 	}
 }
 
-func readSecret(path string) string {
-	f, err := os.OpenFile(path, os.O_RDONLY, 0644)
-	if err != nil {
-		panic(err)
-	}
-
-	secret := ""
-	fmt.Fscan(f, &secret)
-
-	return string(secret)
-}
-
-func (c *Client) UpdateConnection() error {
-	newClient, err := NewClient()
+func (c *Client) UpdateConnection(ctx context.Context) error {
+	newClient, err := NewClient(ctx)
 	if err != nil {
 		return err
 	}

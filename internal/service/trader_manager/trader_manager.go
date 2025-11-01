@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 	"trading_bot/internal/config"
+	ds "trading_bot/internal/service/datastruct"
 	"trading_bot/internal/service/trader"
 	"trading_bot/internal/supports"
 
@@ -32,10 +33,11 @@ type TraderManager struct {
 	managerLogger    trader.ILogger
 	traderLogger     trader.ILogger
 	strategyResolver IStrategyResolver
+	history          trader.IHistoryWriter
 }
 
 func NewTraderManager(ctx context.Context, onTraderPanicDelay time.Duration, broker trader.IBroker,
-	storage trader.IStorage, managerLogger, traderLogger trader.ILogger, strategyResolver IStrategyResolver) *TraderManager {
+	storage trader.IStorage, managerLogger, traderLogger trader.ILogger, strategyResolver IStrategyResolver, history trader.IHistoryWriter) *TraderManager {
 	return &TraderManager{
 		onTraderPanicDelay: onTraderPanicDelay,
 		traders:            make(map[TraderId]*trader.TraderService),
@@ -44,6 +46,7 @@ func NewTraderManager(ctx context.Context, onTraderPanicDelay time.Duration, bro
 		managerLogger:      managerLogger,
 		traderLogger:       traderLogger,
 		strategyResolver:   strategyResolver,
+		history:            history,
 		ctx:                ctx,
 	}
 }
@@ -51,20 +54,20 @@ func NewTraderManager(ctx context.Context, onTraderPanicDelay time.Duration, bro
 func (tm *TraderManager) UpdateTradersWithConfig(cfg *config.TraderCfg) {
 
 	if len(cfg.Traders) == 0 {
-		tm.managerLogger.Errorf("no traders in new config")
+		tm.managerLogger.ErrorfKV("no traders in new config")
 		return
 	}
 
 	for _, traderCfg := range cfg.Traders {
 		instrInfo, err := tm.broker.FindInstrument(traderCfg.Uid)
 		if err != nil {
-			tm.managerLogger.Errorf("failed getting instrument from broker: %s", err.Error())
+			tm.managerLogger.ErrorfKV("failed getting instrument from broker: %s", err.Error())
 			continue
 		}
 
 		dbId, err := tm.storage.AddInstrumentInfo(instrInfo)
 		if err != nil {
-			tm.managerLogger.Errorf("failed adding instrument to database: %s", err.Error())
+			tm.managerLogger.ErrorfKV("failed adding instrument to database: %s", err.Error())
 			continue
 		}
 		instrInfo.Id = dbId
@@ -72,7 +75,7 @@ func (tm *TraderManager) UpdateTradersWithConfig(cfg *config.TraderCfg) {
 
 		strategyInstance, err := tm.strategyResolver.ResolveStrategy(traderCfg.StrategyCfg, tm.storage, tm.broker, traderCfg.UniqueTraderId)
 		if err != nil {
-			tm.managerLogger.Errorf("failed resolving strategy: %s", err.Error())
+			tm.managerLogger.ErrorfKV("failed resolving strategy: %s", err.Error())
 			continue
 		}
 
@@ -92,39 +95,39 @@ func (tm *TraderManager) UpdateTradersWithConfig(cfg *config.TraderCfg) {
 
 			if oldStrategy.GetName() == strategyInstance.GetName() {
 				if err := oldStrategy.UpdateConfig(traderCfg.StrategyCfg); err != nil {
-					tm.managerLogger.Errorf("failed updating strategy config: %s", err.Error())
+					tm.managerLogger.ErrorfKV("failed updating strategy config: %s", err.Error())
 					continue
 				}
-				tm.managerLogger.Infof("strategy config updated on '%s'", oldCfg.TraderId)
+				tm.managerLogger.InfofKV("strategy config updated", ds.HistoryColTraderId, oldCfg.TraderId)
 
 			} else {
 
 				if err := tr.UpdateStrategy(strategyInstance); err != nil {
-					tm.managerLogger.Errorf("failed setting new strategy: %s", err.Error())
+					tm.managerLogger.ErrorfKV("failed setting new strategy: %s", err.Error())
 					continue
 				}
-				tm.managerLogger.Infof("strategy updated on '%s'", oldCfg.TraderId)
+				tm.managerLogger.InfofKV("strategy updated", ds.HistoryColTraderId, oldCfg.TraderId)
 
 			}
 
 			if tr.UpdateConfig(trCfg) != nil {
-				tm.managerLogger.Errorf("failed updating config on '%s'", oldCfg.TraderId)
+				tm.managerLogger.ErrorfKV("failed updating config on '%s'", oldCfg.TraderId)
 				continue
 			}
-			tm.managerLogger.Infof("config on '%s' updated", oldCfg.TraderId)
+			tm.managerLogger.InfofKV("trader config on updated", ds.HistoryColTraderId, oldCfg.TraderId)
 
 			continue
 		}
 
-		trader, err := trader.NewTraderService(tm.ctx, tm.broker, tm.traderLogger, strategyInstance, tm.storage, trCfg)
+		trader, err := trader.NewTraderService(tm.ctx, tm.broker, tm.traderLogger, strategyInstance, tm.storage, tm.history, trCfg)
 		if err != nil {
-			tm.managerLogger.Errorf("failed creating trader '%s': %s", traderCfg.UniqueTraderId, err.Error())
+			tm.managerLogger.ErrorfKV("failed creating trader '%s': %s", traderCfg.UniqueTraderId, err.Error())
 			continue
 		}
 
 		err = tm.goNewOneTrader(trader)
 		if err != nil {
-			tm.managerLogger.Errorf("failed starting trader '%s': %s", traderCfg.UniqueTraderId, err.Error())
+			tm.managerLogger.ErrorfKV("failed starting trader '%s': %s", traderCfg.UniqueTraderId, err.Error())
 			continue
 		}
 	}
@@ -155,7 +158,7 @@ traders:
 		}
 		tr.Stop()
 		delete(tm.traders, k)
-		tm.managerLogger.Infof("trader removed from execution: %s", oldCfg.TraderId)
+		tm.managerLogger.InfofKV("trader removed from execution", ds.HistoryColTraderId, oldCfg.TraderId)
 	}
 }
 
@@ -169,14 +172,14 @@ func (tm *TraderManager) goNewOneTrader(tr *trader.TraderService) error {
 		defer tm.wg.Done()
 
 		cfg := tr.GetConfig()
-		tm.managerLogger.Infof("start trader new %s", cfg.TraderId)
+		tm.managerLogger.InfofKV("start new trader", ds.HistoryColTraderId, cfg.TraderId)
 		for done := false; !done; {
 
 			func() {
 				defer func() {
 					if p := recover(); p != nil {
-						tm.managerLogger.Errorf("Panic recovered on trader '%s': %v; Removed from execution for %v",
-							cfg.TraderId, p, tm.onTraderPanicDelay)
+						tm.managerLogger.ErrorfKV("Panic recovered. Removed from execution for.",
+							ds.HistoryColTraderId, cfg.TraderId, ds.HistoryColError, p, ds.HistoryColSeconds, tm.onTraderPanicDelay.Seconds())
 						supports.WaitFor(tm.ctx, tm.onTraderPanicDelay)
 					}
 				}()

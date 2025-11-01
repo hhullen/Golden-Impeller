@@ -127,12 +127,10 @@ func (c *BacktestBroker) MakeBuyOrder(instrInfo *ds.InstrumentInfo, lots int64, 
 
 	commission := price * c.commissionPercent
 	c.account -= (price + commission)
-	// c.logger.Infof("buy: %f; %s", c.account, requestId)
 	if c.account < c.minAccount {
 		c.minAccount = c.account
 	}
 
-	// t := time.Now()
 	t := c.timer
 	c.timer = c.timer.Add(time.Second)
 
@@ -172,7 +170,6 @@ func (c *BacktestBroker) MakeSellOrder(instrInfo *ds.InstrumentInfo, lots int64,
 
 	commission := price * c.commissionPercent
 	c.account += (price - commission)
-	// c.logger.Infof("sell: %f; %s", c.account, requestId)
 	if c.account > c.maxAccount {
 		c.maxAccount = c.account
 	}
@@ -180,7 +177,6 @@ func (c *BacktestBroker) MakeSellOrder(instrInfo *ds.InstrumentInfo, lots int64,
 	t := c.timer
 	c.timer = c.timer.Add(time.Second)
 
-	// t := time.Now()
 	orderPrice := ds.Quotation{}
 	orderPrice.FromFloat64(c.lastPrice)
 

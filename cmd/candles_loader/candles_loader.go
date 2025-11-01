@@ -40,14 +40,14 @@ func main() {
 		AccountId: envCfg.TInvestAccountID,
 	}
 
-	logger := logger.NewLogger(os.Stdout, "LOADER")
+	logger := logger.NewLogger(os.Stdout, "LOADER", nil)
 
 	investClient, err := t_api.NewClient(ctx, investCfg, logger)
 	if err != nil {
 		panic(err)
 	}
 
-	dbClient, err := postgres.NewClient()
+	dbClient, err := postgres.NewClient(ctx)
 	if err != nil {
 		panic(err)
 	}

@@ -2,7 +2,9 @@ package supports
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 )
@@ -108,5 +110,39 @@ func SendIfMaybeClosed[Type any](ch chan<- Type, v Type) (err error) {
 
 	ch <- v
 
+	return
+}
+
+func IsInContainer() bool {
+	return os.Getenv("RUNNING_IN_CONTAINER") == "true"
+}
+
+func ReadSecret(path string) string {
+	f, err := os.OpenFile(path, os.O_RDONLY, 0644)
+	if err != nil {
+		panic(err)
+	}
+
+	secret := ""
+	fmt.Fscan(f, &secret)
+
+	return string(secret)
+}
+
+func MakeKVMessagesJSON(kvs ...any) (bytes []byte, err error) {
+	defer func() {
+		if p := recover(); p != nil {
+			err = fmt.Errorf("failed WriteInTopicKV: %v", p)
+		}
+	}()
+
+	msgs := map[string]any{}
+	for i := 0; i < len(kvs)-1; i += 2 {
+		key := fmt.Sprint(kvs[i])
+		value := kvs[i+1]
+		msgs[key] = value
+	}
+
+	bytes, err = json.Marshal(msgs)
 	return
 }

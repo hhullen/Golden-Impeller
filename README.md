@@ -24,7 +24,7 @@ TRADER:
 
     traders:
         - unique_trader_id: tgld_[btdstf-4-100-0.75-1.7]
-          uid: 4c466956-d2ce-4a95-abb4-17947a65f18a
+          uid: de82be66-3b9b-4612-9572-61e3c6039013
           account_id: <account id>
           strategy_cfg:
             name: btdstf
@@ -35,7 +35,7 @@ TRADER:
 
 BACKTESTER:
     - unique_trader_id: tgld_san_22_0.75_1.7
-      uid: 4c466956-d2ce-4a95-abb4-17947a65f18a
+      uid: de82be66-3b9b-4612-9572-61e3c6039013
       from: 01.01.2023
       to: now
       interval: 1min
@@ -51,11 +51,12 @@ BACKTESTER:
 
 HISTORY_CANDLES_LOADER:
     - ticker: TGLD
-    uid: 4c466956-d2ce-4a95-abb4-17947a65f18a
+    uid: de82be66-3b9b-4612-9572-61e3c6039013
     from: 01.01.2020
     to: now
     interval: 1min
 ```
+`!` Uid of instruments can be changed fromt time to time
 
 Let's brake config donw step by step:
 * `APP_NAME` can take any value
@@ -151,7 +152,7 @@ HISTORY_CANDLES_LOADER:
     interval: 1min
 
     - ticker: TGLD
-    uid: 4c466956-d2ce-4a95-abb4-17947a65f18a
+    uid: de82be66-3b9b-4612-9572-61e3c6039013
     from: 01.01.2023
     to: now
     interval: 1min
@@ -193,7 +194,7 @@ BACKTESTER:
         percent_up_to_sell: 1.7
 
     - unique_trader_id: tgld_san_22_0.75_1.7
-      uid: 4c466956-d2ce-4a95-abb4-17947a65f18a
+      uid: de82be66-3b9b-4612-9572-61e3c6039013
       from: 01.01.2024
       to: now
       interval: 1min
@@ -235,7 +236,7 @@ TRADER:
 
     traders:
         - unique_trader_id: tgld_[btdstf-4-100-0.75-1.7]
-          uid: 4c466956-d2ce-4a95-abb4-17947a65f18a
+          uid: de82be66-3b9b-4612-9572-61e3c6039013
           account_id: <your another account id>
           strategy_cfg:
             name: btdstf
@@ -398,6 +399,14 @@ make local-trader
 * Run Trader Service in Docker Compose
 ```
 make trader
+```
+* Stop Trader Service in Docker Compose
+```
+make stop-trader
+```
+* Recreate images and run Trader Service in Docker Compose. `!` This cleans docker volumes
+```
+make trader-rebuild
 ```
 
 * Clean built binaries

@@ -203,7 +203,7 @@ func (bs *BacktestStorage) RemoveOrder(instrInfo *ds.InstrumentInfo, order *ds.O
 	v, ok := bs.orders[order.OrderId]
 
 	if !ok {
-		return fmt.Errorf("not found order: %s", order.OrderId)
+		return fmt.Errorf("not found order", ds.HistoryColOrderId, order.OrderId)
 	}
 
 	vRef, ok := bs.orders[*v.OrderIdRef]
