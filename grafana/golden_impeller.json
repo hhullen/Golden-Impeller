@@ -139,6 +139,187 @@
             "title": "Prices",
             "transparent": true,
             "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "clickhouse_data_source"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "points",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "showValues": false,
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": 0
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 0
+            },
+            "id": 3,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "right",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "12.3.0-18925857539",
+            "targets": [
+                {
+                    "editorType": "sql",
+                    "format": 0,
+                    "meta": {
+                        "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                        }
+                    },
+                    "pluginVersion": "4.11.2",
+                    "queryType": "timeseries",
+                    "rawSql": "SELECT\r\n  timestamp AS time,\r\n  price,\r\n  trader_id,\r\n  action\r\nFROM\r\n  orders_history\r\nORDER BY time",
+                    "refId": "A"
+                }
+            ],
+            "title": "Orders",
+            "transparent": true,
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "grafana-clickhouse-datasource",
+                "uid": "clickhouse_data_source"
+            },
+            "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 8
+            },
+            "id": 2,
+            "options": {
+                "dedupStrategy": "none",
+                "enableInfiniteScrolling": false,
+                "enableLogDetails": true,
+                "prettifyLogMessage": true,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "wrapLogMessage": true
+            },
+            "pluginVersion": "12.3.0-18925857539",
+            "targets": [
+                {
+                    "editorType": "sql",
+                    "format": 2,
+                    "meta": {
+                        "builderOptions": {
+                            "columns": [],
+                            "database": "",
+                            "limit": 1000,
+                            "mode": "list",
+                            "queryType": "table",
+                            "table": ""
+                        }
+                    },
+                    "pluginVersion": "4.11.2",
+                    "queryType": "logs",
+                    "rawSql": "SELECT\r\n  timestamp,\r\n  message,\r\n  details\r\nFROM logs",
+                    "refId": "A"
+                }
+            ],
+            "title": "Logs",
+            "transformations": [
+                {
+                    "id": "extractFields",
+                    "options": {
+                        "delimiter": ",",
+                        "format": "json",
+                        "keepTime": false,
+                        "replace": false,
+                        "source": "details"
+                    }
+                },
+                {
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {
+                            "details": true
+                        },
+                        "includeByName": {},
+                        "indexByName": {},
+                        "renameByName": {}
+                    }
+                }
+            ],
+            "transparent": true,
+            "type": "logs"
         }
     ],
     "preload": false,
@@ -154,7 +335,7 @@
     },
     "timepicker": {},
     "timezone": "browser",
-    "title": "Prices",
+    "title": "Golden Impeller",
     "uid": "adtdhkg",
     "version": 1
 }

@@ -2,10 +2,11 @@
 -- +goose StatementBegin
 
 CREATE TABLE IF NOT EXISTS logs (
+timestamp DateTime DEFAULT now(),
 message String,
 details String
 ) ENGINE = MergeTree()
-ORDER BY (message);
+ORDER BY (timestamp);
 
 -- +goose StatementEnd
 

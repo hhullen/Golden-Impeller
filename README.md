@@ -278,7 +278,12 @@ When `T_INVEST_TOKEN`, `T_INVEST_ADDRESS` and `T_INVEST_ACCOUNT_ID` filled.
 ```
 make trader
 ```
-Here all logs writes in stdout.
+Here all logs are wroten in stdout and to Clickhouse database.  
+The logs and some charts are accessible in Grafana dashboard named `Golden Impeller` via browser:
+```
+http://localhost:3000/dashboards
+```
+Default username `admin` and password `admin`.  
 In case `.env.yaml` has some changes after Trader Service started, update traders with command:
 ```
 make update-traders-config

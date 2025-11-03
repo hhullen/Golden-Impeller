@@ -5,6 +5,7 @@ CREATE MATERIALIZED VIEW logs_mv
 TO logs
 AS
 SELECT
+    now() AS timestamp,
     message,
     details
 FROM logs_kafka;
