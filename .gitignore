@@ -22,7 +22,7 @@ go.work
 go.work.sum
 
 # others
-.env.yaml
+config.yaml
 .ENV*
 *.log
 accounts.yaml

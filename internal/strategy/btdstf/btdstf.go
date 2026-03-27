@@ -65,7 +65,7 @@ func NewBTDSTF(s IStorageStrategy, cfg *ConfigBTDSTF, trId string) *BTDSTF {
 	}
 }
 
-func (b *BTDSTF) GetActionDecision(ctx context.Context, trId string, instrInfo *ds.InstrumentInfo, lastPrice *ds.LastPrice) (acts []*ds.StrategyAction, err error) {
+func (b *BTDSTF) GetActionDecision(ctx context.Context, trId, _ string, instrInfo *ds.InstrumentInfo, lastPrice *ds.LastPrice) (acts []*ds.StrategyAction, err error) {
 	defer func() {
 		if len(acts) == 1 && acts[0].Action == ds.Hold {
 			return

@@ -14,18 +14,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-type MockStorageCombined struct {
-	*trader.MockIStorage
-	*btdstf.MockIStorageStrategy
-}
-
 type TestTraderManagerService struct {
 	ctx                  context.Context
 	service              *TraderManager
-	mockBrocker          *trader.MockIBroker
+	mockBroker           *MockIBroker
 	mockLogger           *trader.MockILogger
 	mockStrategyResolver *MockIStrategyResolver
-	mockStorage          *MockStorageCombined
+	mockStorage          *MockIStorage
 	mockHistory          *trader.MockIHistoryWriter
 	mc                   *gomock.Controller
 }
@@ -33,21 +28,18 @@ type TestTraderManagerService struct {
 func newTraderManagerTestService(t *testing.T) *TestTraderManagerService {
 	ctx := context.Background()
 	mc := gomock.NewController(t)
-	mockBrocker := trader.NewMockIBroker(mc)
+	mockBroker := NewMockIBroker(mc)
 	mockLogger := trader.NewMockILogger(mc)
 	mockStrategyResolver := NewMockIStrategyResolver(mc)
-	mockStorage := &MockStorageCombined{
-		MockIStorage:         trader.NewMockIStorage(mc),
-		MockIStorageStrategy: btdstf.NewMockIStorageStrategy(mc),
-	}
+	mockStorage := NewMockIStorage(mc)
 	mockHistory := trader.NewMockIHistoryWriter(mc)
 
-	tm := NewTraderManager(ctx, time.Second*1, mockBrocker, mockStorage, mockLogger, mockLogger, mockStrategyResolver, mockHistory)
+	tm := NewTraderManager(ctx, time.Second*1, mockBroker, mockStorage, mockStrategyResolver, mockLogger, mockLogger, mockHistory)
 
 	return &TestTraderManagerService{
 		ctx:                  ctx,
 		service:              tm,
-		mockBrocker:          mockBrocker,
+		mockBroker:           mockBroker,
 		mockLogger:           mockLogger,
 		mockStorage:          mockStorage,
 		mockStrategyResolver: mockStrategyResolver,
@@ -104,7 +96,7 @@ func TestTraderManager(t *testing.T) {
 
 		cfg := getTestTraderConfig()
 
-		fi := ts.mockBrocker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(nil, errors.New("error"))
+		fi := ts.mockBroker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(nil, errors.New("error"))
 		ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).After(fi)
 
 		ts.service.UpdateTradersWithConfig(cfg)
@@ -117,8 +109,8 @@ func TestTraderManager(t *testing.T) {
 
 		cfg := getTestTraderConfig()
 
-		ts.mockBrocker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
-		ai := ts.mockStorage.MockIStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), errors.New("error"))
+		ts.mockBroker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
+		ai := ts.mockStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), errors.New("error"))
 		ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).After(ai)
 
 		ts.service.UpdateTradersWithConfig(cfg)
@@ -132,8 +124,8 @@ func TestTraderManager(t *testing.T) {
 		cfg := getTestTraderConfig()
 		cfg.Traders[0].StrategyCfg["name"] = "wrong strategy name"
 
-		ts.mockBrocker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
-		ts.mockStorage.MockIStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
+		ts.mockBroker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
+		ts.mockStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
 		rs := ts.mockStrategyResolver.EXPECT().ResolveStrategy(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 		ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).After(rs)
 
@@ -148,8 +140,8 @@ func TestTraderManager(t *testing.T) {
 		cfg := getTestTraderConfig()
 		cfg.Traders[0].UniqueTraderId = ""
 
-		ts.mockBrocker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
-		ts.mockStorage.MockIStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
+		ts.mockBroker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
+		ts.mockStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
 		rs := ts.mockStrategyResolver.EXPECT().ResolveStrategy(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error"))
 		ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).After(rs)
 
@@ -169,24 +161,24 @@ func TestTraderManager(t *testing.T) {
 		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
 
 		// first update
-		ts.mockBrocker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
-		ts.mockStorage.MockIStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
+		ts.mockBroker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
+		ts.mockStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
 		ts.mockStrategyResolver.EXPECT().ResolveStrategy(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(oldMockStrategy, nil)
 
 		//  trader
-		ts.mockBrocker.EXPECT().RegisterLastPriceRecipient(gomock.Any()).Return(nil).MinTimes(1)
-		ts.mockBrocker.EXPECT().RegisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
+		ts.mockBroker.EXPECT().RegisterLastPriceRecipient(gomock.Any()).Return(nil).MinTimes(1)
+		ts.mockBroker.EXPECT().RegisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
 
-		ts.mockBrocker.EXPECT().RecieveOrdersUpdate(gomock.Any(), gomock.Any(), gomock.Any()).Return(&ds.Order{CreatedAt: &time.Time{}}, nil).MinTimes(1)
-		ts.mockStorage.MockIStorage.EXPECT().UpdateOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
+		ts.mockBroker.EXPECT().RecieveOrdersUpdate(gomock.Any(), gomock.Any(), gomock.Any()).Return(&ds.Order{CreatedAt: &time.Time{}}, nil).MinTimes(1)
+		ts.mockStorage.EXPECT().UpdateOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
 
-		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MinTimes(1)
+		ts.mockBroker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MinTimes(1)
 
-		oldMockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MinTimes(1)
+		oldMockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MinTimes(1)
 
-		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
+		ts.mockBroker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
 
-		ts.mockBrocker.EXPECT().MakeBuyOrder(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error")).MinTimes(1)
+		ts.mockBroker.EXPECT().MakeBuyOrder(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error")).MinTimes(1)
 		ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MinTimes(1)
 		// trader
 
@@ -196,8 +188,8 @@ func TestTraderManager(t *testing.T) {
 		ts.service.UpdateTradersWithConfig(cfg)
 		time.Sleep(time.Millisecond * 600)
 
-		ts.mockBrocker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
-		ts.mockStorage.MockIStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
+		ts.mockBroker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
+		ts.mockStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
 		ts.mockStrategyResolver.EXPECT().ResolveStrategy(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(NewMockStrategy, nil)
 		oldMockStrategy.EXPECT().GetName().Return("strategy")
 		NewMockStrategy.EXPECT().GetName().Return("strategy")
@@ -219,24 +211,24 @@ func TestTraderManager(t *testing.T) {
 		ts.mockHistory.EXPECT().WriteInTopicKV(gomock.Any(), gomock.All()).MinTimes(1)
 
 		// first update
-		ts.mockBrocker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
-		ts.mockStorage.MockIStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
+		ts.mockBroker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
+		ts.mockStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
 		ts.mockStrategyResolver.EXPECT().ResolveStrategy(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(oldMockStrategy, nil)
 
 		//  trader
-		ts.mockBrocker.EXPECT().RegisterLastPriceRecipient(gomock.Any()).Return(nil).MinTimes(1)
-		ts.mockBrocker.EXPECT().RegisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
+		ts.mockBroker.EXPECT().RegisterLastPriceRecipient(gomock.Any()).Return(nil).MinTimes(1)
+		ts.mockBroker.EXPECT().RegisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
 
-		ts.mockBrocker.EXPECT().RecieveOrdersUpdate(gomock.Any(), gomock.Any(), gomock.Any()).Return(&ds.Order{CreatedAt: &time.Time{}}, nil).MinTimes(1)
-		ts.mockStorage.MockIStorage.EXPECT().UpdateOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
+		ts.mockBroker.EXPECT().RecieveOrdersUpdate(gomock.Any(), gomock.Any(), gomock.Any()).Return(&ds.Order{CreatedAt: &time.Time{}}, nil).MinTimes(1)
+		ts.mockStorage.EXPECT().UpdateOrder(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).MinTimes(1)
 
-		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MinTimes(1)
+		ts.mockBroker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MinTimes(1)
 
-		oldMockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MinTimes(1)
+		oldMockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MinTimes(1)
 
-		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
+		ts.mockBroker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
 
-		ts.mockBrocker.EXPECT().MakeBuyOrder(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error")).MinTimes(1)
+		ts.mockBroker.EXPECT().MakeBuyOrder(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("error")).MinTimes(1)
 		ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MinTimes(1)
 		// trader
 
@@ -246,15 +238,15 @@ func TestTraderManager(t *testing.T) {
 		ts.service.UpdateTradersWithConfig(cfg)
 		time.Sleep(time.Millisecond * 600)
 
-		ts.mockBrocker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
-		ts.mockStorage.MockIStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
+		ts.mockBroker.EXPECT().FindInstrument(cfg.Traders[0].Uid).Return(&ds.InstrumentInfo{}, nil)
+		ts.mockStorage.EXPECT().AddInstrumentInfo(gomock.Any()).Return(int64(0), nil)
 		ts.mockStrategyResolver.EXPECT().ResolveStrategy(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(NewMockStrategy, nil)
 		oldMockStrategy.EXPECT().GetName().Return("strategy")
 		NewMockStrategy.EXPECT().GetName().Return("strategy")
 		oldMockStrategy.EXPECT().UpdateConfig(gomock.Any()).Return(nil)
 
-		ts.mockBrocker.EXPECT().UnregisterLastPriceRecipient(gomock.Any()).Return(nil)
-		ts.mockBrocker.EXPECT().UnregisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(nil)
+		ts.mockBroker.EXPECT().UnregisterLastPriceRecipient(gomock.Any()).Return(nil)
+		ts.mockBroker.EXPECT().UnregisterOrderStateRecipient(gomock.Any(), gomock.Any()).Return(nil)
 
 		ts.service.UpdateTradersWithConfig(cfg)
 		time.Sleep(time.Millisecond * 600)

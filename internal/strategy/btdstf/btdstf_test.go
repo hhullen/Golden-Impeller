@@ -76,7 +76,7 @@ func TestBTDSTF(t *testing.T) {
 
 		ts.mockStorage.EXPECT().GetUnsoldOrdersAmount(gomock.Any(), gomock.Any()).Return(int64(0), errors.New("error"))
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, &ds.LastPrice{})
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, &ds.LastPrice{})
 
 		require.NotNil(t, err)
 		require.Len(t, acts, 0)
@@ -89,7 +89,7 @@ func TestBTDSTF(t *testing.T) {
 		ts.mockStorage.EXPECT().GetUnsoldOrdersAmount(gomock.Any(), gomock.Any()).Return(int64(0), nil)
 		ts.mockStorage.EXPECT().GetLowestExecutedBuyOrder(gomock.Any(), gomock.Any()).Return(nil, false, errors.New("error"))
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, &ds.LastPrice{})
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, &ds.LastPrice{})
 
 		require.NotNil(t, err)
 		require.Len(t, acts, 0)
@@ -103,7 +103,7 @@ func TestBTDSTF(t *testing.T) {
 		ts.mockStorage.EXPECT().GetLowestExecutedBuyOrder(gomock.Any(), gomock.Any()).Return(nil, false, nil)
 		ts.mockStorage.EXPECT().GetLatestExecutedSellOrder(gomock.Any(), gomock.Any()).Return(nil, false, errors.New("error"))
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, &ds.LastPrice{})
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, &ds.LastPrice{})
 
 		require.NotNil(t, err)
 		require.Len(t, acts, 0)
@@ -118,7 +118,7 @@ func TestBTDSTF(t *testing.T) {
 		ts.mockStorage.EXPECT().GetLatestExecutedSellOrder(gomock.Any(), gomock.Any()).Return(nil, false, nil)
 		ts.mockStorage.EXPECT().MakeNewOrder(gomock.Any(), gomock.Any()).Return(errors.New("errors"))
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, &ds.LastPrice{})
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, &ds.LastPrice{})
 
 		require.NotNil(t, err)
 		require.Len(t, acts, 0)
@@ -133,7 +133,7 @@ func TestBTDSTF(t *testing.T) {
 		ts.mockStorage.EXPECT().GetLatestExecutedSellOrder(gomock.Any(), gomock.Any()).Return(nil, false, nil)
 		ts.mockStorage.EXPECT().MakeNewOrder(gomock.Any(), gomock.Any()).Return(nil)
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, &ds.LastPrice{})
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, &ds.LastPrice{})
 
 		require.Nil(t, err)
 		require.Len(t, acts, 1)
@@ -149,11 +149,13 @@ func TestBTDSTF(t *testing.T) {
 		ts.mockStorage.EXPECT().GetLatestExecutedSellOrder(gomock.Any(), gomock.Any()).Return(&ds.Order{}, true, nil)
 		ts.mockStorage.EXPECT().MakeNewOrder(gomock.Any(), gomock.Any()).Return(nil)
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, &ds.LastPrice{})
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, &ds.LastPrice{
+			Price: ds.Quotation{Units: 10, Nano: 12},
+		})
 
 		require.Nil(t, err)
 		require.Len(t, acts, 1)
-		assert.Equal(t, acts[0].Action, ds.Buy)
+		assert.Equal(t, ds.Buy.ToString(), acts[0].Action.ToString())
 	})
 
 	t.Run("GetActionDecision buy on IsDownToBuy", func(t *testing.T) {
@@ -176,7 +178,7 @@ func TestBTDSTF(t *testing.T) {
 
 		ts.mockStorage.EXPECT().MakeNewOrder(gomock.Any(), gomock.Any()).Return(nil)
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, lastPrice)
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, lastPrice)
 
 		require.Nil(t, err)
 		require.Len(t, acts, 1)
@@ -203,7 +205,7 @@ func TestBTDSTF(t *testing.T) {
 		ts.mockStorage.EXPECT().GetLowestExecutedBuyOrder(gomock.Any(), gomock.Any()).Return(order, true, nil)
 		ts.mockStorage.EXPECT().GetHighestExecutedBuyOrder(gomock.Any(), gomock.Any()).Return(nil, false, errors.New("error"))
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, lastPrice)
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, lastPrice)
 
 		require.NotNil(t, err)
 		require.Len(t, acts, 0)
@@ -231,7 +233,7 @@ func TestBTDSTF(t *testing.T) {
 
 		ts.mockStorage.EXPECT().MakeNewOrder(gomock.Any(), gomock.Any()).Return(nil).MinTimes(2)
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, lastPrice)
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, lastPrice)
 
 		require.Nil(t, err)
 		require.Len(t, acts, 2)
@@ -260,7 +262,7 @@ func TestBTDSTF(t *testing.T) {
 
 		ts.mockStorage.EXPECT().MakeNewOrder(gomock.Any(), gomock.Any()).Return(nil)
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, lastPrice)
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, lastPrice)
 
 		require.Nil(t, err)
 		require.Len(t, acts, 1)
@@ -286,7 +288,7 @@ func TestBTDSTF(t *testing.T) {
 		ts.mockStorage.EXPECT().GetUnsoldOrdersAmount(gomock.Any(), gomock.Any()).Return(orders, nil)
 		ts.mockStorage.EXPECT().GetLowestExecutedBuyOrder(gomock.Any(), gomock.Any()).Return(order, true, nil)
 
-		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", &ds.InstrumentInfo{}, lastPrice)
+		acts, err := ts.strategy.GetActionDecision(ts.ctx, "trId", "", &ds.InstrumentInfo{}, lastPrice)
 
 		require.Nil(t, err)
 		require.Len(t, acts, 1)

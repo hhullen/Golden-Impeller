@@ -139,7 +139,7 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Hold}}, nil).MinTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Hold}}, nil).MinTimes(1)
 
 		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MinTimes(1)
 
@@ -173,7 +173,7 @@ func TestTraderService(t *testing.T) {
 		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MaxTimes(1)
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return(nil, errors.New("error")).MaxTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return(nil, errors.New("error")).MaxTimes(1)
 
 		logCall := ts.mockLogger.EXPECT().ErrorfKV(gomock.Any(), gomock.All()).MaxTimes(1)
 		ts.mockLogger.EXPECT().InfofKV(gomock.Any(), gomock.All()).MaxTimes(1).After(logCall)
@@ -192,7 +192,7 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MaxTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Sell}}, nil).MaxTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Sell}}, nil).MaxTimes(1)
 
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.NotAvailableNow, errors.New("error")).MinTimes(1)
 
@@ -213,7 +213,7 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MaxTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Sell}}, nil).MaxTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Sell}}, nil).MaxTimes(1)
 
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
 
@@ -273,7 +273,7 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MaxTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MaxTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MaxTimes(1)
 
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
 
@@ -296,7 +296,7 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MinTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MinTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MinTimes(1)
 
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
 
@@ -326,7 +326,7 @@ func TestTraderService(t *testing.T) {
 
 		ts.mockBrocker.EXPECT().RecieveLastPrice(gomock.Any(), gomock.Any()).Return(&ds.LastPrice{}, nil).MinTimes(1)
 
-		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MinTimes(1)
+		ts.mockStrategy.EXPECT().GetActionDecision(gomock.Any(), gomock.Any(), gomock.Any(), ts.service.cfg.InstrInfo, gomock.Any()).Return([]*ds.StrategyAction{{Action: ds.Buy}}, nil).MinTimes(1)
 
 		ts.mockBrocker.EXPECT().GetTradingAvailability(gomock.Any()).Return(ds.Available, nil).MinTimes(1)
 

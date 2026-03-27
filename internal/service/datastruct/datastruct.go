@@ -143,10 +143,11 @@ func (os OrderStatus) ToString() string {
 }
 
 type StrategyAction struct {
-	Action      Action
-	Lots        int64
-	RequestId   string
-	OnErrorFunc func() error
+	Action        Action
+	Lots          int64
+	RequestId     string
+	OnErrorFunc   func() error
+	OnSuccessFunc func() error
 }
 
 type Candle struct {

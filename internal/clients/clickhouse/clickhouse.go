@@ -25,11 +25,26 @@ type Client struct {
 }
 
 func NewClient(ctx context.Context) (*Client, error) {
-	host := supports.ReadSecret(db_host_secret_path)
-	port := supports.ReadSecret(db_port_secret_path)
-	user := supports.ReadSecret(db_user_secret_path)
-	password := supports.ReadSecret(db_password_secret_path)
-	dbname := supports.ReadSecret(db_name_secret_path)
+	host, err := supports.ReadSecret(db_host_secret_path)
+	if err != nil {
+		return nil, err
+	}
+	port, err := supports.ReadSecret(db_port_secret_path)
+	if err != nil {
+		return nil, err
+	}
+	user, err := supports.ReadSecret(db_user_secret_path)
+	if err != nil {
+		return nil, err
+	}
+	password, err := supports.ReadSecret(db_password_secret_path)
+	if err != nil {
+		return nil, err
+	}
+	dbname, err := supports.ReadSecret(db_name_secret_path)
+	if err != nil {
+		return nil, err
+	}
 
 	dsn := fmt.Sprintf("tcp://%s:%s@%s:%s/%s", user, password, host, port, dbname)
 

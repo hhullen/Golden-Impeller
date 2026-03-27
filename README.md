@@ -9,7 +9,7 @@ Here is a trading bot coded on golang using T-Invest API
 GNU Make 3.81, go1.24.2, Docker (Docker Desktop)
   
 # Before the start
-Create a `.env.yaml` file with configuration example below
+Create a `config.yaml` file with configuration example below
 ```yaml
 APP_NAME: Golden_Impeller
 
@@ -284,7 +284,7 @@ The logs and some charts are accessible in Grafana dashboard named `Golden Impel
 http://localhost:3000/dashboards
 ```
 Default username `admin` and password `admin`.  
-In case `.env.yaml` has some changes after Trader Service started, update traders with command:
+In case `config.yaml` has some changes after Trader Service started, update traders with command:
 ```
 make update-traders-config
 ```
@@ -381,7 +381,7 @@ make get-accounts
 make get-instruments
 ```
 
-* Update .env.yaml config when Trader Service is running in Docker Compose
+* Update config.yaml config when Trader Service is running in Docker Compose
 ```
 make update-traders-config
 ```

@@ -36,18 +36,18 @@ func (m *MockIStrategy) EXPECT() *MockIStrategyMockRecorder {
 }
 
 // GetActionDecision mocks base method.
-func (m *MockIStrategy) GetActionDecision(ctx context.Context, trId string, instrInfo *datastruct.InstrumentInfo, lp *datastruct.LastPrice) ([]*datastruct.StrategyAction, error) {
+func (m *MockIStrategy) GetActionDecision(ctx context.Context, trId, accountId string, instrInfo *datastruct.InstrumentInfo, lp *datastruct.LastPrice) ([]*datastruct.StrategyAction, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetActionDecision", ctx, trId, instrInfo, lp)
+	ret := m.ctrl.Call(m, "GetActionDecision", ctx, trId, accountId, instrInfo, lp)
 	ret0, _ := ret[0].([]*datastruct.StrategyAction)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetActionDecision indicates an expected call of GetActionDecision.
-func (mr *MockIStrategyMockRecorder) GetActionDecision(ctx, trId, instrInfo, lp interface{}) *gomock.Call {
+func (mr *MockIStrategyMockRecorder) GetActionDecision(ctx, trId, accountId, instrInfo, lp interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActionDecision", reflect.TypeOf((*MockIStrategy)(nil).GetActionDecision), ctx, trId, instrInfo, lp)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActionDecision", reflect.TypeOf((*MockIStrategy)(nil).GetActionDecision), ctx, trId, accountId, instrInfo, lp)
 }
 
 // GetName mocks base method.

@@ -2,6 +2,9 @@
 MOCKGEN_INSTALL=go install github.com/golang/mock/mockgen@latest
 MOCKGEN=$(shell where mockgen)
 
+SQLC_INSTALL=go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+SQLC_BIN=$(shell where sqlc)
+
 PWD=$(pwd)
 RM=rm -rf
 
@@ -39,6 +42,12 @@ ifndef MOCKGEN
 	$(MOCKGEN_INSTALL)
 endif
 	go generate ./...
+
+generate-sqlc:
+ifeq ($(SQLC_BIN),)
+	$(SQLC_INSTALL)
+endif
+	sqlc generate
 
 $(MIGRATOR_BIN):
 	go build -o $(MIGRATOR_BIN) $(MIGRATOR_DIR)
@@ -87,6 +96,9 @@ start-local-database:
 
 stop-local-database:
 	docker container stop trader-local-database
+
+clean-local-database:
+	docker volume rm local_postgres_data
 
 local-trader: $(TRADER_LOCAL_BIN)
 	$(TRADER_LOCAL_BIN)

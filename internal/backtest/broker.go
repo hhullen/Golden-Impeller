@@ -13,12 +13,19 @@ type IStorage interface {
 	PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) (err error)
 }
 
+type Position struct {
+	Lots  int64
+	Price float64
+}
+
 type BacktestBroker struct {
 	account           float64
 	minAccount        float64
 	maxAccount        float64
 	lastPrice         float64
 	commissionPercent float64
+
+	position []Position
 
 	candleHistoryOffset int64
 	from, to            time.Time
@@ -123,7 +130,14 @@ func (c *BacktestBroker) MakeBuyOrder(instrInfo *ds.InstrumentInfo, lots int64, 
 		return nil, fmt.Errorf("invalid buy lots amount. lots: %d", lots)
 	}
 
-	price := c.lastPrice * float64(lots) * float64(instrInfo.Lot)
+	amount := float64(lots) * float64(instrInfo.Lot)
+
+	c.position = append(c.position, Position{
+		Lots:  lots,
+		Price: c.lastPrice,
+	})
+
+	price := c.lastPrice * amount
 
 	commission := price * c.commissionPercent
 	c.account -= (price + commission)
@@ -166,7 +180,35 @@ func (c *BacktestBroker) MakeSellOrder(instrInfo *ds.InstrumentInfo, lots int64,
 		return nil, fmt.Errorf("invalid lots amount. lots: %d", lots)
 	}
 
-	price := c.lastPrice * float64(lots) * float64(instrInfo.Lot)
+	amount := float64(lots) * float64(instrInfo.Lot)
+
+	lotsBought := int64(0)
+	i := 0
+	for ; i < len(c.position); i++ {
+		lotsBought += c.position[i].Lots
+		if lotsBought == lots {
+			i++
+			break
+		}
+		if lotsBought > lots {
+			c.position[i].Lots = lotsBought - lots
+			break
+		}
+	}
+
+	fmt.Println("Bought", lotsBought, "Lots", lots, "Poss", c.position)
+
+	if lotsBought < lots {
+		return nil, fmt.Errorf("Trying to sell more than bought")
+	}
+
+	if i == len(c.position) {
+		c.position = make([]Position, 0, 20)
+	} else {
+		c.position = c.position[i:]
+	}
+
+	price := c.lastPrice * amount
 
 	commission := price * c.commissionPercent
 	c.account += (price - commission)

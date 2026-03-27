@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	envFile = ".env.yaml"
+	envFile = "config.yaml"
 )
 
 type EnvCfg struct {

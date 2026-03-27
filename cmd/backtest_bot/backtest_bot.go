@@ -66,10 +66,12 @@ func main() {
 			panic(err)
 		}
 
-		dbClient, err := postgres.NewClient(ctx)
+		dbConn, err := postgres.NewSQLConn(ctx)
 		if err != nil {
 			panic(err)
 		}
+
+		dbClient := postgres.NewClient(ctx, dbConn)
 
 		ctx, cancel := context.WithCancel(ctx)
 
@@ -124,7 +126,7 @@ func main() {
 
 		strategyResolver := strategy.NewStrategy()
 
-		strategyInstance, err := strategyResolver.ResolveStrategy(test.StrategyCfg, backtestStorage, investClient, test.UniqueTraderId)
+		strategyInstance, err := strategyResolver.ResolveStrategy(test.StrategyCfg, backtestStorage, backtestBroker, test.UniqueTraderId)
 		if err != nil {
 			panic(err)
 		}

@@ -12,7 +12,7 @@ import (
 //go:generate mockgen -source=trader.go -destination=trader_mock.go -package=trader IStrategy,ILogger,IBroker,IStorage,IHistoryWriter
 
 type IStrategy interface {
-	GetActionDecision(ctx context.Context, trId string, instrInfo *ds.InstrumentInfo, lp *ds.LastPrice) ([]*ds.StrategyAction, error)
+	GetActionDecision(ctx context.Context, trId, accountId string, instrInfo *ds.InstrumentInfo, lp *ds.LastPrice) ([]*ds.StrategyAction, error)
 	GetName() string
 	UpdateConfig(params map[string]any) error
 }
@@ -194,7 +194,7 @@ mainLoop:
 			}
 
 			var actions []*ds.StrategyAction
-			actions, err = s.GetStrategy().GetActionDecision(s.ctx, config.TraderId, config.InstrInfo, lastPrice)
+			actions, err = s.GetStrategy().GetActionDecision(s.ctx, config.TraderId, config.AccountId, config.InstrInfo, lastPrice)
 			if err != nil {
 				s.logger.ErrorfKV("failed getting action decision",
 					ds.HistoryColInstrumentUID, config.InstrInfo.Uid, ds.HistoryColError, err.Error())
@@ -215,6 +215,13 @@ mainLoop:
 						}
 					}
 					continue mainLoop
+				}
+
+				if action.OnSuccessFunc != nil {
+					if err := action.OnSuccessFunc(); err != nil {
+						s.logger.FatalfKV("failed executing on success function of action",
+							ds.HistoryColAction, action.Action.ToString(), ds.HistoryColError, err.Error())
+					}
 				}
 
 				if action.Action == ds.Hold {
@@ -240,9 +247,10 @@ mainLoop:
 }
 
 func (s *TraderService) MakeAction(lastPrice *ds.LastPrice, action *ds.StrategyAction) (res *ds.PostOrderResult, err error) {
-	if action.Action == ds.Sell {
+	switch action.Action {
+	case ds.Sell:
 		return s.broker.MakeSellOrder(s.cfg.InstrInfo, action.Lots, action.RequestId, s.cfg.AccountId)
-	} else if action.Action == ds.Buy {
+	case ds.Buy:
 		return s.broker.MakeBuyOrder(s.cfg.InstrInfo, action.Lots, action.RequestId, s.cfg.AccountId)
 	}
 
@@ -263,16 +271,10 @@ func (s *TraderService) Stop() {
 }
 
 func (s *TraderService) GetConfig() *TraderCfg {
-	s.RLock()
-	defer s.RUnlock()
-
 	return s.cfg
 }
 
 func (s *TraderService) GetStrategy() IStrategy {
-	s.RLock()
-	defer s.RUnlock()
-
 	return s.strategy
 }
 

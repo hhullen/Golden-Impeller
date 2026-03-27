@@ -3,18 +3,20 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
-	"strings"
 	"time"
+
+	"trading_bot/internal/clients/postgres/sqlc"
 	ds "trading_bot/internal/service/datastruct"
 	"trading_bot/internal/supports"
 
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
 const (
-	insertOneTime = 1000
+	insertOneTime  = 1000
+	requestTimeout = time.Second * 5
 
 	db_host_secret_path     = "./secrets/db_host.txt"
 	db_port_secret_path     = "./secrets/db_port.txt"
@@ -23,158 +25,217 @@ const (
 	db_name_secret_path     = "./secrets/db_name.txt"
 )
 
-type Client struct {
-	db *sqlx.DB
+var defaultTxOpt = &sql.TxOptions{Isolation: sql.LevelRepeatableRead}
+
+//go:generate mockgen -source=postgres.go -destination=postgres_mock.go -package=postgres IDB,IQuerier
+
+type IQuerier interface {
+	sqlc.Querier
 }
 
-func NewClient(ctx context.Context) (*Client, error) {
-	host := supports.ReadSecret(db_host_secret_path)
-	port := supports.ReadSecret(db_port_secret_path)
-	user := supports.ReadSecret(db_user_secret_path)
-	password := supports.ReadSecret(db_password_secret_path)
-	dbname := supports.ReadSecret(db_name_secret_path)
+type IDB interface {
+	ExecTx(*sql.TxOptions, func(context.Context, IQuerier) error) error
+	Querier() IQuerier
+	CtxWithCancel() (context.Context, context.CancelFunc)
+}
+
+type DB struct {
+	ctx  context.Context
+	conn *sql.DB
+	sqlc *sqlc.Queries
+}
+
+type Client struct {
+	db IDB
+}
+
+func NewSQLConn(ctx context.Context) (*sql.DB, error) {
+	host, err := supports.ReadSecret(db_host_secret_path)
+	if err != nil {
+		return nil, err
+	}
+	port, err := supports.ReadSecret(db_port_secret_path)
+	if err != nil {
+		return nil, err
+	}
+	user, err := supports.ReadSecret(db_user_secret_path)
+	if err != nil {
+		return nil, err
+	}
+	password, err := supports.ReadSecret(db_password_secret_path)
+	if err != nil {
+		return nil, err
+	}
+	dbname, err := supports.ReadSecret(db_name_secret_path)
+	if err != nil {
+		return nil, err
+	}
 
 	if !supports.IsInContainer() {
 		host = "localhost"
 	}
 
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", user, password, host, port, dbname)
 
-	db, err := sqlx.Connect("postgres", dsn)
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
-		return nil, fmt.Errorf("unable to connect to db: %s", err.Error())
+		return nil, fmt.Errorf("unable opening db connection: %w", err)
+	}
+
+	if err = db.Ping(); err != nil {
+		return nil, fmt.Errorf("error connecting to db: %w", err)
 	}
 
 	go func() {
 		<-ctx.Done()
-		db.Close()
+		err = db.Close()
+		if err != nil {
+			panic(err)
+		}
 	}()
 
-	db.SetMaxIdleConns(5)
-	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(25)
+	db.SetMaxOpenConns(25)
 
-	return buildClient(db), nil
+	return db, nil
 }
 
-func buildClient(db *sqlx.DB) *Client {
+func NewClient(ctx context.Context, conn *sql.DB) *Client {
+	return buildClient(&DB{
+		ctx:  ctx,
+		sqlc: sqlc.New(conn),
+		conn: conn,
+	})
+}
+
+func buildClient(db IDB) *Client {
 	return &Client{
 		db: db,
 	}
 }
 
-func (c *Client) UpdateConnection(ctx context.Context) error {
-	newClient, err := NewClient(ctx)
-	if err != nil {
-		return err
-	}
-
-	c.db.Close()
-	c.db = newClient.db
-
-	return nil
+func (db *DB) CtxWithCancel() (context.Context, context.CancelFunc) {
+	return context.WithTimeout(db.ctx, requestTimeout)
 }
 
-func (c *Client) GetDB() *sql.DB {
-	return c.db.DB
-}
-
-func (c *Client) AddInstrumentInfo(instrInfo *ds.InstrumentInfo) (dbId int64, err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+func (db *DB) ExecTx(txOpt *sql.TxOptions, withTx func(context.Context, IQuerier) error) (err error) {
+	ctx, cancel := db.CtxWithCancel()
 	defer cancel()
 
 	var tx *sql.Tx
-	defer func() {
-		if p := recover(); p != nil {
-			err = fmt.Errorf("panic recovered: %v. rollback error: %s", p, tx.Rollback().Error())
-		} else if err == nil {
-			err = tx.Commit()
-		} else {
-			if rbErr := tx.Rollback(); rbErr != nil {
-				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
-			}
-		}
-	}()
-
-	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
+	tx, err = db.conn.BeginTx(ctx, txOpt)
 	if err != nil {
 		return
 	}
 
-	query := `INSERT INTO instruments (uid, isin, figi, ticker, class_code, name, lot, available_api, for_quals)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT (uid, isin, figi, ticker)
-		DO UPDATE SET 
-			lot = EXCLUDED.lot,
-			name = EXCLUDED.name,
-			available_api = EXCLUDED.available_api,
-			for_quals = EXCLUDED.for_quals
-		RETURNING id;`
-
-	err = c.db.GetContext(ctx, &dbId, query, instrInfo.Uid, instrInfo.Isin, instrInfo.Figi, instrInfo.Ticker,
-		instrInfo.ClassCode, instrInfo.Name, instrInfo.Lot, instrInfo.AvailableApi, instrInfo.ForQuals)
-
-	return
-}
-
-func (c *Client) GetInstrumentInfo(uid string) (info *ds.InstrumentInfo, err error) {
 	defer func() {
-		if p := recover(); p != nil {
-			err = fmt.Errorf("panic recovered: %v", p)
-		}
-	}()
-	info = &ds.InstrumentInfo{}
-
-	query := `SELECT * FROM instruments WHERE uid = $1`
-
-	err = c.db.Get(info, query, uid)
-
-	return
-}
-
-func (c *Client) AddCandles(ctx context.Context, instrInfo *ds.InstrumentInfo, candles []*ds.Candle, interval ds.CandleInterval) (err error) {
-	var tx *sql.Tx
-	defer func() {
-		if p := recover(); p != nil {
-			err = fmt.Errorf("panic recovered: %v. rollback error: %s", p, tx.Rollback().Error())
-		} else if err == nil {
-			err = tx.Commit()
-		} else {
-			if rbErr := tx.Rollback(); rbErr != nil {
-				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
+		errRB := tx.Rollback()
+		if errRB != nil && !errors.Is(errRB, sql.ErrTxDone) {
+			if err != nil {
+				err = fmt.Errorf("ExecTx error: %w; Rollback error: %w", err, errRB)
+			} else {
+				err = fmt.Errorf("rollback error: %w", errRB)
 			}
 		}
 	}()
 
-	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
-	if err != nil {
-		return err
+	if err = withTx(ctx, db.sqlc.WithTx(tx)); err != nil {
+		return
 	}
 
-	const fieldsAmount = 12
+	if err = tx.Commit(); err != nil {
+		return
+	}
+
+	return
+}
+
+func (db *DB) Querier() IQuerier {
+	return db.sqlc
+}
+
+func (c *Client) AddInstrumentInfo(instrInfo *ds.InstrumentInfo) (int64, error) {
+	ctx, cancel := c.db.CtxWithCancel()
+	defer cancel()
+
+	dbId, err := c.db.Querier().InsertinstrumentInfo(ctx, sqlc.InsertinstrumentInfoParams{
+		Uid:          instrInfo.Uid,
+		Isin:         instrInfo.Isin,
+		Figi:         instrInfo.Figi,
+		Ticker:       instrInfo.Ticker,
+		ClassCode:    instrInfo.ClassCode,
+		Name:         instrInfo.Name,
+		Lot:          instrInfo.Lot,
+		AvailableApi: instrInfo.AvailableApi,
+		ForQuals:     instrInfo.ForQuals,
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return int64(dbId), nil
+}
+
+func (c *Client) GetInstrumentInfo(uid string) (*ds.InstrumentInfo, error) {
+	ctx, cancel := c.db.CtxWithCancel()
+	defer cancel()
+
+	inst, err := c.db.Querier().GetInstrumentInfo(ctx, uid)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ds.InstrumentInfo{
+		Id:           int64(inst.ID),
+		Uid:          inst.Uid,
+		Isin:         inst.Isin,
+		Figi:         inst.Figi,
+		Ticker:       inst.Ticker,
+		ClassCode:    inst.ClassCode,
+		Name:         inst.Name,
+		Lot:          inst.Lot,
+		AvailableApi: inst.AvailableApi,
+		ForQuals:     inst.ForQuals,
+	}, nil
+}
+
+func (c *Client) AddCandles(instrInfo *ds.InstrumentInfo, candles []*ds.Candle, interval ds.CandleInterval) (err error) {
+	ctx, cancel := c.db.CtxWithCancel()
+	defer cancel()
+
 	for i := 0; i < len(candles); i += insertOneTime {
 		batch := getBatch(i, candles)
-
-		placeholders := make([]string, 0, len(batch))
-		values := make([]interface{}, 0, len(batch)*fieldsAmount)
-
-		for j, candle := range batch {
-			placeholders = append(placeholders,
-				fmt.Sprintf("($%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d,$%d)",
-					j*fieldsAmount+1, j*fieldsAmount+2, j*fieldsAmount+3, j*fieldsAmount+4,
-					j*fieldsAmount+5, j*fieldsAmount+6, j*fieldsAmount+7, j*fieldsAmount+8,
-					j*fieldsAmount+9, j*fieldsAmount+10, j*fieldsAmount+11, j*fieldsAmount+12))
-
-			values = append(values,
-				instrInfo.Id, candle.Timestamp, interval.ToString(),
-				candle.Open.Units, candle.Open.Nano, candle.Close.Units, candle.Close.Nano,
-				candle.High.Units, candle.High.Nano, candle.Low.Units, candle.Low.Nano, candle.Volume)
+		vals := sqlc.InsertCandlesBatchParams{
+			InstrumentIds: make([]int32, len(batch)),
+			Timestamps:    make([]time.Time, len(batch)),
+			Intervals:     make([]string, len(batch)),
+			OpensUnits:    make([]int64, len(batch)),
+			OpensNanos:    make([]int32, len(batch)),
+			ClosesUnits:   make([]int64, len(batch)),
+			ClosesNanos:   make([]int32, len(batch)),
+			HighsUnits:    make([]int64, len(batch)),
+			HighsNanos:    make([]int32, len(batch)),
+			LowsUnits:     make([]int64, len(batch)),
+			LowsNanos:     make([]int32, len(batch)),
+			Volumes:       make([]int64, len(batch)),
 		}
 
-		query := fmt.Sprintf(`INSERT INTO candles 
-			(instrument_id, timestamp, interval, open_units, open_nano, close_units, close_nano, high_units, high_nano, low_units, low_nano, volume)
-			VALUES %s ON CONFLICT (instrument_id, timestamp, interval) DO NOTHING;`, strings.Join(placeholders, ","))
+		for i := range batch {
+			vals.InstrumentIds[i] = int32(instrInfo.Id)
+			vals.Timestamps[i] = batch[i].Timestamp
+			vals.Intervals[i] = interval.ToString()
+			vals.OpensUnits[i] = batch[i].Open.Units
+			vals.OpensNanos[i] = batch[i].Open.Nano
+			vals.ClosesUnits[i] = batch[i].Close.Units
+			vals.ClosesNanos[i] = batch[i].Close.Nano
+			vals.HighsUnits[i] = batch[i].High.Units
+			vals.HighsNanos[i] = batch[i].High.Nano
+			vals.LowsUnits[i] = batch[i].Low.Units
+			vals.LowsNanos[i] = batch[i].Low.Nano
+			vals.Volumes[i] = batch[i].Volume
+		}
 
-		_, err = tx.Exec(query, values...)
+		err := c.db.Querier().InsertCandlesBatch(ctx, vals)
 		if err != nil {
 			return err
 		}
@@ -191,271 +252,169 @@ func getBatch(i int, candles []*ds.Candle) []*ds.Candle {
 }
 
 func (c *Client) GetCandles(instrInfo *ds.InstrumentInfo, interval ds.CandleInterval, from, to time.Time) ([]*ds.Candle, error) {
-	query := `SELECT
-		id, instrument_id, timestamp, interval, open_units AS "open.units", open_nano AS "open.nano",
-		close_units AS "close.units", close_nano AS "close.nano", high_units AS "high.units", high_nano AS "high.nano",
-		low_units AS "low.units", low_nano AS "low.nano", volume
-		FROM candles
-		WHERE instrument_id = $1
-		AND interval = $2
-		AND timestamp >= $3
-		AND timestamp <= $4
-		order by timestamp`
+	ctx, cancel := c.db.CtxWithCancel()
+	defer cancel()
 
-	var candles []*ds.Candle
-	err := c.db.Select(&candles, query, instrInfo.Id, interval.ToString(), from, to)
+	resp, err := c.db.Querier().GetCandles(ctx, sqlc.GetCandlesParams{
+		InstrumentID:  int32(instrInfo.Id),
+		Interval:      interval.ToString(),
+		TimestampFrom: from,
+		TimestampTo:   to,
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	if len(candles) == 0 {
+	if len(resp) == 0 {
 		return nil, fmt.Errorf("no candles for %s - %s", from.Format(time.DateOnly), to.Format(time.DateOnly))
+	}
+
+	candles := make([]*ds.Candle, len(resp))
+	for i := range resp {
+		candles[i] = &ds.Candle{
+			Id:           int64(resp[i].ID),
+			InstrumentId: int64(resp[i].InstrumentID),
+			Timestamp:    resp[i].Timestamp,
+			Interval:     resp[i].Interval,
+			Open: ds.Quotation{
+				Units: resp[i].OpenUnits,
+				Nano:  resp[i].OpenNano,
+			},
+			Close: ds.Quotation{
+				Units: resp[i].CloseUnits,
+				Nano:  resp[i].CloseNano,
+			},
+			High: ds.Quotation{
+				Units: resp[i].HighUnits,
+				Nano:  resp[i].HighNano,
+			},
+			Low: ds.Quotation{
+				Units: resp[i].LowUnits,
+				Nano:  resp[i].LowNano,
+			},
+			Volume: resp[i].Volume,
+		}
 	}
 
 	return candles, nil
 }
 
-func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) (err error) {
+func (c *Client) PutOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) error {
+	err := c.db.ExecTx(defaultTxOpt, func(ctx context.Context, qtx IQuerier) error {
+		err := qtx.InsertOrder(ctx, sqlc.InsertOrderParams{
+			InstrumentID: int32(instrInfo.Id),
+			CreatedAt:    nullTime(order.CreatedAt),
+			CompletedAt:  nullTime(order.CompletionTime),
+			OrderID:      order.OrderId,
+			OrderIDRef:   nullString(order.OrderIdRef),
+			Direction:    order.Direction,
+		})
+		if err != nil {
+			return err
+		}
+
+		if order.OrderIdRef == nil {
+			return nil
+		}
+
+		err = qtx.UpdateOrderRef(ctx, sqlc.UpdateOrderRefParams{
+			OrderIDRef:   nullString(order.OrderIdRef),
+			InstrumentID: int32(instrInfo.Id),
+			OrderID:      order.OrderId,
+			TraderID:     trId,
+		})
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) UpdateOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) error {
+	ctx, cancel := c.db.CtxWithCancel()
+	defer cancel()
+
+	err := c.db.Querier().UpdateOrder(ctx, sqlc.UpdateOrderParams{
+		CreatedAt:        nullTime(order.CreatedAt),
+		CompletedAt:      nullTime(order.CompletionTime),
+		Direction:        order.Direction,
+		ExecReportStatus: order.ExecutionReportStatus,
+		PriceUnits:       order.OrderPrice.Units,
+		PriceNano:        order.OrderPrice.Nano,
+		LotsExecuted:     order.LotsExecuted,
+		InstrumentID:     int32(instrInfo.Id),
+		TraderID:         trId,
+		OrderID:          order.OrderId,
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) ClearOrdersForTrader(trId string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	var tx *sql.Tx
-	defer func() {
-		if p := recover(); p != nil {
-			err = fmt.Errorf("panic recovered: %v. rollback error: %v", p, tx.Rollback())
-		} else if err == nil {
-			err = tx.Commit()
-		} else {
-			if rbErr := tx.Rollback(); rbErr != nil {
-				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
-			}
+	err := c.db.Querier().DeleteOrdersForTrader(ctx, trId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func nullTime(t *time.Time) sql.NullTime {
+	if t == nil {
+		return sql.NullTime{Valid: false}
+	}
+	return sql.NullTime{Time: *t, Valid: true}
+}
+
+func fromNullTime(nt sql.NullTime) *time.Time {
+	if nt.Valid {
+		return &nt.Time
+	}
+	return nil
+}
+
+func nullString(s *string) sql.NullString {
+	if s == nil {
+		return sql.NullString{
+			Valid: false,
 		}
-	}()
-
-	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
-	if err != nil {
-		return
 	}
-
-	queryInsert := `INSERT INTO orders 
-		(instrument_id, created_at, completed_at, order_id, order_id_ref, direction, exec_report_status, 
-		price_units, price_nano, lots_requested, lots_executed, trader_id)
-		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12);`
-
-	_, err = tx.ExecContext(ctx, queryInsert,
-		instrInfo.Id, order.CreatedAt, order.CompletionTime, order.OrderId, order.OrderIdRef, order.Direction,
-		order.ExecutionReportStatus, order.OrderPrice.Units, order.OrderPrice.Nano,
-		order.LotsRequested, order.LotsExecuted, trId)
-
-	if err != nil {
-		return
+	return sql.NullString{
+		String: *s,
+		Valid:  true,
 	}
-
-	if order.OrderIdRef == nil {
-		return
-	}
-
-	queryUpdate := `UPDATE orders
-			SET order_id_ref = $1
-			WHERE instrument_id = $2
-			AND trader_id = $3
-			AND order_id = $4;`
-
-	_, err = tx.ExecContext(ctx, queryUpdate, order.OrderId, instrInfo.Id, trId, order.OrderIdRef)
-
-	return
 }
 
-func (c *Client) UpdateOrder(trId string, instrInfo *ds.InstrumentInfo, order *ds.Order) (err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-
-	var tx *sql.Tx
-	defer func() {
-		if p := recover(); p != nil {
-			err = fmt.Errorf("panic recovered: %v. rollback error: %v", p, tx.Rollback())
-		} else if err == nil {
-			err = tx.Commit()
-		} else {
-			if rbErr := tx.Rollback(); rbErr != nil {
-				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
-			}
-		}
-	}()
-
-	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
-	if err != nil {
-		return
+func fromNullString(ns sql.NullString) *string {
+	if ns.Valid {
+		return &ns.String
 	}
-
-	queryUpdate := `UPDATE orders
-			SET created_at = $1,
-				completed_at = $2,
-				direction = $3,
-				exec_report_status = $4,
-				price_units = $5,
-				price_nano = $6,
-				lots_executed = $7
-			WHERE instrument_id = $8
-			AND trader_id = $9
-			AND order_id = $10;`
-
-	_, err = tx.ExecContext(ctx, queryUpdate, order.CreatedAt, order.CompletionTime, order.Direction,
-		order.ExecutionReportStatus, order.OrderPrice.Units, order.OrderPrice.Nano, order.LotsExecuted,
-		instrInfo.Id, trId, order.OrderId)
-
-	return
+	return nil
 }
 
-func (c *Client) GetLowestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
-	query := `SELECT id, created_at, completed_at, order_id, direction, exec_report_status,
-		price_units AS "price.units", price_nano AS "price.nano", lots_requested, 
-		lots_executed, additional_info
-		FROM orders
-		WHERE instrument_id = $1
-		AND direction = 'BUY'
-		AND exec_report_status = 'FILL'
-		AND trader_id = $2
-		AND order_id_ref IS NULL
-		ORDER BY price_units, price_nano
-		LIMIT 1;`
-
-	return c.selectOrder(query, trId, instrInfo)
-}
-
-func (c *Client) GetHighestExecutedBuyOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
-	query := `SELECT id, created_at, completed_at, order_id, direction, exec_report_status,
-		price_units AS "price.units", price_nano AS "price.nano", lots_requested, 
-		lots_executed, additional_info
-		FROM orders
-		WHERE instrument_id = $1
-		AND direction = 'BUY'
-		AND exec_report_status = 'FILL'
-		AND trader_id = $2
-		AND order_id_ref IS NULL
-		ORDER BY price_units DESC, price_nano DESC
-		LIMIT 1;`
-
-	return c.selectOrder(query, trId, instrInfo)
-}
-
-func (c *Client) GetLatestExecutedSellOrder(trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
-	query := `SELECT id, created_at, completed_at, order_id, direction, exec_report_status,
-		price_units AS "price.units", price_nano AS "price.nano", lots_requested, 
-		lots_executed, additional_info
-		FROM orders
-		WHERE instrument_id = $1
-		AND direction = 'SELL'
-		AND exec_report_status = 'FILL'
-		AND trader_id = $2
-		ORDER BY completed_at DESC
-		LIMIT 1;`
-
-	return c.selectOrder(query, trId, instrInfo)
-}
-
-func (c *Client) selectOrder(query string, trId string, instrInfo *ds.InstrumentInfo) (*ds.Order, bool, error) {
-	var orders []*ds.Order
-	err := c.db.Select(&orders, query, instrInfo.Id, trId)
-	if err != nil {
-		return nil, false, err
+func nullInt64(n *int64) sql.NullInt64 {
+	if n == nil {
+		return sql.NullInt64{Valid: false}
 	}
-
-	if len(orders) == 0 {
-		return nil, false, nil
-	}
-
-	orders[0].InstrumentUid = instrInfo.Uid
-
-	return orders[0], true, err
+	return sql.NullInt64{Valid: true, Int64: *n}
 }
 
-func (c *Client) GetUnsoldOrdersAmount(trId string, instrInfo *ds.InstrumentInfo) (int64, error) {
-	query := `SELECT COUNT(*) FROM orders
-		WHERE instrument_id = $1
-		AND direction = 'BUY'
-		AND trader_id = $2
-		AND order_id_ref IS NULL;`
-
-	var res int64
-	err := c.db.Get(&res, query, instrInfo.Id, trId)
-
-	return res, err
-}
-
-func (c *Client) ClearOrdersForTrader(trId string) (err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-
-	var tx *sql.Tx
-	defer func() {
-		if p := recover(); p != nil {
-			err = fmt.Errorf("panic recovered: %v. rollback error: %v", p, tx.Rollback())
-		} else if err == nil {
-			err = tx.Commit()
-		} else {
-			if rbErr := tx.Rollback(); rbErr != nil {
-				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
-			}
-		}
-	}()
-
-	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
-	if err != nil {
-		return
+func nullInt32(n *int32) sql.NullInt32 {
+	if n == nil {
+		return sql.NullInt32{Valid: false}
 	}
-	query := `DELETE FROM orders
-		WHERE trader_id = $1;`
-
-	_, err = tx.ExecContext(ctx, query, trId)
-
-	return
-}
-
-func (c *Client) MakeNewOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) error {
-	return c.PutOrder(order.TraderId, instrInfo, order)
-}
-
-func (c *Client) RemoveOrder(instrInfo *ds.InstrumentInfo, order *ds.Order) (err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-
-	var tx *sql.Tx
-	defer func() {
-		if p := recover(); p != nil {
-			err = fmt.Errorf("panic recovered: %v. rollback error: %v", p, tx.Rollback())
-		} else if err == nil {
-			err = tx.Commit()
-		} else {
-			if rbErr := tx.Rollback(); rbErr != nil {
-				err = fmt.Errorf("%s; rollback error: %s", err.Error(), rbErr.Error())
-			}
-		}
-	}()
-
-	tx, err = c.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
-	if err != nil {
-		return
-	}
-
-	queryUpdate := `UPDATE orders
-	SET order_id_ref = NULL
-	WHERE instrument_id = $1
-	AND trader_id = $2
-	AND order_id = $3;`
-
-	_, err = tx.ExecContext(ctx, queryUpdate, instrInfo.Id, order.TraderId, order.OrderIdRef)
-
-	if err != nil {
-		return
-	}
-
-	queryDelete := `DELETE FROM orders
-	WHERE instrument_id = $1
-	AND trader_id = $2
-	AND order_id = $3;`
-
-	_, err = tx.ExecContext(ctx, queryDelete, instrInfo.Id, order.TraderId, order.OrderId)
-
-	return
+	return sql.NullInt32{Valid: true, Int32: *n}
 }

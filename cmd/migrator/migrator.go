@@ -64,7 +64,7 @@ func MigrateClickhouse(command string) {
 
 func MigratePostgres(command string) {
 	ctx := context.Background()
-	db, err := postgres.NewClient(ctx)
+	db, err := postgres.NewSQLConn(ctx)
 	if err != nil {
 		log.Fatalf("failed to open DB: %v", err)
 	}
@@ -73,7 +73,7 @@ func MigratePostgres(command string) {
 		log.Fatalf("failed to set dialect: %v", err)
 	}
 
-	ExecMigration(db.GetDB(), command, migrationsDirPostgres)
+	ExecMigration(db, command, migrationsDirPostgres)
 
 	ctx.Done()
 }

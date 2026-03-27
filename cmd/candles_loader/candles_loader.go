@@ -47,10 +47,12 @@ func main() {
 		panic(err)
 	}
 
-	dbClient, err := postgres.NewClient(ctx)
+	dbConn, err := postgres.NewSQLConn(ctx)
 	if err != nil {
 		panic(err)
 	}
+
+	dbClient := postgres.NewClient(ctx, dbConn)
 
 	msgCh := make(chan string)
 	go func() {
@@ -98,7 +100,7 @@ func main() {
 			}
 
 			fmt.Printf("Start loading: %s\n", instr.Ticker)
-			loadCandlesToDB(ctx, investClient, dbClient, instrInfo, from, to, interval, msgCh)
+			loadCandlesToDB(investClient, dbClient, instrInfo, from, to, interval, msgCh)
 
 			<-pool
 		}()
@@ -110,7 +112,7 @@ func main() {
 	close(pool)
 }
 
-func loadCandlesToDB(ctx context.Context, c *t_api.Client, db *postgres.Client,
+func loadCandlesToDB(c *t_api.Client, db *postgres.Client,
 	instrInfo *ds.InstrumentInfo, from, to time.Time, interval ds.CandleInterval, ch chan string) {
 	tick := time.NewTicker(time.Second * 2)
 
@@ -122,7 +124,7 @@ func loadCandlesToDB(ctx context.Context, c *t_api.Client, db *postgres.Client,
 			panic(err)
 		}
 
-		err = db.AddCandles(ctx, instrInfo, candles, interval)
+		err = db.AddCandles(instrInfo, candles, interval)
 		if err != nil {
 			panic(err)
 		}

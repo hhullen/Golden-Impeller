@@ -187,8 +187,9 @@ func TestIsInContainer(t *testing.T) {
 
 func TestReadSecret(t *testing.T) {
 	t.Parallel()
-
-	require.NotEqual(t, ReadSecret("./supports_test.go"), "")
+	secret, err := ReadSecret("./supports_test.go")
+	require.Nil(t, err)
+	require.NotEqual(t, secret, "")
 
 }
 

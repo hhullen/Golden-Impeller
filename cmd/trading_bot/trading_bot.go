@@ -77,10 +77,12 @@ func main() {
 		panic("no traders specified in config")
 	}
 
-	dbClient, err := postgres.NewClient(ctx)
+	dbConn, err := postgres.NewSQLConn(ctx)
 	if err != nil {
 		panic(err)
 	}
+
+	dbClient := postgres.NewClient(ctx, dbConn)
 
 	investCfg := investgo.Config{
 		AppName:   envCfg.AppName,
@@ -95,7 +97,7 @@ func main() {
 	}
 
 	strategyResolver := strategy.NewStrategy()
-	traderManager := tradermanager.NewTraderManager(ctx, waitOnPanic, investClient, dbClient, tradingManagerLogger, traderLogger, strategyResolver, kafkaBroker)
+	traderManager := tradermanager.NewTraderManager(ctx, waitOnPanic, investClient, dbClient, strategyResolver, tradingManagerLogger, traderLogger, kafkaBroker)
 
 	traderManager.UpdateTradersWithConfig(envCfg.Trader)
 
@@ -107,11 +109,6 @@ func main() {
 			case <-ctx.Done():
 				return
 			case <-sighup:
-				err := dbClient.UpdateConnection(ctx)
-				if err != nil {
-					traderLogger.Errorf("failed updating db connection", ds.HistoryColError, err.Error())
-				}
-
 				envCfg, err := config.GetEnvCfg()
 				if err != nil {
 					tradingManagerLogger.Errorf("failed getting env config", ds.HistoryColError, err.Error())

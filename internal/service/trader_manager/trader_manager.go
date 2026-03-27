@@ -8,17 +8,28 @@ import (
 	"trading_bot/internal/config"
 	ds "trading_bot/internal/service/datastruct"
 	"trading_bot/internal/service/trader"
+	"trading_bot/internal/strategy"
 	"trading_bot/internal/supports"
 
 	"github.com/google/uuid"
 )
 
-//go:generate mockgen -source=trader_manager.go -destination=trader_manager_mock.go -package=tradermanager . IStrategyResolver
+//go:generate mockgen -source=trader_manager.go -destination=trader_manager_mock.go -package=tradermanager . IStorage,IBroker,IStrategyResolver
 
 type TraderId string
 
+type IStorage interface {
+	trader.IStorage
+	strategy.IStorage
+}
+
+type IBroker interface {
+	trader.IBroker
+	strategy.IBroker
+}
+
 type IStrategyResolver interface {
-	ResolveStrategy(cfg map[string]any, db any, broker any, traderId string) (strategy trader.IStrategy, err error)
+	ResolveStrategy(cfg map[string]any, db strategy.IStorage, broker strategy.IBroker, traderId string) (trader.IStrategy, error)
 }
 type TraderManager struct {
 	sync.RWMutex
@@ -28,24 +39,30 @@ type TraderManager struct {
 	onTraderPanicDelay time.Duration
 	wg                 sync.WaitGroup
 
-	broker           trader.IBroker
-	storage          trader.IStorage
+	broker           IBroker
+	storage          IStorage
+	strategyResolver IStrategyResolver
 	managerLogger    trader.ILogger
 	traderLogger     trader.ILogger
-	strategyResolver IStrategyResolver
 	history          trader.IHistoryWriter
 }
 
-func NewTraderManager(ctx context.Context, onTraderPanicDelay time.Duration, broker trader.IBroker,
-	storage trader.IStorage, managerLogger, traderLogger trader.ILogger, strategyResolver IStrategyResolver, history trader.IHistoryWriter) *TraderManager {
+func NewTraderManager(ctx context.Context,
+	onTraderPanicDelay time.Duration,
+	broker IBroker,
+	storage IStorage,
+	strategyResolver IStrategyResolver,
+	managerLogger, traderLogger trader.ILogger,
+	history trader.IHistoryWriter) *TraderManager {
+
 	return &TraderManager{
 		onTraderPanicDelay: onTraderPanicDelay,
 		traders:            make(map[TraderId]*trader.TraderService),
 		broker:             broker,
 		storage:            storage,
+		strategyResolver:   strategyResolver,
 		managerLogger:      managerLogger,
 		traderLogger:       traderLogger,
-		strategyResolver:   strategyResolver,
 		history:            history,
 		ctx:                ctx,
 	}
@@ -94,6 +111,7 @@ func (tm *TraderManager) UpdateTradersWithConfig(cfg *config.TraderCfg) {
 			oldCfg := tr.GetConfig()
 
 			if oldStrategy.GetName() == strategyInstance.GetName() {
+
 				if err := oldStrategy.UpdateConfig(traderCfg.StrategyCfg); err != nil {
 					tm.managerLogger.ErrorfKV("failed updating strategy config: %s", err.Error())
 					continue
@@ -178,7 +196,7 @@ func (tm *TraderManager) goNewOneTrader(tr *trader.TraderService) error {
 			func() {
 				defer func() {
 					if p := recover(); p != nil {
-						tm.managerLogger.ErrorfKV("Panic recovered. Removed from execution for.",
+						tm.managerLogger.ErrorfKV("Panic recovered. Removed from execution.",
 							ds.HistoryColTraderId, cfg.TraderId, ds.HistoryColError, p, ds.HistoryColSeconds, tm.onTraderPanicDelay.Seconds())
 						supports.WaitFor(tm.ctx, tm.onTraderPanicDelay)
 					}

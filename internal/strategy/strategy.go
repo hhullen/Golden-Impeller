@@ -4,7 +4,19 @@ import (
 	"fmt"
 	"trading_bot/internal/service/trader"
 	"trading_bot/internal/strategy/btdstf"
+	simpleTrade "trading_bot/internal/strategy/simple_trade"
 )
+
+//go:generate mockgen -source=strategy.go -destination=strategy_mock.go -package=strategy IStrategyStorage,IStrategyBroker
+
+type IStorage interface {
+	btdstf.IStorageStrategy
+	simpleTrade.IStorage
+}
+
+type IBroker interface {
+	simpleTrade.IBroker
+}
 
 type Strategy struct {
 }
@@ -13,24 +25,35 @@ func NewStrategy() *Strategy {
 	return &Strategy{}
 }
 
-func (s *Strategy) ResolveStrategy(cfg map[string]any, db any, broker any, traderId string) (strategy trader.IStrategy, err error) {
-	defer func() {
-		if p := recover(); p != nil {
-			strategy = nil
-			err = fmt.Errorf("%v", p)
-		}
-	}()
+var strategiesInit = map[string]func(cfg map[string]any, db IStorage, broker IBroker, traderId string) (trader.IStrategy, error){
 
-	name := cfg["name"].(string)
-
-	if name == btdstf.GetName() {
-		cfg, err := btdstf.NewConfigBTDSTF(cfg)
+	btdstf.GetName(): func(cfg map[string]any, db IStorage, broker IBroker, traderId string) (trader.IStrategy, error) {
+		strategyCfg, err := btdstf.NewConfigBTDSTF(cfg)
 		if err != nil {
 			return nil, err
 		}
+		return btdstf.NewBTDSTF(db, strategyCfg, traderId), nil
+	},
 
-		return btdstf.NewBTDSTF(db.(btdstf.IStorageStrategy), cfg, traderId), nil
+	simpleTrade.GetName(): func(cfg map[string]any, db IStorage, broker IBroker, traderId string) (trader.IStrategy, error) {
+		strat := simpleTrade.NewSimpleTrade(db, broker)
+		err := strat.UpdateConfig(cfg)
+		if err != nil {
+			return nil, err
+		}
+		return strat, nil
+	},
+}
+
+func (s *Strategy) ResolveStrategy(cfg map[string]any, db IStorage, broker IBroker, traderId string) (trader.IStrategy, error) {
+	name, ok := cfg["name"].(string)
+	if !ok {
+		return nil, fmt.Errorf("failed getting strategy name")
 	}
 
-	return nil, fmt.Errorf("incorect strategy name specified")
+	if initer, ok := strategiesInit[name]; ok {
+		return initer(cfg, db, broker, traderId)
+	}
+
+	return nil, fmt.Errorf("no strategy with name: '%s'", name)
 }

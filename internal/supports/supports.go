@@ -117,16 +117,19 @@ func IsInContainer() bool {
 	return os.Getenv("RUNNING_IN_CONTAINER") == "true"
 }
 
-func ReadSecret(path string) string {
+func ReadSecret(path string) (string, error) {
 	f, err := os.OpenFile(path, os.O_RDONLY, 0644)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	secret := ""
-	fmt.Fscan(f, &secret)
+	_, err = fmt.Fscan(f, &secret)
+	if err != nil {
+		return "", err
+	}
 
-	return string(secret)
+	return string(secret), nil
 }
 
 func MakeKVMessagesJSON(kvs ...any) (bytes []byte, err error) {
