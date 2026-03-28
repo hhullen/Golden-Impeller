@@ -51,20 +51,15 @@ func NewSimpleTrade(storage IStorage, broker IBroker) *SimpleTrade {
 }
 
 func (st *SimpleTrade) init(trId string, instrInfo *ds.InstrumentInfo, price *ds.Quotation) error {
-	set, err := st.storage.IsMinMaxSet(trId)
+	err := st.storage.UpdateMinimum(trId, instrInfo, price)
 	if err != nil {
 		return err
 	}
-	if !set {
-		err = st.storage.UpdateMinimum(trId, instrInfo, price)
-		if err != nil {
-			return err
-		}
-		err = st.storage.UpdateMaximum(trId, instrInfo, price)
-		if err != nil {
-			return err
-		}
+	err = st.storage.UpdateMaximum(trId, instrInfo, price)
+	if err != nil {
+		return err
 	}
+
 	return nil
 }
 
@@ -94,7 +89,7 @@ func (st *SimpleTrade) GetActionDecision(ctx context.Context, trId, accountId st
 
 		risenToBuy := func() bool { return minPriceF*(1+st.cfg.PercentRaiseToBuy) <= lpF }
 
-		if lpF < minPrice.ToFloat64() {
+		if lpF < minPriceF {
 			err := st.storage.UpdateMinimum(trId, instrInfo, &lp.Price)
 			if err != nil {
 				return nil, err
